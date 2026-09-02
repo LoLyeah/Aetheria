@@ -131,6 +131,13 @@ export const QuantumOrbitalViewer: React.FC = () => {
   const [showBohrOrbit, setShowBohrOrbit] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
+  // Dynamic references to prevent WebGL canvas re-mounting on rotation toggle
+  const isRotatingRef = useRef(isRotating);
+
+  useEffect(() => {
+    isRotatingRef.current = isRotating;
+  }, [isRotating]);
+
   // Scene references
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -304,7 +311,7 @@ export const QuantumOrbitalViewer: React.FC = () => {
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      if (isRotating && !isDragging) {
+      if (isRotatingRef.current && !isDragging) {
         scene.rotation.y += 0.004;
       }
 
@@ -343,7 +350,7 @@ export const QuantumOrbitalViewer: React.FC = () => {
       resizeObserver.disconnect();
       renderer.dispose();
     };
-  }, [isRotating]);
+  }, []);
 
   // Rebuild 3D Orbital Geometry on parameters change
   useEffect(() => {

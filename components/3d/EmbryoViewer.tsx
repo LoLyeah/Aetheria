@@ -165,6 +165,15 @@ export const EmbryoViewer: React.FC = () => {
   const [isUltrasoundMode, setIsUltrasoundMode] = useState<boolean>(false);
   const [isRotating, setIsRotating] = useState<boolean>(true);
 
+  // Dynamic references to avoid tearing down WebGL canvas
+  const currentStageKeyRef = useRef(currentStageKey);
+  const isRotatingRef = useRef(isRotating);
+
+  useEffect(() => {
+    currentStageKeyRef.current = currentStageKey;
+    isRotatingRef.current = isRotating;
+  }, [currentStageKey, isRotating]);
+
   // Three.js References
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -249,13 +258,14 @@ export const EmbryoViewer: React.FC = () => {
       animId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      if (isRotating && !isDragging) {
+      if (isRotatingRef.current && !isDragging) {
         modelGroup.rotation.y += 0.005;
       }
 
       // Heart pulsation animation (rhythmic heartbeat)
       if (heartMeshRef.current) {
-        const bpmSpeed = currentStageKey === 'w4' ? 4 : currentStageKey === 'w8' ? 6 : 5;
+        const stage = currentStageKeyRef.current;
+        const bpmSpeed = stage === 'w4' ? 4 : stage === 'w8' ? 6 : 5;
         const pulse = 1 + 0.12 * Math.sin(elapsedTime * bpmSpeed);
         heartMeshRef.current.scale.set(pulse, pulse, pulse);
       }
@@ -282,7 +292,7 @@ export const EmbryoViewer: React.FC = () => {
       ro.disconnect();
       renderer.dispose();
     };
-  }, [isRotating, currentStageKey]);
+  }, []);
 
   // Reconstruct 3D Anatomical Embryo Geometry when stage or layers change
   useEffect(() => {
@@ -409,21 +419,30 @@ export const EmbryoViewer: React.FC = () => {
     else {
       const isLate = currentStageKey === 'w20' || currentStageKey === 'w36';
 
-      // Head / Cranium
-      const headGeo = new THREE.SphereGeometry(isLate ? 1.4 : 1.1, 32, 32);
-      headGeo.scale(1.0, 1.2, 1.1);
+      // 1. Head / Cranium
+      const headRadius = isLate ? 1.4 : 1.1;
+      const headGeo = new THREE.SphereGeometry(headRadius, 32, 32);
+      headGeo.scale(1.0, 1.15, 1.05);
       const head = new THREE.Mesh(headGeo, skinMat);
       head.position.set(0, 1.6, 0);
       group.add(head);
 
-      // Facial Features (Optic vesicles, nose, jaw)
-      const eyeGeo = new THREE.SphereGeometry(0.16, 16, 16);
-      const eyeMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1 });
+      // Facial Features (Optic Vesicles / Eyes anchored locally to head)
+      const eyeRadius = isLate ? 0.18 : 0.14;
+      const eyeGeo = new THREE.SphereGeometry(eyeRadius, 16, 16);
+      const eyeMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.1,
+        metalness: 0.1,
+      });
+
+      // Eyes placed locally on the head surface (anterior-lateral position)
       const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
-      eyeL.position.set(0.45, 1.65, 0.95);
-      const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
-      eyeR.position.set(-0.45, 1.65, 0.95);
+      eyeL.position.set(headRadius * 0.42, headRadius * 0.05, headRadius * 0.92);
       head.add(eyeL);
+
+      const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+      eyeR.position.set(-headRadius * 0.42, headRadius * 0.05, headRadius * 0.92);
       head.add(eyeR);
 
       // Torso / Chest & Abdomen

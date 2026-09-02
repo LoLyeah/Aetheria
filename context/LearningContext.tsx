@@ -365,9 +365,20 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const navigateTo = (newView: AppView, topicId?: TopicId | null, moduleId?: string) => {
     setView(newView);
-    if (topicId !== undefined) {
+    if (newView === 'learn') {
+      if (topicId === undefined || topicId === null) {
+        setSelectedTopicId(null);
+        setSelectedModuleId(null);
+      } else {
+        setSelectedTopicId(topicId);
+      }
+    } else if (newView === 'landing') {
+      setSelectedTopicId(null);
+      setSelectedModuleId(null);
+    } else if (topicId !== undefined) {
       setSelectedTopicId(topicId);
     }
+
     if (moduleId) {
       setSelectedModuleId(moduleId);
       const info = getModuleById(moduleId);

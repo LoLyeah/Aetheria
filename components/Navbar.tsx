@@ -182,18 +182,6 @@ export const Navbar: React.FC<{
 
         {/* Right Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Version Badge Button */}
-          {onOpenVersion && (
-            <button
-              onClick={onOpenVersion}
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700/60 text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
-              title="Software Version & Changelog (x.y.z)"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>v{APP_VERSION_DATA.version}</span>
-            </button>
-          )}
-
           {/* WebGPU Status Badge */}
           <div className="hidden sm:block">
             <WebGPUTestBadge compact />

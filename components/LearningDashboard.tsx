@@ -55,7 +55,7 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
               </button>
               <span>/</span>
               <button
-                onClick={() => navigateTo('learn')}
+                onClick={() => navigateTo('learn', null)}
                 className={`transition-colors ${
                   !selectedTopicId ? 'text-sky-600 dark:text-sky-400 font-bold' : 'hover:text-slate-600 dark:hover:text-slate-200'
                 }`}
@@ -125,7 +125,7 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
               {/* Back to all topics button */}
               <div className="flex items-center justify-between">
                 <button
-                  onClick={() => navigateTo('learn')}
+                  onClick={() => navigateTo('learn', null)}
                   className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />

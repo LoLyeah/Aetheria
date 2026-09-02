@@ -16,6 +16,17 @@ export const BatteryCellViewer: React.FC = () => {
   const [showThermalHeatmap, setShowThermalHeatmap] = useState<boolean>(false);
   const [isRotating, setIsRotating] = useState<boolean>(true);
 
+  // References for dynamic updates to avoid tearing down WebGL context
+  const isChargingRef = useRef(isCharging);
+  const cRateRef = useRef(cRate);
+  const isRotatingRef = useRef(isRotating);
+
+  useEffect(() => {
+    isChargingRef.current = isCharging;
+    cRateRef.current = cRate;
+    isRotatingRef.current = isRotating;
+  }, [isCharging, cRate, isRotating]);
+
   // Three.js References
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -97,14 +108,14 @@ export const BatteryCellViewer: React.FC = () => {
       animId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      if (isRotating && !isDragging) {
+      if (isRotatingRef.current && !isDragging) {
         modelGroup.rotation.y += 0.005;
       }
 
       // Animate Lithium Ion migration particles along jellyroll spiral / cross-section
       if (ionParticlesRef.current) {
         const pos = ionParticlesRef.current.geometry.attributes.position as THREE.BufferAttribute;
-        const speed = (isCharging ? 1 : -1) * (cRate * 0.02);
+        const speed = (isChargingRef.current ? 1 : -1) * (cRateRef.current * 0.02);
 
         for (let i = 0; i < pos.count; i++) {
           let y = pos.getY(i) + speed;
@@ -137,7 +148,7 @@ export const BatteryCellViewer: React.FC = () => {
       ro.disconnect();
       renderer.dispose();
     };
-  }, [isRotating, cRate, isCharging]);
+  }, []);
 
   // Rebuild 3D Battery Model on parameter changes
   useEffect(() => {

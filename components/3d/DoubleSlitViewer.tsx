@@ -14,7 +14,19 @@ export const DoubleSlitViewer: React.FC = () => {
   const [isRunning, setIsRunning] = useState<boolean>(true);
   const [accumulatedHits, setAccumulatedHits] = useState<number>(0);
 
-  // References for dynamic updates
+  // References for dynamic updates to avoid tearing down WebGL renderer and re-renders
+  const detectorActiveRef = useRef(detectorActive);
+  const wavelengthRef = useRef(wavelength);
+  const slitDistanceRef = useRef(slitDistance);
+  const isRunningRef = useRef(isRunning);
+
+  useEffect(() => {
+    detectorActiveRef.current = detectorActive;
+    wavelengthRef.current = wavelength;
+    slitDistanceRef.current = slitDistance;
+    isRunningRef.current = isRunning;
+  }, [detectorActive, wavelength, slitDistance, isRunning]);
+
   const sceneRef = useRef<THREE.Scene | null>(null);
   const waveMeshRef = useRef<THREE.Mesh | null>(null);
   const particlesRef = useRef<THREE.Points | null>(null);
@@ -154,23 +166,30 @@ export const DoubleSlitViewer: React.FC = () => {
     // Animation Loop
     let animId: number;
     let time = 0;
+    let frameCount = 0;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
+      frameCount++;
       time += 0.04;
 
+      const currentIsRunning = isRunningRef.current;
+      const currentDetectorActive = detectorActiveRef.current;
+      const currentSlitDistance = slitDistanceRef.current;
+      const currentWavelength = wavelengthRef.current;
+
       // Animate wave surface
-      if (waveMeshRef.current && isRunning) {
+      if (waveMeshRef.current && currentIsRunning) {
         const pos = waveMeshRef.current.geometry.attributes.position as THREE.BufferAttribute;
-        const slit1X = -slitDistance / 2;
-        const slit2X = slitDistance / 2;
-        const k = (2 * Math.PI * 550) / wavelength;
+        const slit1X = -currentSlitDistance / 2;
+        const slit2X = currentSlitDistance / 2;
+        const k = (2 * Math.PI * 550) / currentWavelength;
 
         for (let i = 0; i < pos.count; i++) {
           const x = pos.getX(i);
           const z = pos.getZ(i);
 
-          if (detectorActive) {
+          if (currentDetectorActive) {
             // Classical decoherence: sum of independent intensities without phase interference
             const r1 = Math.sqrt((x - slit1X) ** 2 + z ** 2);
             const r2 = Math.sqrt((x - slit2X) ** 2 + z ** 2);
@@ -189,24 +208,23 @@ export const DoubleSlitViewer: React.FC = () => {
       }
 
       // Spawn photon/electron hits on the detector screen
-      if (isRunning && particlesRef.current && hitCountRef.current < maxHits) {
+      if (currentIsRunning && particlesRef.current && hitCountRef.current < maxHits) {
         for (let h = 0; h < 2; h++) {
           const hitIdx = hitCountRef.current;
           let screenX = 0;
 
-          if (detectorActive) {
+          if (currentDetectorActive) {
             // Classical two peaks
-            const slitChoice = Math.random() > 0.5 ? -slitDistance / 2 : slitDistance / 2;
+            const slitChoice = Math.random() > 0.5 ? -currentSlitDistance / 2 : currentSlitDistance / 2;
             const gaussian = (Math.random() + Math.random() + Math.random() - 1.5) * 0.6;
             screenX = slitChoice + gaussian;
           } else {
             // Quantum interference fringes distribution
-            // Rejection sampling based on I(x) = cos^2(pi * d * x / (lambda * L)) * sinc^2(pi * a * x / (lambda * L))
             let accepted = false;
             let candX = 0;
             for (let attempt = 0; attempt < 20; attempt++) {
               candX = (Math.random() * 2 - 1) * 3.5;
-              const fringeFreq = (slitDistance * 1.8 * (550 / wavelength));
+              const fringeFreq = (currentSlitDistance * 1.8 * (550 / currentWavelength));
               const intensity = Math.pow(Math.cos(candX * fringeFreq), 2) * Math.exp(-(candX * candX) / 6);
               if (Math.random() < intensity) {
                 screenX = candX;
@@ -223,7 +241,11 @@ export const DoubleSlitViewer: React.FC = () => {
           posAttr.needsUpdate = true;
           hitCountRef.current++;
         }
-        setAccumulatedHits(hitCountRef.current);
+
+        // Throttle React state updates to every 12 frames (~5 times/sec) to avoid component re-render thrashing
+        if (frameCount % 12 === 0) {
+          setAccumulatedHits(hitCountRef.current);
+        }
       }
 
       renderer.render(scene, camera);
@@ -248,7 +270,7 @@ export const DoubleSlitViewer: React.FC = () => {
       ro.disconnect();
       renderer.dispose();
     };
-  }, [detectorActive, wavelength, slitDistance, isRunning]);
+  }, []);
 
   const resetSimulation = () => {
     if (particlesRef.current) {
