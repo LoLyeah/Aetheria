@@ -1,0 +1,6 @@
+{
+  "name": "Aetheria - Interactive 3D Science & Tech Learning Platform",
+  "description": "An interactive WebGPU/3D learning platform featuring Quantum Mechanics, Embryonic Development, and EV Battery Technology with interactive simulations, bilingual support (EN/ID), and progress tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
