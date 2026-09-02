@@ -22,32 +22,30 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.0.8',
+  version: '1.0.9',
   major: 1,
   minor: 0,
-  patch: 8,
+  patch: 9,
   releaseDate: '2026-09-02',
-  buildNumber: 'build.20260902.08',
+  buildNumber: 'build.20260902.09',
   environment: 'production',
   changelog: [
     {
-      version: '1.0.8',
+      version: '1.0.9',
       date: '2026-09-02',
       type: 'patch',
       title: {
-        en: '60 FPS Simulation Animation Loop Optimization & Smooth Settings Transitions',
-        id: 'Optimasi Loop Animasi Simulasi 60 FPS & Transisi Halus Pengaturan',
+        en: 'Hero 3D Model Viewport Centering & Symmetrical Camera Alignment',
+        id: 'Penyelarasan Presisi Pusat Model 3D Hero & Kamera Simetris',
       },
       highlights: {
         en: [
-          'Decoupled WebGL rendering contexts from dynamic component state (isRotating, cRate, wavelength, detectorActive) using mutable refs to eliminate frame stutter and prevent canvas rebuilds.',
-          'Throttled Double-Slit quantum hit state dispatches to 5 Hz instead of 60 Hz to avoid React component thrashing.',
-          'Integrated motion cross-fade animations across all Settings tabs and fixed container height to prevent any layout jumping.',
+          'Corrected perspective camera elevation offset from Y=1.2 to Y=0.0 and enforced continuous lookAt(0,0,0) targeting to perfectly center the 3D model in the hero viewport card.',
+          'Rescaled quantum orbital lobes and equatorial nodal torus to balance bounding box margins and prevent lower control overlap.',
         ],
         id: [
-          'Memisahkan konteks render WebGL dari state dinamis komponen menggunakan mutable ref untuk mengeliminasi lag dan mencegah inisialisasi ulang kanvas.',
-          'Membatasi update state hit interferensi celah ganda menjadi 5 Hz dari 60 Hz untuk mencegah beban render berlebih di React.',
-          'Mengintegrasikan animasi motion halus di seluruh tab Pengaturan dan menetapkan tinggi kontainer tetap.',
+          'Memperbaiki offset elevasi kamera perspektif dari Y=1.2 ke Y=0.0 dan menerapkan penargetan lookAt(0,0,0) kontinu agar model 3D berada tepat di tengah kartu hero.',
+          'Menyesuaikan skala lobus orbital kuantum dan cincin torus khatulistiwa untuk keseimbangan margin dan mencegah tumpang tindih dengan kontrol bawah.',
         ],
       },
     },

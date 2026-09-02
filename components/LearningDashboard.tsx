@@ -87,7 +87,7 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
           </div>
 
           {/* Quick Progress Indicator Card */}
-          <div className="flex items-center gap-3 self-start md:self-auto p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80">
+          <div className="flex items-center gap-3 self-start md:self-auto p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex-shrink-0 min-w-[280px]">
             <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
               <Award className="w-5 h-5" />
             </div>

@@ -88,7 +88,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 12 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10"
+          className="relative w-full max-w-4xl h-[680px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10"
         >
           {/* Header */}
           <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">

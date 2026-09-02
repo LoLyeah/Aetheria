@@ -85,7 +85,8 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 1.2, 8.5);
+    camera.position.set(0, 0, 9.0);
+    camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -126,8 +127,8 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     let targetRotY = 0;
     let currentRotX = 0;
     let currentRotY = 0;
-    let targetZoom = 8.5;
-    let currentZoom = 8.5;
+    let targetZoom = 9.0;
+    let currentZoom = 9.0;
 
     const onMouseDown = (e: MouseEvent) => {
       isDragging = true;
@@ -213,6 +214,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       // Smooth damping for zoom
       currentZoom += (targetZoom - currentZoom) * 0.08;
       camera.position.z = currentZoom;
+      camera.lookAt(0, 0, 0);
 
       // Animate rotators & wave pulsers
       const anims = animatedObjectsRef.current;
@@ -336,8 +338,8 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       animatedObjectsRef.current.pulsers.push({ mesh: nucleusGroup as any, baseScale: 1.0, speed: 2.0 });
 
       // 2. Quantum d_z^2 Spherical Harmonic Orbital Lobes
-      const lobeGeo = new THREE.SphereGeometry(1.3, 32, 32);
-      lobeGeo.scale(0.8, 1.8, 0.8);
+      const lobeGeo = new THREE.SphereGeometry(1.15, 32, 32);
+      lobeGeo.scale(0.72, 1.45, 0.72);
 
       const lobeMat1 = new THREE.MeshPhysicalMaterial({
         color: 0x0284c7,
@@ -349,7 +351,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         ior: 1.4,
       });
       const lobe1 = new THREE.Mesh(lobeGeo, lobeMat1);
-      lobe1.position.set(0, 1.4, 0);
+      lobe1.position.set(0, 1.25, 0);
 
       const lobeMat2 = new THREE.MeshPhysicalMaterial({
         color: 0x38bdf8,
@@ -361,14 +363,14 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         ior: 1.4,
       });
       const lobe2 = new THREE.Mesh(lobeGeo, lobeMat2);
-      lobe2.position.set(0, -1.4, 0);
+      lobe2.position.set(0, -1.25, 0);
       lobe2.rotation.x = Math.PI;
 
       group.add(lobe1);
       group.add(lobe2);
 
       // Toroidal Equatorial Donut Ring (Node of d_z^2)
-      const donutGeo = new THREE.TorusGeometry(1.4, 0.25, 24, 64);
+      const donutGeo = new THREE.TorusGeometry(1.3, 0.22, 24, 64);
       const donutMat = new THREE.MeshPhysicalMaterial({
         color: 0x06b6d4,
         transparent: true,

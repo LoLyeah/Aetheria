@@ -43,13 +43,13 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-4xl h-[680px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
       >
         {/* Modal Header */}
         <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -118,7 +118,7 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
         </div>
 
         {/* Modal Body with AnimatePresence */}
-        <div className="p-6 overflow-y-auto space-y-6">
+        <div className="flex-1 p-6 overflow-y-auto space-y-6">
           <AnimatePresence mode="wait">
             {/* TAB 1: OVERVIEW */}
             {activeTab === 'overview' && (

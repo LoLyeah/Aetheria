@@ -141,20 +141,20 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <motion.span
             initial={{ opacity: 0, y: 6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.97 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
-            className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 sm:w-80 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 text-slate-900 dark:text-slate-100 text-left font-sans cursor-default pointer-events-auto select-text"
+            className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 sm:w-80 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 text-slate-900 dark:text-slate-100 text-left font-sans cursor-default pointer-events-auto select-text block"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
             {/* Popover Arrow */}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-3 h-3 rotate-45 bg-white dark:bg-slate-900 border-r border-b border-slate-200 dark:border-slate-800" />
+            <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-3 h-3 rotate-45 bg-white dark:bg-slate-900 border-r border-b border-slate-200 dark:border-slate-800 block" />
 
             {/* Header: Category & Close */}
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+            <span className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
               <span
                 className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${cat.badgeBg}`}
               >
@@ -162,7 +162,7 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
                 <span>{cat.label[language]}</span>
               </span>
 
-              <div className="flex items-center gap-1">
+              <span className="flex items-center gap-1">
                 {settings?.speechAudioEnabled !== false && (
                   <button
                     onClick={speakTerm}
@@ -182,47 +182,47 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
-              </div>
-            </div>
+              </span>
+            </span>
 
             {/* Title & Mathematical Symbol */}
-            <div className="pt-2.5 pb-1 space-y-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight">
+            <span className="pt-2.5 pb-1 space-y-1 block">
+              <span className="flex items-baseline justify-between gap-2">
+                <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight block">
                   {termData.term[language]}
-                </h4>
+                </span>
                 {termData.pronunciation && (
                   <span className="text-[10px] text-slate-400 font-mono">
                     {termData.pronunciation}
                   </span>
                 )}
-              </div>
+              </span>
 
               {termData.symbol && (
-                <div className="py-1 px-2 rounded-lg bg-slate-950 text-cyan-300 text-xs font-serif inline-block border border-slate-800">
+                <span className="py-1 px-2 rounded-lg bg-slate-950 text-cyan-300 text-xs font-serif inline-block border border-slate-800">
                   <MathFormula formula={termData.symbol} displayMode={false} />
-                </div>
+                </span>
               )}
-            </div>
+            </span>
 
             {/* Non-AI Clear Scientific Definition */}
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-1 pb-2">
+            <span className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-1 pb-2 block">
               {termData.definition[language]}
-            </p>
+            </span>
 
             {/* Real Lab & Clinical Context Callout */}
             {termData.context && (
-              <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5">
+              <span className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5 block">
                 <span className="font-bold text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-slate-400 block">
                   {language === 'en' ? 'Laboratory Application' : 'Penerapan Laboratorium'}
                 </span>
-                <p className="leading-snug">{termData.context[language]}</p>
-              </div>
+                <span className="leading-snug block">{termData.context[language]}</span>
+              </span>
             )}
 
             {/* Footer CTA */}
             {onOpenFullGlossary && (
-              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
+              <span className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
                 <span>{language === 'en' ? 'Scientific Terminology' : 'Terminologi Ilmiah'}</span>
                 <button
                   onClick={(e) => {
@@ -235,9 +235,9 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
                   <span>{language === 'en' ? 'Open Lexicon' : 'Buka Glosarium'}</span>
                   <ExternalLink className="w-2.5 h-2.5" />
                 </button>
-              </div>
+              </span>
             )}
-          </motion.div>
+          </motion.span>
         )}
       </AnimatePresence>
     </span>
