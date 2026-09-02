@@ -18,7 +18,7 @@ interface LearningContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   userProgress: UserProgress;
-  navigateTo: (view: AppView, topicId?: TopicId, moduleId?: string) => void;
+  navigateTo: (view: AppView, topicId?: TopicId | null, moduleId?: string) => void;
   markModuleComplete: (moduleId: string) => void;
   saveQuizScore: (moduleId: string, score: number) => void;
   saveNote: (moduleId: string, text: string) => void;
@@ -63,7 +63,7 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
     return 'light'; // light mode default per prompt
   });
   const [view, setView] = useState<AppView>('landing');
-  const [selectedTopicId, setSelectedTopicId] = useState<TopicId | null>('quantum-mechanics');
+  const [selectedTopicId, setSelectedTopicId] = useState<TopicId | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [userProgress, setUserProgress] = useState<UserProgress>(() => {
@@ -291,9 +291,11 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
     } catch (e) {}
   };
 
-  const navigateTo = (newView: AppView, topicId?: TopicId, moduleId?: string) => {
+  const navigateTo = (newView: AppView, topicId?: TopicId | null, moduleId?: string) => {
     setView(newView);
-    if (topicId) setSelectedTopicId(topicId);
+    if (topicId !== undefined) {
+      setSelectedTopicId(topicId);
+    }
     if (moduleId) {
       setSelectedModuleId(moduleId);
       const info = getModuleById(moduleId);

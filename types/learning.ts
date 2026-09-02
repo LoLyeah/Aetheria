@@ -54,7 +54,7 @@ export type InteractiveLabType =
 export interface LearningModule {
   id: string;
   topicId: TopicId;
-  order: number;
+  order: number; // 1, 2, 3, 4 - Part sequence
   title: {
     en: string;
     id: string;
@@ -64,11 +64,11 @@ export interface LearningModule {
     id: string;
   };
   durationMinutes: number;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  difficultyId: 'Pemula' | 'Menengah' | 'Lanjutan';
   interactiveType: InteractiveLabType;
   sections: ModuleSection[];
   quiz: QuizQuestion[];
+  difficulty?: string;
+  difficultyId?: string;
 }
 
 export interface Topic {

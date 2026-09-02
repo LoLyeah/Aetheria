@@ -1,13 +1,18 @@
 {
   "name": "ai-studio-applet",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "clean": "next clean"
+    "clean": "next clean",
+    "version:patch": "node scripts/bump-version.mjs patch",
+    "version:minor": "node scripts/bump-version.mjs minor",
+    "version:major": "node scripts/bump-version.mjs major",
+    "version:bump": "node scripts/bump-version.mjs patch",
+    "version:setup-hooks": "node scripts/setup-git-hooks.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
