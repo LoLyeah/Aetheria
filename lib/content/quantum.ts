@@ -11,8 +11,8 @@ export const quantumMechanicsTopic: Topic = {
     id: 'Fungsi gelombang, awan probabilitas, dan perilaku fundamental materi subatomik.',
   },
   description: {
-    en: 'Dive into the quantum realm. Discover how the Schrödinger wave equation replaces classic planetary Bohr orbits with probabilistic electron probability clouds (psi squared), explore wave-particle duality through real-time double-slit interference, and manipulate quantum tunneling barriers in real-time 3D.',
-    id: 'Selami dunia kuantum. Pelajari bagaimana persamaan gelombang Schrödinger menggantikan orbit planet klasik Bohr dengan awan probabilitas elektron (psi kuadrat), amati dualitas gelombang-partikel melalui interferensi celah ganda langsung, dan atur rintangan penembusan kuantum (quantum tunneling) dalam visualisasi 3D real-time.',
+    en: 'Dive into the quantum realm. Discover how the Schrödinger wave equation replaces classic planetary Bohr orbits with probabilistic electron clouds (|ψ|²), explore wave-particle duality through real-time double-slit interference, and manipulate quantum tunneling barriers in real-time 3D.',
+    id: 'Selami dunia kuantum. Pelajari bagaimana persamaan gelombang Schrödinger menggantikan orbit planet klasik Bohr dengan awan probabilitas elektron (|ψ|²), amati dualitas gelombang-partikel melalui interferensi celah ganda langsung, dan atur rintangan penembusan kuantum (quantum tunneling) dalam visualisasi 3D real-time.',
   },
   category: {
     en: 'Fundamental Physics',
@@ -34,7 +34,7 @@ export const quantumMechanicsTopic: Topic = {
         en: 'From the classical planetary Bohr model to the modern quantum mechanical wavefunction formulation.',
         id: 'Dari model atom tata surya klasik Bohr hingga formulasi fungsi gelombang mekanika kuantum modern.',
       },
-      durationMinutes: 15,
+      durationMinutes: 18,
       difficulty: 'Beginner',
       difficultyId: 'Pemula',
       interactiveType: 'orbital-cloud',
@@ -42,28 +42,66 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-1-sec-1',
           title: {
-            en: '1. The Failure of Classical Mechanics at the Atomic Scale',
-            id: '1. Kegagalan Mekanika Klasik pada Skala Atom',
+            en: '1. The Crisis of Classical Electrodynamics at the Atomic Scale',
+            id: '1. Krisis Elektrodinamika Klasik pada Skala Atom',
           },
           content: {
-            en: 'In classical electrodynamics, an accelerating charged particle (like an electron orbiting a positively charged nucleus) must continuously radiate electromagnetic energy according to Larmor\'s formula. If this were true, an electron would spiral inward into the nucleus in less than 10 picoseconds, causing all matter in the universe to collapse.\n\nIn 1913, Niels Bohr introduced quantized angular momentum, proposing fixed discrete energy orbits. However, the Bohr model failed for multi-electron atoms and could not explain chemical bonding or spectral line splitting (Zeeman effect). In 1926, Erwin Schrödinger synthesized Louis de Broglie\'s wave-particle duality into the time-independent Schrödinger wave equation, proving electrons are not localized tiny spheres, but standing spatial probability waves.',
-            id: 'Dalam elektrodinamika klasik, partikel bermuatan yang dipercepat (seperti elektron yang mengorbit inti bermuatan positif) harus terus-menerus memancarkan energi elektromagnetik menurut rumus Larmor. Jika ini benar, elektron akan jatuh spiral ke dalam inti dalam waktu kurang dari 10 pikodetik, menyebabkan seluruh materi di alam semesta runtuh.\n\nPada tahun 1913, Niels Bohr memperkenalkan momentum sudut terkuantisasi dengan orbit energi diskrit tertentu. Namun, model Bohr gagal untuk atom berelektron banyak dan tidak dapat menjelaskan ikatan kimia atau pembelahan garis spektrum (efek Zeeman). Pada tahun 1926, Erwin Schrödinger memformulasikan persamaan gelombang bebas-waktu yang membuktikan bahwa elektron bukanlah bola partikel kecil yang bergerak di rel pasti, melainkan gelombang probabilitas spasial stasioner.',
+            en: 'In classical Newtonian and Maxwellian electrodynamics, any accelerated charged particle—such as an electron in centripetal orbital motion around a positively charged nucleus—must continuously radiate electromagnetic energy at power $P = \\frac{q^2 a^2}{6\\pi \\varepsilon_0 c^3}$ (Larmor\'s radiation formula).\n\nIf classical physics were valid at subatomic dimensions, the electron would shed its entire kinetic and potential energy within approximately 16 picoseconds ($1.6 \\times 10^{-11}$ s), spiraling inexorably into the nuclear center. Consequently, stable macroscopic matter and chemical elements could not exist in our universe.\n\nIn 1913, Niels Bohr introduced the radical postulate that electron orbital angular momentum is quantized in integer units of $\\hbar$: $L = m_e v r = n\\hbar$. While this successfully predicted the Rydberg emission lines of atomic hydrogen, the semi-classical Bohr-Sommerfeld model failed to explain multi-electron atoms, chemical bonding geometry, or spectral fine-structure splitting.',
+            id: 'Dalam elektrodinamika klasik Newton dan Maxwell, setiap partikel bermuatan yang mengalami percepatan—seperti elektron dalam gerak orbit sentripetal mengelilingi inti bermuatan positif—harus terus-menerus memancarkan energi gelombang elektromagnetik dengan daya radiasi $P = \\frac{q^2 a^2}{6\\pi \\varepsilon_0 c^3}$ (rumus radiasi Larmor).\n\nJika hukum fisika klasik berlaku pada skala subatomik, elektron akan kehilangan seluruh energi kinetik dan potensialnya dalam waktu sekitar 16 pikodetik ($1.6 \\times 10^{-11}$ detik), jatuh secara spiral dan menabrak inti atom. Akibatnya, materi stabil dan ikatan kimia tidak akan pernah terbentuk di alam semesta.\n\nPada tahun 1913, Niels Bohr mengajukan postulat revolusioner bahwa momentum sudut orbital elektron terkuantisasi dalam kelipatan bulat $\\hbar$: $L = m_e v r = n\\hbar$. Walaupun berhasil memprediksi spektrum emisi atom hidrogen (deret Rydberg), model semi-klasik Bohr-Sommerfeld gagal menjelaskan atom berelektron banyak, geometri ikatan kimia, serta pembelahan garis halus spektroskopi.',
           },
-          formula: '-\\frac{\\hbar^2}{2m}\\nabla^2\\psi(\\mathbf{r}) + V(\\mathbf{r})\\psi(\\mathbf{r}) = E\\psi(\\mathbf{r})',
+          formula: '-\\frac{\\hbar^2}{2m_e} \\nabla^2 \\psi(\\mathbf{r}) + V(\\mathbf{r})\\psi(\\mathbf{r}) = E\\psi(\\mathbf{r})',
           formulaExplanation: {
-            en: 'The Time-Independent Schrödinger Equation for an electron in a potential field V(r), where ħ is the reduced Planck constant, m is electron mass, and E is total quantized energy.',
-            id: 'Persamaan Schrödinger Bebas-Waktu untuk elektron dalam medan potensial V(r), di mana ħ adalah konstanta Planck tereduksi, m adalah massa elektron, dan E adalah energi terkuantisasi total.',
+            en: 'The Time-Independent Schrödinger Equation (TISE) in three dimensions for an electron of mass m_e subject to an electrostatic Coulomb potential V(r) = -e² / (4πε₀r), yielding stationary energy eigenstates E and spatial probability wavefunctions ψ(r).',
+            id: 'Persamaan Schrödinger Bebas-Waktu 3D untuk elektron bermassa m_e dalam medan potensial Coulomb V(r) = -e² / (4πε₀r), yang menghasilkan keadaan stasioner energi E dan fungsi gelombang probabilitas spasial ψ(r).',
           },
+          variables: [
+            {
+              symbol: '\\hbar',
+              name: { en: 'Reduced Planck Constant', id: 'Konstanta Planck Tereduksi' },
+              unit: 'J·s (1.0545718 × 10⁻³⁴)',
+              description: {
+                en: 'Fundamental quantum action scaling factor (h / 2π).',
+                id: 'Faktor skala aksi kuantum fundamental (h / 2π).',
+              },
+            },
+            {
+              symbol: '\\nabla^2',
+              name: { en: 'Laplacian Operator', id: 'Operator Laplacian' },
+              unit: 'm⁻²',
+              description: {
+                en: 'Three-dimensional spatial divergence of the gradient: ∂²/∂x² + ∂²/∂y² + ∂²/∂z².',
+                id: 'Divergensi spasial 3 dimensi dari gradien: ∂²/∂x² + ∂²/∂y² + ∂²/∂z².',
+              },
+            },
+            {
+              symbol: '\\psi(\\mathbf{r})',
+              name: { en: 'Stationary Wavefunction', id: 'Fungsi Gelombang Stasioner' },
+              unit: 'm⁻³/²',
+              description: {
+                en: 'Complex spatial probability amplitude describing the quantum state.',
+                id: 'Amplitudo probabilitas spasial kompleks yang mendeskripsikan keadaan kuantum.',
+              },
+            },
+            {
+              symbol: 'V(\\mathbf{r})',
+              name: { en: 'Coulombic Potential Energy', id: 'Energi Potensial Coulomb' },
+              unit: 'Joules / eV',
+              description: {
+                en: 'Attractive central force potential between proton nucleus and electron.',
+                id: 'Potensial gaya tarik pusat antara inti proton dan elektron.',
+              },
+            },
+          ],
           keyTakeaways: {
             en: [
-              'Electrons do not travel in circular deterministic tracks; they exist as three-dimensional probability distributions.',
-              'The wavefunction ψ itself is complex-valued, but |ψ|² represents the exact spatial probability density of finding the electron.',
-              'Quantization emerges naturally from boundary conditions applied to the wave equation.',
+              'Electrons do not traverse classical deterministic circular tracks; they exist as three-dimensional stationary standing waves.',
+              'The wavefunction ψ itself is a complex probability amplitude; its modulus squared |ψ(r)|² defines the spatial probability density.',
+              'Quantization of energy emerges rigorously from boundary conditions requiring ψ to be single-valued, continuous, and normalizable.',
             ],
             id: [
-              'Elektron tidak bergerak pada lintasan melingkar deterministik; elektron ada sebagai distribusi probabilitas spasial tiga dimensi.',
-              'Fungsi gelombang ψ bernilai kompleks, namun |ψ|² mewakili kerapatan probabilitas menemukan elektron di ruang tertentu.',
-              'Kuantisasi muncul secara alami dari syarat batas matematis yang diterapkan pada persamaan gelombang.',
+              'Elektron tidak bergerak pada lintasan melingkar deterministik, melainkan eksis sebagai gelombang stasioner probabilitas 3D.',
+              'Fungsi gelombang ψ bernilai kompleks; kuadrat modulusnya |ψ(r)|² mendefinisikan kerapatan probabilitas menemukan elektron.',
+              'Kuantisasi energi muncul secara matematis dari syarat batas yang mewajibkan ψ bernilai tunggal, kontinu, dan ternormalisasi.',
             ],
           },
         },
@@ -74,19 +112,61 @@ export const quantumMechanicsTopic: Topic = {
             id: '2. Empat Bilangan Kuantum (n, l, m_l, m_s)',
           },
           content: {
-            en: 'Solving the Schrödinger equation in spherical polar coordinates (r, θ, φ) yields three spatial quantum numbers, plus an intrinsic relativistic spin quantum number:\n\n1. Principal Quantum Number (n = 1, 2, 3...): Determines the primary energy shell and overall radial size of the orbital.\n2. Azimuthal / Orbital Angular Momentum (l = 0, 1, ..., n-1): Defines the geometric shape of the orbital (l=0: s orbital [spherical], l=1: p orbital [dumb-bell/bilobed], l=2: d orbital [cloverleaf], l=3: f orbital [complex octalobal]).\n3. Magnetic Quantum Number (m_l = -l, ..., 0, ..., +l): Dictates the spatial 3D orientation of the angular momentum vector in space (2l + 1 possible orientations).\n4. Spin Projection (m_s = +1/2 or -1/2): The intrinsic quantum spin angular momentum of the fermion, governed by the Pauli Exclusion Principle.',
-            id: 'Penyelesaian persamaan Schrödinger dalam koordinat bola (r, θ, φ) menghasilkan tiga bilangan kuantum spasial, ditambah bilangan kuantum spin intrinsik relativistik:\n\n1. Bilangan Kuantum Utama (n = 1, 2, 3...): Menentukan kulit energi utama dan ukuran radial keseluruhan dari orbital.\n2. Bilangan Kuantum Azimut / Momentum Sudut (l = 0, 1, ..., n-1): Menentukan bentuk geometris orbital (l=0: orbital s [bola], l=1: orbital p [cuping ganda], l=2: orbital d [semanggi], l=3: orbital f [oktalobal kompleks]).\n3. Bilangan Kuantum Magnetik (m_l = -l, ..., 0, ..., +l): Menentukan orientasi spasial 3D dari vektor momentum sudut di ruang (tersedia 2l + 1 orientasi).\n4. Bilangan Kuantum Spin (m_s = +1/2 atau -1/2): Momentum sudut spin intrinsik elektron, yang diatur oleh Prinsip Larangan Pauli.',
+            en: 'Solving the Schrödinger equation for a central Coulomb potential requires transforming Cartesian coordinates (x, y, z) into spherical polar coordinates (r, θ, φ). Applying separation of variables $\\psi(r, \\theta, \\phi) = R(r) Y(\\theta, \\phi)$ yields three fundamental integer spatial quantum numbers, augmented by a fourth intrinsic relativistic spin quantum number:\n\n1. Principal Quantum Number (n ∈ {1, 2, 3, ...}): Defines the main energy level shell and radial distance scale. For hydrogen-like systems, $E_n = -\\frac{13.6\\text{ eV}}{n^2}$.\n2. Azimuthal / Orbital Angular Momentum (l ∈ {0, 1, ..., n-1}): Governs orbital geometry and magnitude of orbital angular momentum $L = \\hbar\\sqrt{l(l+1)}$. (l=0: s [sharp/spherical], l=1: p [principal/bilobed], l=2: d [diffuse/cloverleaf], l=3: f [fundamental/complex octalobe]).\n3. Magnetic Quantum Number ($m_l \\in \\{-l, ..., 0, ..., +l\\}$): Dictates the 3D spatial orientation of the angular momentum vector relative to an external magnetic axis (2l + 1 states).\n4. Spin Magnetic Quantum Number ($m_s = \\pm 1/2$): The intrinsic angular momentum of the electron ($S = \\hbar\\sqrt{3/4}$), governed by the Dirac relativistic equation.',
+            id: 'Penyelesaian persamaan Schrödinger pada potensial Coulomb pusat memerlukan transformasi koordinat Kartesius (x, y, z) ke koordinat polar bola (r, θ, φ). Pemisahan variabel $\\psi(r, \\theta, \\phi) = R(r) Y(\\theta, \\phi)$ menghasilkan tiga bilangan kuantum spasial bulat fundamental, ditambah bilangan kuantum spin relativistik intrinsik:\n\n1. Bilangan Kuantum Utama (n ∈ {1, 2, 3, ...}): Menentukan kulit energi utama dan skala radial atom. Untuk sistem hidrogen, $E_n = -\\frac{13.6\\text{ eV}}{n^2}$.\n2. Bilangan Kuantum Azimut / Momentum Sudut (l ∈ {0, 1, ..., n-1}): Menentukan geometri orbital dan besarnya momentum sudut orbital $L = \\hbar\\sqrt{l(l+1)}$. (l=0: s [bola], l=1: p [cuping ganda], l=2: d [semanggi], l=3: f [oktalobal]).\n3. Bilangan Kuantum Magnetik ($m_l \\in \\{-l, ..., 0, ..., +l\\}$): Menentukan orientasi spasial 3D vektor momentum sudut terhadap sumbu magnetik luar (sebanyak 2l + 1 orientasi).\n4. Bilangan Kuantum Spin ($m_s = \\pm 1/2$): Momentum sudut intrinsik elektron ($S = \\hbar\\sqrt{3/4}$) yang dijelaskan oleh persamaan relativistik Dirac.',
+          },
+          comparisonTable: {
+            headers: {
+              en: ['Quantum Number', 'Symbol', 'Allowed Values', 'Physical Property Determined', 'Geometric Influence'],
+              id: ['Bilangan Kuantum', 'Simbol', 'Nilai yang Diizinkan', 'Sifat Fisik yang Ditentukan', 'Pengaruh Geometris'],
+            },
+            rows: [
+              {
+                en: ['Principal', 'n', '1, 2, 3, 4, ...', 'Total energy level & size', 'Radial distance from nucleus'],
+                id: ['Utama', 'n', '1, 2, 3, 4, ...', 'Tingkat energi & ukuran total', 'Jarak radial rata-rata dari inti'],
+              },
+              {
+                en: ['Azimuthal', 'l', '0, 1, ..., n-1', 'Orbital angular momentum |L|', 'Orbital geometric shape (s, p, d, f)'],
+                id: ['Azimut', 'l', '0, 1, ..., n-1', 'Besar momentum sudut orbital |L|', 'Bentuk geometri orbital (s, p, d, f)'],
+              },
+              {
+                en: ['Magnetic', 'm_l', '-l, ..., 0, ..., +l', 'Spatial orientation of L along z-axis', 'Directional lobe orientation (x, y, z)'],
+                id: ['Magnetik', 'm_l', '-l, ..., 0, ..., +l', 'Orientasi proyeksi L pada sumbu-z', 'Arah orientasi spasial cuping orbital'],
+              },
+              {
+                en: ['Spin Projection', 'm_s', '+1/2, -1/2', 'Intrinsic magnetic moment projection', 'Two-fold spin degeneracy (Up / Down)'],
+                id: ['Proyeksi Spin', 'm_s', '+1/2, -1/2', 'Momen magnetik intrinsik elektron', 'Degenerasi spin (Spin Atas / Spin Bawah)'],
+              },
+            ],
+          },
+          caseStudy: {
+            title: {
+              en: 'The Stern-Gerlach Experiment & Quantum Spin Quantization',
+              id: 'Eksperimen Stern-Gerlach & Kuantisasi Spin Kuantum',
+            },
+            context: {
+              en: 'In 1922, Otto Stern and Walther Gerlach fired a collimated beam of neutral silver atoms through an inhomogeneous magnetic field ∂B_z/∂z to test spatial quantization.',
+              id: 'Pada tahun 1922, Otto Stern dan Walther Gerlach menembakkan berkas atom perak netral melewati medan magnet non-homogen ∂B_z/∂z untuk menguji kuantisasi spasial.',
+            },
+            analysis: {
+              en: 'Classical physics predicted a continuous smear of deflected atoms on the detector plate. Instead, the beam split into exactly two discrete deflection traces corresponding to intrinsic spin projections ms = +1/2 and ms = -1/2.',
+              id: 'Fisika klasik memprediksi jejak berkas akan menyebar secara kontinu. Namun, berkas justru terbelah menjadi tepat dua garis diskrit terpisah yang membuktikan kuantisasi spin intrinsik ms = +1/2 dan ms = -1/2.',
+            },
+            takeaway: {
+              en: 'Intrinsic quantum spin is a purely quantum relativistic observable without any classical mechanical spinning ball analogue.',
+              id: 'Spin kuantum intrinsik adalah besaran kuantum murni tanpa analogi mekanis klasik bola yang berputar.',
+            },
           },
           keyTakeaways: {
             en: [
-              'No two electrons in a single atom can occupy identical sets of the four quantum numbers (Pauli Principle).',
-              'Energy increases with (n + l) according to the Madelung / Aufbau ordering rule.',
-              'Radial nodes = n - l - 1; Angular planar/conical nodes = l.',
+              'The Pauli Exclusion Principle states that no two fermions in the same quantum system may possess an identical set of all four quantum numbers (n, l, ml, ms).',
+              'Total degenerate quantum states in shell n equals 2n².',
+              'Radial nodes = n - l - 1; Angular nodal surfaces = l.',
             ],
             id: [
-              'Tidak ada dua elektron dalam satu atom yang dapat memiliki keempat bilangan kuantum yang identik (Prinsip Pauli).',
-              'Tingkat energi meningkat seiring nilai (n + l) sesuai kaidah pengisian Aufbau / Madelung.',
-              'Simpul radial (radial nodes) = n - l - 1; Simpul sudut (angular nodes) = l.',
+              'Prinsip Larangan Pauli menyatakan bahwa tidak ada dua fermion dalam sistem kuantum yang sama yang dapat memiliki keempat bilangan kuantum identik.',
+              'Total jumlah keadaan kuantum degenerasi pada kulit n adalah 2n².',
+              'Simpul radial = n - l - 1; Simpul sudut (angular nodal planes) = l.',
             ],
           },
         },
@@ -158,11 +238,11 @@ export const quantumMechanicsTopic: Topic = {
       order: 2,
       title: {
         en: '3D Wave Functions & Real Spherical Harmonics',
-        id: 'Fungsi Gelombang 3D & Harmonik Bola Nyata',
+        id: 'Fungsi Gelombang 3D & Harmonisa Bola Riil',
       },
       shortDescription: {
-        en: 'Decompose the hydrogen wave function into radial wave components R(r) and angular spherical harmonics Y(θ, φ).',
-        id: 'Uraikan fungsi gelombang hidrogen menjadi komponen radial R(r) dan harmonik bola sudut Y(θ, φ).',
+        en: 'Separating the radial and angular solutions, calculating probability density distributions, and visualizing phase lobes.',
+        id: 'Pemisahan solusi radial dan sudut, perhitungan distribusi kerapatan probabilitas, dan visualisasi cuping fase.',
       },
       durationMinutes: 20,
       difficulty: 'Intermediate',
@@ -172,28 +252,54 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-2-sec-1',
           title: {
-            en: '1. Radial and Angular Separation of Variables',
-            id: '1. Pemisahan Variabel Radial dan Sudut',
+            en: '1. Radial-Angular Separation of the Hydrogen Wavefunction',
+            id: '1. Pemisahan Radial-Sudut pada Fungsi Gelombang Hidrogen',
           },
           content: {
-            en: 'Because the electrostatic Coulomb potential between a proton and an electron is spherically symmetric, the 3D partial differential equation separates cleanly:\n\nψ_{n,l,m}(r, θ, φ) = R_{n,l}(r) · Y_{l}^{m}(θ, φ)\n\n• The Radial Function R_{n,l}(r) consists of associated Laguerre polynomials multiplied by an exponential decay factor e^{-r / (n a_0)}, where a_0 is the Bohr radius (~0.529 Å).\n• The Spherical Harmonics Y_{l}^{m}(θ, φ) are composed of associated Legendre polynomials P_l^m(cos θ) and azimuthal phase e^{i m φ}. In real chemistry, we take linear combinations to produce real orbitals with distinct lobes and node planes.',
-            id: 'Karena potensial Coulomb elektrostatik antara proton dan elektron bersifat simetris bola, persamaan diferensial parsial 3D dapat dipisahkan secara rapi:\n\nψ_{n,l,m}(r, θ, φ) = R_{n,l}(r) · Y_{l}^{m}(θ, φ)\n\n• Fungsi Radial R_{n,l}(r) terdiri dari polinomial Laguerre terasosiasi dikalikan dengan faktor peluruhan eksponensial e^{-r / (n a_0)}, di mana a_0 adalah jari-jari Bohr (~0.529 Å).\n• Harmonik Bola Y_{l}^{m}(θ, φ) terdiri dari polinomial Legendre terasosiasi P_l^m(cos θ) dan fase azimut e^{i m φ}. Dalam kimia nyata, kombinasi linier digunakan untuk menghasilkan orbital nyata dengan cuping dan bidang simpul (nodal plane) yang khas.',
+            en: 'The complete three-dimensional spatial wavefunction for an electron in a hydrogenic atom is factored into a purely radial function $R_{nl}(r)$ and an angular spherical harmonic function $Y_l^{m_l}(\\theta, \\phi)$:\n\n$$\\psi_{nlm_l}(r, \\theta, \\phi) = R_{nl}(r) Y_l^{m_l}(\\theta, \\phi)$$\n\n• Radial Function $R_{nl}(r)$: Involves Associated Laguerre Polynomials $L_{n-l-1}^{2l+1}(\\rho)$ and an exponential decay factor $e^{-\\rho/2}$, where $\\rho = \\frac{2Zr}{n a_0}$. It determines how electron probability decays radially away from the nucleus.\n• Spherical Harmonics $Y_l^{m_l}(\\theta, \\phi)$: Constructed from Associated Legendre Polynomials $P_l^{|m_l|}(\\cos\\theta)$ and complex exponential phases $e^{i m_l \\phi}$. They govern the 3D angular lobes and nodal cones.',
+            id: 'Fungsi gelombang spasial tiga dimensi lengkap untuk elektron pada atom mirip-hidrogen difaktorkan menjadi fungsi radial murni $R_{nl}(r)$ dan fungsi harmonisa bola sudut $Y_l^{m_l}(\\theta, \\phi)$:\n\n$$\\psi_{nlm_l}(r, \\theta, \\phi) = R_{nl}(r) Y_l^{m_l}(\\theta, \\phi)$$\n\n• Fungsi Radial $R_{nl}(r)$: Melibatkan Polinomial Laguerre Terasosiasi $L_{n-l-1}^{2l+1}(\\rho)$ dan faktor peluruhan eksponensial $e^{-\\rho/2}$, dengan $\\rho = \\frac{2Zr}{n a_0}$. Menentukan bagaimana probabilitas elektron meluruh seiring pertambahan jarak dari inti.\n• Harmonisa Bola $Y_l^{m_l}(\\theta, \\phi)$: Dibangun dari Polinomial Legendre Terasosiasi $P_l^{|m_l|}(\\cos\\theta)$ dan fase eksponensial kompleks $e^{i m_l \\phi}$. Menentukan cuping orientasi spasial dan simpul angular 3D.',
           },
-          formula: 'P(r) dr = r^2 |R_{n,l}(r)|^2 dr',
+          formula: 'R_{nl}(r) = -\\sqrt{\\left(\\frac{2Z}{n a_0}\\right)^3 \\frac{(n-l-1)!}{2n [(n+l)!]^3}} e^{-\\rho/2} \\rho^l L_{n+l}^{2l+1}(\\rho)',
           formulaExplanation: {
-            en: 'Radial Probability Density function P(r), showing the likelihood of finding an electron in a thin spherical shell between radius r and r + dr.',
-            id: 'Fungsi Kerapatan Probabilitas Radial P(r), yang menunjukkan peluang menemukan elektron di dalam kulit bola tipis antara jari-jari r dan r + dr.',
+            en: 'The generalized analytical radial wavefunction where a₀ = 0.529177 Å is the Bohr radius, Z is nuclear charge, and L is the associated Laguerre polynomial.',
+            id: 'Fungsi gelombang radial analitis umum di mana a₀ = 0.529177 Å adalah jari-jari Bohr, Z adalah muatan inti, dan L adalah polinomial Laguerre terasosiasi.',
           },
+          derivationSteps: [
+            {
+              title: { en: 'Separation of Variables', id: 'Pemisahan Variabel' },
+              math: '\\psi(r,\\theta,\\phi) = R(r)\\Theta(\\theta)\\Phi(\\phi)',
+              explanation: {
+                en: 'Substituting the product into the Laplacian in spherical coordinates decouples the radial differential equation from the angular terms.',
+                id: 'Substitusi produk fungsi ke dalam Laplacian koordinat bola memisahkan persamaan diferensial radial dari suku sudut.',
+              },
+            },
+            {
+              title: { en: 'Azimuthal Phase Solution', id: 'Solusi Fase Azimut' },
+              math: '\\frac{d^2\\Phi}{d\\phi^2} = -m_l^2\\Phi \\implies \\Phi(\\phi) = \\frac{1}{\\sqrt{2\\pi}} e^{i m_l \\phi}',
+              explanation: {
+                en: 'Single-valued boundary condition Φ(φ + 2π) = Φ(φ) forces ml to be strictly an integer.',
+                id: 'Syarat batas nilai tunggal Φ(φ + 2π) = Φ(φ) mewajibkan ml berupa bilangan bulat.',
+              },
+            },
+            {
+              title: { en: 'Radial Probability Peak vs Nucleus Density', id: 'Puncak Peluang Radial vs Kerapatan di Inti' },
+              math: 'P(r) dr = r^2 |R_{nl}(r)|^2 dr',
+              explanation: {
+                en: 'Although |ψ(0)|² is maximum at the nucleus for 1s, the spherical shell volume element dV = 4πr²dr causes the total radial probability P(r) to peak exactly at r = a₀.',
+                id: 'Meskipun |ψ(0)|² bernilai maksimum di titik inti (r=0) untuk orbital 1s, elemen volume kulit bola dV = 4πr²dr membuat peluang radial total P(r) memuncak tepat pada r = a₀.',
+              },
+            },
+          ],
           keyTakeaways: {
             en: [
-              'For a 1s orbital, maximum probability density is at r = 0, but total radial probability P(r) peaks at exactly r = a_0 (the Bohr radius).',
-              'Higher n shells expand further radially with multiple internal nodal shells.',
-              'The wave function phase (positive vs negative amplitude) is fundamental to molecular orbital hybridization (bonding σ vs antibonding σ*).',
+              'Radial distribution function P(r) = r²|R(r)|² reveals the true radial probability of locating the electron at distance r.',
+              'Linear combinations of complex eigenfunctions produce real-valued chemical orbitals (e.g. px = (Y₁¹ + Y₁⁻¹)/√2).',
+              'Wavefunction lobes have alternating positive (+) and negative (-) mathematical phase signs critical for covalent bonding.',
             ],
             id: [
-              'Untuk orbital 1s, kerapatan probabilitas maksimum ada di r = 0, namun peluang radial total P(r) mencapai puncak tepat di r = a_0 (jari-jari Bohr).',
-              'Kulit n yang lebih tinggi meluas lebih jauh secara radial dengan beberapa kulit simpul internal.',
-              'Fase fungsi gelombang (amplitudo positif vs negatif) sangat penting dalam hibridisasi orbital molekul (ikatan σ versus anti-ikatan σ*).',
+              'Fungsi distribusi radial P(r) = r²|R(r)|² mengungkapkan peluang radial sebenarnya menemukan elektron pada jarak r.',
+              'Kombinasi linier fungsi gelombang kompleks menghasilkan orbital kimia riil (misal px = (Y₁¹ + Y₁⁻¹)/√2).',
+              'Cuping orbital memiliki tanda fase matematis positif (+) dan negatif (-) yang krusial dalam pembentukan ikatan kovalen.',
             ],
           },
         },
@@ -202,17 +308,27 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-q2-1',
           question: {
-            en: 'How many total nodal planes (where ψ = 0) pass through the nucleus for a 2p_z orbital (l = 1)?',
-            id: 'Berapa banyak bidang simpul (di mana ψ = 0) yang melewati inti atom untuk orbital 2p_z (l = 1)?',
+            en: 'Why does the total radial probability density P(r) for a 1s orbital peak at the Bohr radius (a₀) even though |ψ(r)|² is highest at the nucleus (r = 0)?',
+            id: 'Mengapa kerapatan probabilitas radial total P(r) untuk orbital 1s memuncak pada jari-jari Bohr (a₀) padahal |ψ(r)|² tertinggi di inti (r = 0)?',
           },
           options: {
-            en: ['1 nodal plane (the xy plane)', '2 nodal planes', '0 nodal planes', '3 nodal planes'],
-            id: ['1 bidang simpul (bidang xy)', '2 bidang simpul', '0 bidang simpul', '3 bidang simpul'],
+            en: [
+              'Because the spherical shell volume element grows proportionally to r² (dV = 4πr² dr)',
+              'Because the electron repels the proton nucleus',
+              'Because of centrifugal force pushing the electron outward',
+              'Because the wavefunction changes sign at a₀',
+            ],
+            id: [
+              'Karena elemen volume kulit bola meningkat sebanding dengan r² (dV = 4πr² dr)',
+              'Karena elektron menolak proton di inti atom',
+              'Karena gaya sentrifugal mendorong elektron keluar',
+              'Karena fungsi gelombang berganti tanda pada r = a₀',
+            ],
           },
           correctAnswerIndex: 0,
           explanation: {
-            en: 'An orbital with angular quantum number l has exactly l angular nodal planes. For p_z (l=1), the xy plane (where z = 0) is the sole nodal plane.',
-            id: 'Orbital dengan bilangan kuantum sudut l memiliki tepat l bidang simpul sudut. Untuk p_z (l=1), bidang xy (di mana z = 0) merupakan satu-satunya bidang simpul.',
+            en: 'The radial probability is P(r) = r² |R(r)|². Even though |R(r)|² is highest at r = 0, the multiplying factor r² equals 0 at the origin, creating a peak at r = a₀.',
+            id: 'Probabilitas radial adalah P(r) = r² |R(r)|². Walaupun |R(r)|² bernilai maksimum di r = 0, faktor pengali r² bernilai 0 di titik pusat, sehingga kurva memuncak di r = a₀.',
           },
         },
       ],
@@ -222,14 +338,14 @@ export const quantumMechanicsTopic: Topic = {
       topicId: 'quantum-mechanics',
       order: 3,
       title: {
-        en: 'Wave-Particle Duality & The Double-Slit Experiment',
-        id: 'Dualitas Gelombang-Partikel & Eksperimen Celah Ganda',
+        en: 'Wave-Particle Duality & Double-Slit Interference',
+        id: 'Dualitas Gelombang-Partikel & Interferensi Celah Ganda',
       },
       shortDescription: {
-        en: 'Observe the transition between coherent wave interference and decoherent classical particles under measurement.',
-        id: 'Amati transisi antara interferensi gelombang koheren dan partikel klasik terdekoherensi saat dilakukan pengukuran.',
+        en: 'How single photons and electrons generate interference fringes, and the collapse of the wavefunction under observation.',
+        id: 'Bagaimana foton dan elektron tunggal menghasilkan pola interferensi, dan runtuhnya fungsi gelombang akibat pengamatan.',
       },
-      durationMinutes: 18,
+      durationMinutes: 22,
       difficulty: 'Intermediate',
       difficultyId: 'Menengah',
       interactiveType: 'double-slit',
@@ -237,28 +353,46 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-3-sec-1',
           title: {
-            en: '1. The Core Mystery of Quantum Measurement',
-            id: '1. Misteri Utama Pengukuran Kuantum',
+            en: '1. The de Broglie Hypothesis & Matter Waves',
+            id: '1. Hipotesis de Broglie & Gelombang Materi',
           },
           content: {
-            en: 'When individual electrons or photons are fired one by one through a barrier with two slits onto a detector screen, each particle lands as a localized, discrete dot. However, over time, the statistical accumulation of dots reveals an unmistakable wave interference pattern of alternating constructive and destructive fringes.\n\nEven when particles are fired with hours between them (preventing any particle-particle interaction), the interference pattern still forms: each single electron passes through both slits simultaneously as a probability wave ψ = ψ_1 + ψ_2.\n\nCrucially, when a detector is placed at either slit to observe which path the electron took ("which-way" information), the wave function collapses / decoheres, and the interference fringes vanish entirely, replaced by two classical particle bands.',
-            id: 'Ketika elektron atau foton tunggal ditembakkan satu per satu melewati penghalang dengan dua celah ke layar detektor, setiap partikel mendarat sebagai titik diskrit yang terlokalisasi. Namun, seiring waktu, akumulasi statistik titik-titik tersebut membentuk pola interferensi gelombang yang jelas berupa garis-garis terang dan gelap bergantian.\n\nBahkan jika partikel ditembakkan dengan jeda waktu lama (mencegah interaksi antar-partikel), pola interferensi tetap terbentuk: setiap elektron tunggal melewati kedua celah secara bersamaan sebagai gelombang probabilitas ψ = ψ_1 + ψ_2.\n\nYang paling menarik, ketika detektor dipasang di salah satu celah untuk mengetahui celah mana yang dilewati partikel, fungsi gelombang mengalami keruntuhan (collapse/decoherence), dan pola interferensi lenyap sepenuhnya, digantikan oleh dua garis partikel klasik.',
+            en: 'In 1924, Louis de Broglie proposed that wave-particle duality is not exclusive to light, but a universal property of all matter. Any particle possessing momentum $p = mv$ possesses an associated quantum matter wavelength:\n\n$$\\lambda = \\frac{h}{p} = \\frac{h}{mv}$$\n\nWhen a monochromatic beam of electrons (or buckyballs, C₆₀ molecules) passes through two closely spaced slits separated by distance $d$, the spatial probability wave splits and propagates through both slits simultaneously. The waves interfere constructively and destructively on the detection screen located distance $L$ away.',
+            id: 'Pada tahun 1924, Louis de Broglie mengusulkan bahwa dualitas gelombang-partikel tidak hanya berlaku untuk cahaya, melainkan merupakan sifat universal seluruh materi. Setiap partikel bermomentum $p = mv$ memiliki panjang gelombang materi kuantum:\n\n$$\\lambda = \\frac{h}{p} = \\frac{h}{mv}$$\n\nKetika berkas elektron (atau molekul buckyball C₆₀) melewati dua celah sempit yang berjarak $d$, gelombang probabilitas spasial membelah dan merambat melalui kedua celah secara simultan. Gelombang tersebut mengalami interferensi konstruktif dan destruktif pada layar detektor berjarak $L$.',
           },
-          formula: 'I(x) = |\\psi_1(x) + \\psi_2(x)|^2 = |\\psi_1|^2 + |\\psi_2|^2 + 2\\text{Re}(\\psi_1^* \\psi_2)',
+          formula: 'I(\\theta) = I_0 \\left(\\frac{\\sin \\beta}{\\beta}\\right)^2 \\cos^2 \\alpha, \\quad \\alpha = \\frac{\\pi d \\sin\\theta}{\\lambda}, \\quad \\beta = \\frac{\\pi a \\sin\\theta}{\\lambda}',
           formulaExplanation: {
-            en: 'Intensity distribution on the screen. The cross-term 2 Re(ψ1* ψ2) generates quantum interference. When measured, this cross-term vanishes.',
-            id: 'Distribusi intensitas pada layar. Suku silang 2 Re(ψ1* ψ2) menghasilkan interferensi kuantum. Saat diukur, suku silang ini lenyap.',
+            en: 'Combined Fraunhofer double-slit intensity distribution where a is the individual slit aperture width, d is inter-slit separation, and θ is the angular position on the detector.',
+            id: 'Distribusi intensitas celah ganda Fraunhofer gabungan di mana a adalah lebar celah individual, d adalah jarak antar-celah, dan θ adalah posisi sudut pada layar.',
+          },
+          caseStudy: {
+            title: {
+              en: 'Davisson-Germer Nickel Crystal Diffraction (1927)',
+              id: 'Difraksi Kristal Nikel Davisson-Germer (1927)',
+            },
+            context: {
+              en: 'Clinton Davisson and Lester Germer scattered 54 eV electrons onto a single-crystal nickel target.',
+              id: 'Clinton Davisson dan Lester Germer menembakkan elektron berenergi 54 eV ke target kristal tunggal nikel.',
+            },
+            analysis: {
+              en: 'The scattered electrons showed sharp angular intensity maxima at 50° that precisely matched Bragg\'s law for de Broglie matter waves (λ = 0.165 nm).',
+              id: 'Elektron yang dihamburkan menunjukkan puncak intensitas tajam pada sudut 50° yang cocok dengan hukum Bragg untuk gelombang materi de Broglie (λ = 0.165 nm).',
+            },
+            takeaway: {
+              en: 'Definitively established the wave nature of electrons, laying the foundation for modern Transmission Electron Microscopy (TEM).',
+              id: 'Secara definitif membuktikan sifat gelombang elektron, membuka jalan bagi Mikroskop Elektron Transmisi (TEM) modern.',
+            },
           },
           keyTakeaways: {
             en: [
-              'Quantum entities exhibit complementary wave-like and particle-like characteristics depending on the experimental measurement setup.',
-              'Acquiring "which-way" information eliminates phase coherence and destroys interference fringes.',
-              'Matter waves obey the de Broglie relation: λ = h / p.',
+              'Interference fringes accumulate particle-by-particle over time, proving probability amplitudes interfere, not classical physical fluids.',
+              'Fringe spacing on the screen is given by Δy = λL / d.',
+              'Attempting to determine which slit the particle passed through collapses the spatial coherent superposition into a classical incoherent sum.',
             ],
             id: [
-              'Entitas kuantum menunjukkan sifat komplementer mirip gelombang dan mirip partikel tergantung pengaturan pengukuran eksperimen.',
-              'Mendapatkan informasi "jalur mana" yang dilalui akan menghilangkan koherensi fase dan melenyapkan pola interferensi.',
-              'Gelombang materi mematuhi hubungan de Broglie: λ = h / p.',
+              'Pola interferensi terbentuk partikel demi partikel seiring waktu, membuktikan bahwa amplitudo probabilitas yang berinterferensi.',
+              'Jarak antar garis terang adalah Δy = λL / d.',
+              'Upaya mendeteksi celah mana yang dilewati partikel meruntuhkan superposisi koheren menjadi penjumlahan inkoheren klasik.',
             ],
           },
         },
@@ -267,27 +401,27 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-q3-1',
           question: {
-            en: 'What happens to the screen pattern in a double-slit experiment when a detector is activated to determine which slit each electron passed through?',
-            id: 'Apa yang terjadi pada pola layar dalam eksperimen celah ganda ketika detektor diaktifkan untuk mengetahui celah mana yang dilewati setiap elektron?',
+            en: 'What happens to the fringe spacing Δy on the screen if the electron beam kinetic energy is increased (increasing velocity v)?',
+            id: 'Apa yang terjadi pada jarak antar-garis terang (Δy) di layar jika energi kinetik berkas elektron ditingkatkan (kecepatan v bertambah)?',
           },
           options: {
             en: [
-              'The interference fringes disappear and two classical bands appear',
-              'The interference fringes become twice as bright',
-              'The electrons are completely absorbed by the slits',
-              'A circular diffraction ring forms',
+              'Fringe spacing decreases (fringes compress closer together)',
+              'Fringe spacing increases (fringes spread further apart)',
+              'The interference pattern disappears completely',
+              'The fringes remain completely unchanged',
             ],
             id: [
-              'Pola garis interferensi menghilang dan muncul dua garis partikel klasik',
-              'Pola interferensi menjadi dua kali lebih terang',
-              'Elektron terserap seluruhnya oleh celah',
-              'Terbentuk cincin difraksi melingkar',
+              'Jarak antar-garis terang mengecil (pola garis saling merapat)',
+              'Jarak antar-garis terang membesar (pola garis semakin melebar)',
+              'Pola interferensi menghilang sama sekali',
+              'Pola garis tidak mengalami perubahan sama sekali',
             ],
           },
           correctAnswerIndex: 0,
           explanation: {
-            en: 'Detecting the path of the particle destroys the quantum phase superposition (decoherence), collapsing the wave distribution into two classical probability peaks.',
-            id: 'Mendeteksi lintasan partikel merusak superposisi fase kuantum (dekoherensi), meruntuhkan distribusi gelombang menjadi dua puncak probabilitas klasik.',
+            en: 'Higher electron velocity increases momentum p, which decreases the de Broglie wavelength λ = h/p. Since fringe spacing is Δy = λL/d, smaller λ compresses the fringes.',
+            id: 'Kecepatan elektron yang lebih tinggi meningkatkan momentum p, sehingga memperpendek panjang gelombang de Broglie λ = h/p. Karena jarak garis Δy = λL/d, panjang gelombang yang lebih pendek membuat garis-garis merapat.',
           },
         },
       ],
@@ -297,14 +431,14 @@ export const quantumMechanicsTopic: Topic = {
       topicId: 'quantum-mechanics',
       order: 4,
       title: {
-        en: 'Quantum Tunneling & The Bloch Sphere',
-        id: 'Penembusan Kuantum (Tunneling) & Bola Bloch',
+        en: 'Potential Barrier Tunneling & The Bloch Sphere',
+        id: 'Penembusan Rintangan Potensial & Bola Bloch',
       },
       shortDescription: {
-        en: 'Analyze how wavefunctions penetrate classically forbidden finite potential barriers and visualize qubit superposition.',
-        id: 'Analisis bagaimana fungsi gelombang menembus rintangan potensial yang secara klasik terlarang dan visualisasikan superposisi qubit.',
+        en: 'Quantum evanescent wave transmission through classically forbidden energy barriers, and 2-level qubit superposition geometry.',
+        id: 'Transmisi gelombang evanescent kuantum melalui rintangan energi yang terlarang secara klasik, dan geometri superposisi qubit 2-level.',
       },
-      durationMinutes: 22,
+      durationMinutes: 24,
       difficulty: 'Advanced',
       difficultyId: 'Lanjutan',
       interactiveType: 'quantum-tunneling',
@@ -312,28 +446,46 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-4-sec-1',
           title: {
-            en: '1. Quantum Tunneling Across Finite Potential Barriers',
-            id: '1. Penembusan Kuantum Melewati Rintangan Potensial',
+            en: '1. Finite Rectangular Potential Barrier & Evanescent Decay',
+            id: '1. Rintangan Potensial Persegi Berhingga & Peluruhan Evanescent',
           },
           content: {
-            en: 'In classical physics, a particle with kinetic energy E < V_0 cannot cross a potential barrier of height V_0; it rebounds with 100% certainty. In quantum mechanics, the wave function inside the barrier becomes an exponentially decaying evanescent wave:\n\nψ(x) ~ e^{-κ x}, where κ = sqrt(2m(V_0 - E)) / ħ\n\nIf the barrier width L is finite, the wave function does not reach zero at the exit face. It emerges with reduced amplitude, allowing the particle to appear on the other side with non-zero transmission probability T ≈ e^{-2κL}.\n\nQuantum tunneling is essential to modern technology and astrophysics: it enables nuclear fusion in the Sun, flash memory NAND gates, and Scanning Tunneling Microscopy (STM).',
-            id: 'Dalam fisika klasik, partikel dengan energi kinetik E < V_0 tidak dapat melompati rintangan potensial setinggi V_0; partikel akan memantul 100%. Namun dalam mekanika kuantum, fungsi gelombang di dalam rintangan menjadi gelombang evanesen yang meluruh secara eksponensial:\n\nψ(x) ~ e^{-κ x}, di mana κ = sqrt(2m(V_0 - E)) / ħ\n\nJika ketebalan rintangan L berhingga, fungsi gelombang tidak bernilai nol di ujung rintangan. Gelombang tersebut keluar dengan amplitudo yang lebih kecil, memberikan probabilitas transmisi bukan nol T ≈ e^{-2κL} bagi partikel untuk menembus rintangan.\n\nPenembusan kuantum sangat penting bagi teknologi modern dan astrofisika: memungkinkan fusi nuklir di Matahari, memori flash NAND, dan mikroskop penerowongan payaran (STM).',
+            en: 'In classical mechanics, a particle with total energy $E$ incident on a potential barrier of height $V_0 > E$ will be reflected with 100% certainty ($R = 1, T = 0$).\n\nIn quantum mechanics, solving the Schrödinger equation inside the barrier region ($0 \\le x \\le a$) where $V_0 > E$ yields an exponential evanescent decay solution:\n\n$$\\psi_{II}(x) = A e^{-\\kappa x} + B e^{\\kappa x}, \\quad \\kappa = \\frac{\\sqrt{2m(V_0 - E)}}{\\hbar}$$\n\nIf the barrier width $a$ is sufficiently narrow, the exponential tail does not decay to zero before reaching the exit boundary ($x = a$). A finite oscillatory wavefunction $\\psi_{III}(x) = C e^{ikx}$ emerges on the other side, giving a non-zero quantum transmission probability $T > 0$.',
+            id: 'Dalam mekanika klasik, partikel dengan energi total $E$ yang membentur rintangan potensial setinggi $V_0 > E$ akan dipantulkan kembali dengan kepastian 100% ($R = 1, T = 0$).\n\nDalam mekanika kuantum, penyelesaian persamaan Schrödinger di dalam rintangan ($0 \\le x \\le a$) di mana $V_0 > E$ menghasilkan solusi peluruhan eksponensial (evanescent):\n\n$$\\psi_{II}(x) = A e^{-\\kappa x} + B e^{\\kappa x}, \\quad \\kappa = \\frac{\\sqrt{2m(V_0 - E)}}{\\hbar}$$\n\nJika lebar rintangan $a$ cukup tipis, ekor gelombang eksponensial belum mencapai nol saat tiba di batas keluar ($x = a$). Fungsi gelombang osilatori $\\psi_{III}(x) = C e^{ikx}$ muncul di sisi seberang, menghasilkan probabilitas transmisi kuantum bernilai positif $T > 0$.',
           },
-          formula: 'T \\approx 16 \\frac{E}{V_0} \\left(1 - \\frac{E}{V_0}\\right) e^{-2 \\kappa L}',
+          formula: 'T \\approx 16 \\frac{E}{V_0} \\left(1 - \\frac{E}{V_0}\\right) e^{-2\\kappa a}, \\quad \\kappa = \\frac{\\sqrt{2m(V_0 - E)}}{\\hbar}',
           formulaExplanation: {
-            en: 'Transmission coefficient T through a rectangular potential barrier of width L and height V0 for a particle with energy E < V0.',
-            id: 'Koefisien transmisi T melalui rintangan potensial persegi panjang dengan lebar L dan tinggi V0 untuk partikel berenergi E < V0.',
+            en: 'Transmission coefficient T in the thick-barrier limit (κa >> 1), demonstrating exponential sensitivity to barrier width a and particle mass m.',
+            id: 'Koefisien transmisi T pada limit rintangan tebal (κa >> 1), yang menunjukkan sensitivitas eksponensial terhadap ketebalan rintangan a dan massa partikel m.',
+          },
+          caseStudy: {
+            title: {
+              en: 'Scanning Tunneling Microscopy (STM) & Flash Memory',
+              id: 'Scanning Tunneling Microscopy (STM) & Memori Flash',
+            },
+            context: {
+              en: 'Invented by Gerd Binnig and Heinrich Rohrer (Nobel Prize 1986), STM scans an atomically sharp metal tip ~1 nm above a conducting surface.',
+              id: 'Ditemukan oleh Gerd Binnig dan Heinrich Rohrer (Nobel Fisika 1986), STM mengarahkan ujung jarum logam runcing atomik ~1 nm di atas permukaan konduktor.',
+            },
+            analysis: {
+              en: 'Because tunnel current I ∝ e^(-2κd), changing the tip-to-sample distance by just 0.1 nm (1 Å) alters the tunneling current by a factor of 10×.',
+              id: 'Karena arus tunneling I ∝ e^(-2κd), perubahan jarak jarum-sampel sebesar 0.1 nm (1 Å) mengubah kuat arus sebesar 10 kali lipat.',
+            },
+            takeaway: {
+              en: 'Enables sub-angstrom topographic resolution capable of imaging and manipulating individual surface atoms.',
+              id: 'Memungkinkan resolusi topografi sub-angstrom untuk memetakan dan memanipulasi atom individual satu per satu.',
+            },
           },
           keyTakeaways: {
             en: [
-              'Tunneling probability decreases exponentially with barrier thickness L and with the square root of particle mass m.',
-              'Alpha decay in radioactive nuclei is governed by quantum tunneling through the Coulomb electrostatic barrier.',
-              'Qubits on the Bloch sphere represent superpositions of |0⟩ and |1⟩ with state vector |ψ⟩ = cos(θ/2)|0⟩ + e^{iφ}sin(θ/2)|1⟩.',
+              'Tunneling probability decays exponentially with barrier thickness a and the square root of particle mass m.',
+              'Nuclear alpha decay, solar core proton-proton fusion, and modern sub-3nm MOSFET gate leakage are all direct manifestations of quantum tunneling.',
+              'The Bloch Sphere maps any two-level quantum qubit state vector |ψ⟩ = cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩ onto the surface of a unit sphere in Hilbert space.',
             ],
             id: [
-              'Peluang tunneling berkurang secara eksponensial terhadap ketebalan rintangan L dan akar kuadrat massa partikel m.',
-              'Peluruhan alfa pada inti radioaktif dikendalikan oleh penembusan kuantum melalui rintangan Coulomb elektrostatik.',
-              'Qubit pada Bola Bloch mewakili superposisi dari |0⟩ dan |1⟩ dengan vektor keadaan |ψ⟩ = cos(θ/2)|0⟩ + e^{iφ}sin(θ/2)|1⟩.',
+              'Peluang penembusan kuantum meluruh secara eksponensial terhadap ketebalan rintangan a dan akar massa partikel m.',
+              'Peluruhan alfa nuklir, fusi proton-proton di inti matahari, dan kebocoran gerbang transistor sub-3nm adalah manifestasi langsung dari quantum tunneling.',
+              'Bola Bloch memetakan vektor keadaan qubit 2-level |ψ⟩ = cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩ pada permukaan bola satuan di ruang Hilbert.',
             ],
           },
         },
@@ -342,27 +494,27 @@ export const quantumMechanicsTopic: Topic = {
         {
           id: 'qm-q4-1',
           question: {
-            en: 'If the thickness (L) of a potential barrier is doubled, how does the quantum tunneling transmission probability scale approximately?',
-            id: 'Jika ketebalan (L) dari rintangan potensial digandakan, bagaimana perkiraan skala probabilitas transmisi tunneling kuantum?',
+            en: 'If the barrier width (a) in a quantum tunneling experiment is doubled, what happens to the transmission probability T (assuming thick barrier approximation)?',
+            id: 'Jika lebar rintangan (a) dalam eksperimen quantum tunneling digandakan menjadi 2×, apa yang terjadi pada peluang transmisi T?',
           },
           options: {
             en: [
-              'It decreases exponentially as e^(-2 * 2κL)',
-              'It is halved linearly (T / 2)',
+              'It decreases exponentially (approximately squared decay e^(-4κa))',
+              'It decreases by exactly 50%',
               'It remains unchanged because energy E is constant',
-              'It drops to exactly zero',
+              'It increases due to wave buildup',
             ],
             id: [
-              'Berkurang secara eksponensial menjadi e^(-2 * 2κL)',
-              'Berkurang separuh secara linier (T / 2)',
-              'Tetap sama karena energi E konstan',
-              'Turun menjadi tepat nol',
+              'Menurun secara eksponensial tajam (mendekati kuadrat peluruhan e^(-4κa))',
+              'Menurun tepat sebesar 50%',
+              'Tetap sama karena energi partikel E konstan',
+              'Meningkat akibat akumulasi gelombang',
             ],
           },
           correctAnswerIndex: 0,
           explanation: {
-            en: 'Because transmission probability is dominated by the exponential factor e^{-2κL}, doubling barrier width L squares the attenuation factor, causing a severe exponential drop.',
-            id: 'Karena probabilitas transmisi didominasi oleh faktor eksponensial e^{-2κL}, penggandaan lebar rintangan L mengkuadratkan faktor atenuasi, menyebabkan penurunan eksponensial yang sangat tajam.',
+            en: 'Because transmission depends exponentially on barrier width T ∝ e^(-2κa), doubling a to 2a squares the exponential attenuation e^(-4κa), causing an exponential drop in transmission.',
+            id: 'Karena transmisi bergantung secara eksponensial pada lebar rintangan T ∝ e^(-2κa), menggandakan a menjadi 2a mengkuadratkan faktor atenuasi e^(-4κa), menyebabkan penurunan transmisi yang sangat drastis.',
           },
         },
       ],

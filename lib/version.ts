@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.0.0',
+  version: '1.0.2',
   major: 1,
   minor: 0,
-  patch: 0,
+  patch: 2,
   releaseDate: '2026-09-02',
-  buildNumber: 'build.20260902.00',
+  buildNumber: 'build.20260902.02',
   environment: 'production',
   changelog: [
+    {
+      version: '1.0.2',
+      date: '2026-09-02',
+      type: 'patch',
+      title: {
+        en: 'Hover-Enabled Scientific Glossary & Global System Settings',
+        id: 'Glosarium Sains Interaktif & Panel Pengaturan Sistem',
+      },
+      highlights: {
+        en: [
+          'Interactive scientific hover tooltips across all theory modules with real-world definitions and TTS pronunciation.',
+          'Full-screen searchable Lexicon browser with discipline categorization and phonetic guides.',
+          'Comprehensive Settings page with font scaling, 3D simulation quality toggles, particle count, and data export/import.',
+          'Expanded and formatted theory principles with rigorous LaTeX equations and pedagogical step derivations.',
+        ],
+        id: [
+          'Tooltip glosarium sains interaktif di seluruh modul teori dengan definisi faktual dan audio pelafalan.',
+          'Panel Glosarium Sains lengkap yang dapat dicari dengan filter kategori dan panduan fonetik.',
+          'Halaman Pengaturan lengkap: ukuran teks, kualitas simulasi 3D, jumlah partikel, serta ekspor/impor data progres.',
+          'Pengayaan materi teori dan prinsip ilmiah dengan persamaan matematis terstruktur dan penurunan rumus langkah demi langkah.',
+        ],
+      },
+    },
     {
       version: '1.0.0',
       date: '2026-09-02',

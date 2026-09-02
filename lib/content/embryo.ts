@@ -11,7 +11,7 @@ export const fetusDevelopmentTopic: Topic = {
     id: 'Dari zigot sel tunggal hingga bayi cukup bulan: tahapan anatomi dalam 3D.',
   },
   description: {
-    en: 'Explore the miraculous biological timeline of human prenatal morphogenesis. Scrutinize early gastrulation and the three primary germ layers, watch the embryonic heart tube establish primitive circulation, inspect limb bud chondrogenesis, and interact with layered anatomical systems, placental nutrient transport, and ultrasound imaging in 3D.',
+    en: 'Explore the biological timeline of human prenatal morphogenesis. Scrutinize early gastrulation and the three primary germ layers, watch the embryonic heart tube establish primitive circulation, inspect limb bud chondrogenesis, and interact with layered anatomical systems, placental nutrient transport, and ultrasound imaging in 3D.',
     id: 'Jelajahi garis waktu biologis morfogenesis prenatal manusia. Pelajari proses gastrulasi awal dan tiga lapisan germinal primer, amati tabung jantung embrio yang mulai memompa sirkulasi primitif, teliti pembentukan kuncup anggota tubuh, serta operasikan sistem anatomi berlapis, pertukaran nutrisi plasenta, dan tampilan ultrasonografi (USG) dalam 3D.',
   },
   category: {
@@ -34,7 +34,7 @@ export const fetusDevelopmentTopic: Topic = {
         en: 'From cleavage of the single-cell zygote to the establishment of the three primary germ layers and neural tube.',
         id: 'Dari pembelahan sel zigot hingga pembentukan tiga lapisan germinal primer dan tabung saraf.',
       },
-      durationMinutes: 16,
+      durationMinutes: 18,
       difficulty: 'Beginner',
       difficultyId: 'Pemula',
       interactiveType: 'embryo-timeline',
@@ -46,47 +46,44 @@ export const fetusDevelopmentTopic: Topic = {
             id: '1. Fertilisasi dan Rangkaian Pembelahan (Hari 1–7)',
           },
           content: {
-            en: 'Upon fertilization in the ampulla of the uterine tube, the diploid zygote begins rapid mitotic cleavage without cellular growth, forming a solid 16-cell sphere known as a morula by Day 3–4.\n\nFluid accumulates inside, converting the morula into a hollow blastocyst comprising:\n1. Outer Trophoblast: Responsible for chorionic sac formation and uterine wall implantation (starting Day 6–7).\n2. Inner Cell Mass (Embryoblast): Pluripotent cells that will form the entire embryo proper.\n\nDuring implantation, the trophoblast differentiates into the inner cytotrophoblast and outer multinucleated syncytiotrophoblast, which secretes human chorionic gonadotropin (hCG) to sustain the corpus luteum.',
-            id: 'Setelah pembuahan di ampula tuba falopi, zigot diploid memulai pembelahan mitosis cepat tanpa penambahan ukuran sel, membentuk bola padat 16 sel yang disebut morula pada Hari ke 3–4.\n\nCairan menumpuk di bagian dalam, mengubah morula menjadi blastokista berongga yang terdiri dari:\n1. Trofoblas Luar: Bertanggung jawab untuk pembentukan kantung korion dan implantasi dinding rahim (mulai Hari ke 6–7).\n2. Massa Sel Dalam (Embrioblas): Sel-sel pluripoten yang akan berkembang menjadi seluruh tubuh embrio.\n\nSelama implantasi, trofoblas berdiferensiasi menjadi sitotrofoblas dalam dan sinsisiotrofoblas luar berinti banyak, yang menyekresikan hormon human chorionic gonadotropin (hCG) untuk mempertahankan korpus luteum.',
+            en: 'Following fertilization in the ampulla of the uterine tube, the diploid zygote undergoes rapid mitotic cleavage divisions without cytoplasmic growth within the confining zona pellucida. By Day 3–4, it forms a compact 16-cell sphere termed the morula.\n\nFluid accumulation under hydrostatic pressure expands the central blastocoele cavity, transforming the morula into a hollow blastocyst comprising:\n• Outer Trophoblast (Trophectoderm): Differentiates upon endometrial contact into inner mononuclear cytotrophoblasts and an invasive outer multinucleated syncytiotrophoblast that secretes human chorionic gonadotropin (hCG).\n• Inner Cell Mass (Embryoblast): Pluripotent stem cells situated at the embryonic pole that will differentiate into the entire embryo proper.\n\nBetween Days 6 and 8, the syncytiotrophoblast degrades the maternal extracellular matrix, securing interstitial implantation in the posterior-superior uterine wall.',
+            id: 'Setelah fertilisasi di ampula tuba falopi, zigot diploid menjalani pembelahan mitosis cepat (cleavage) tanpa pertambahan ukuran sel di dalam selubung zona pelusida. Pada Hari ke 3–4, terbentuk bola padat 16 sel yang disebut morula.\n\nAkumulasi cairan di bawah tekanan hidrostatik memperluas rongga blastosel sentral, mengubah morula menjadi blastokista berongga yang terdiri dari:\n• Trofoblas Luar: Berdiferensiasi saat menempel pada endometrium menjadi sitotrofoblas mononuklear dalam dan sinsisiotrofoblas multinuklear luar yang mensekresikan hormon human chorionic gonadotropin (hCG).\n• Massa Sel Dalam (Embrioblas): Sel-sel punca pluripoten di kutub embrionik yang akan membentuk seluruh jaringan tubuh embrio.\n\nAntara Hari ke-6 hingga ke-8, sinsisiotrofoblas mendegradasi matriks ekstraseluler rahim untuk menuntaskan proses implantasi interstisial pada dinding rahim posterior-superior.',
           },
-          formula: '\\text{Zygote} \\longrightarrow \\text{Morula (16 cells)} \\longrightarrow \\text{Blastocyst (Inner Cell Mass + Trophoblast)} \\longrightarrow \\text{Bilaminar Disc}',
+          formula: '\\text{Zygote (1 cell)} \\xrightarrow{\\text{Cleavage}} \\text{Morula (16 cells)} \\xrightarrow{\\text{Cavitation}} \\text{Blastocyst} \\xrightarrow{\\text{Gastrulation}} \\text{Trilaminar Disc}',
           formulaExplanation: {
-            en: 'The chronological morphological sequence during the first seven post-conception days.',
-            id: 'Urutan morfologis kronologis selama tujuh hari pertama pasca-konsepsi.',
+            en: 'Chronological morphological progression during the first three weeks of human embryogenesis.',
+            id: 'Kemajuan morfologis kronologis selama tiga minggu pertama embriogenesis manusia.',
+          },
+          comparisonTable: {
+            headers: {
+              en: ['Primary Germ Layer', 'Embryonic Origin', 'Epithelial & Organ Derivatives', 'Clinical Pathology Associated'],
+              id: ['Lapisan Germinal Primer', 'Asal Embrionik', 'Turunan Epitel & Organ', 'Patologi Klinis Terkait'],
+            },
+            rows: [
+              {
+                en: ['Ectoderm', 'Epiblast surface', 'CNS (brain, spinal cord), retina, epidermis, hair, neural crest', 'Anencephaly, Spina Bifida, Hirschsprung disease'],
+                id: ['Ektoderm', 'Permukaan Epiblas', 'Sistem Saraf Pusat (otak, sumsum tulang belakang), retina, epidermis kulit, neural crest', 'Anensefali, Spina Bifida, Penyakit Hirschsprung'],
+              },
+              {
+                en: ['Mesoderm', 'Ingressed Epiblast cells', 'Axial skeleton, skeletal/cardiac muscle, kidneys, gonads, blood vessels', 'Congenital heart defects, Renal agenesis, Scoliosis'],
+                id: ['Mesoderm', 'Sel Epiblas yang Mengalami Ingresi', 'Tulang aksial, otot rangka/jantung, ginjal, gonad, pembuluh darah', 'Defek septum jantung bawaan, Agenesis ginjal, Skoliosis'],
+              },
+              {
+                en: ['Endoderm', 'Displaced Hypoblast layer', 'GI tract lining, respiratory epithelium, liver parenchyma, pancreas, thyroid', 'Tracheoesophageal fistula, Biliary atresia'],
+                id: ['Endoderm', 'Lapisan Hipoblas yang Tergeser', 'Lapisan saluran cerna, epitel pernapasan, parenkim hati, pankreas, tiroid', 'Fistula trakeoesofagus, Atresia bilier'],
+              },
+            ],
           },
           keyTakeaways: {
             en: [
-              'The blastocyst implants into the posterior-superior uterine endometrium around day 6–8.',
-              'Gastrulation converts the bilaminar disc (epiblast + hypoblast) into the trilaminar embryonic disc (Ectoderm, Mesoderm, Endoderm).',
-              'The primitive node and streak establish the cranial-caudal and left-right anatomical axes.',
+              'Gastrulation converts the bilaminar embryonic disc (epiblast + hypoblast) into a trilaminar embryo with definitive Ectoderm, Mesoderm, and Endoderm.',
+              'The primitive streak and node establish the cranial-caudal, dorsal-ventral, and left-right anatomical axes.',
+              'Neural tube closure finishes by Day 28; periconceptional folic acid supplementation (400–800 µg/day) prevents up to 70% of neural tube defects.',
             ],
             id: [
-              'Blastokista berimplantasi pada endometrium rahim posterior-superior sekitar hari ke 6–8.',
-              'Gastrulasi mengubah lempeng bilaminar (epiblas + hipoblas) menjadi lempeng embrionik trilaminar (Ektoderm, Mesoderm, Endoderm).',
-              'Nodus primitif dan alur primitif (primitive streak) menetapkan sumbu anatomi kranial-kaudal dan kiri-kanan.',
-            ],
-          },
-        },
-        {
-          id: 'emb-1-sec-2',
-          title: {
-            en: '2. The Three Primary Germ Layers & Neural Tube Closure',
-            id: '2. Tiga Lapisan Germinal Primer & Penutupan Tabung Saraf',
-          },
-          content: {
-            en: 'Through epiblast cell ingression during Week 3 gastrulation, three distinct germ layers differentiate:\n\n• Ectoderm: Gives rise to the central and peripheral nervous system, retina, epidermis, hair, nails, and enamel.\n• Mesoderm: Forms the paraxial somites (axial skeleton, skeletal muscle), intermediate mesoderm (urogenital system), and lateral plate mesoderm (circulatory system, heart, connective tissue).\n• Endoderm: Forms the epithelial lining of the gastrointestinal tract, respiratory system, liver, gallbladder, and pancreas.\n\nBy Day 22, the neural plate folds along the notochord to form the neural tube. The cranial neuropore closes around Day 25, followed by the caudal neuropore at Day 28.',
-            id: 'Melalui ingresi sel epiblas selama gastrulasi Minggu ke-3, terbentuk tiga lapisan germinal utama:\n\n• Ektoderm: Menghasilkan sistem saraf pusat dan perifer, retina, epidermis kulit, rambut, kuku, dan enamel gigi.\n• Mesoderm: Membentuk somit paraksial (tulang aksial, otot rangka), mesoderm intermediat (sistem urogenital), dan mesoderm lempeng lateral (sistem sirkulasi, jantung, jaringan ikat).\n• Endoderm: Membentuk lapisan epitel saluran pencernaan, sistem pernapasan, hati, kantung empedu, dan pankreas.\n\nPada Hari ke-22, lempeng saraf melipat di sepanjang notokorda membentuk tabung saraf. Neuropor kranial menutup sekitar Hari ke-25, diikuti oleh neuropor kaudal pada Hari ke-28.',
-          },
-          keyTakeaways: {
-            en: [
-              'Folic acid intake prior to conception reduces neural tube defects (e.g., spina bifida, anencephaly) by up to 70%.',
-              'The notochord acts as the primary embryonic inducer for overlying ectoderm neuralization.',
-              'Neural crest cells migrate extensively to form craniofacial cartilage, melanocytes, and sympathetic ganglia.',
-            ],
-            id: [
-              'Asupan asam folat sebelum konsepsi mengurangi risiko defek tabung saraf (misal spina bifida, anensefali) hingga 70%.',
-              'Notokorda bertindak sebagai penginduksi embrio primer untuk neuralisasi ektoderm di atasnya.',
-              'Sel krista neural bermigrasi luas untuk membentuk kartilago kraniofasial, melanosit, dan ganglia simpatis.',
+              'Gastrulasi mengubah lempeng bilaminar (epiblas + hipoblas) menjadi lempeng trilaminar dengan Ektoderm, Mesoderm, dan Endoderm definitif.',
+              'Alur primitif (primitive streak) dan nodus primitif menetapkan sumbu anatomi kranial-kaudal, dorsal-ventral, dan kiri-kanan.',
+              'Penutupan tabung saraf tuntas pada Hari ke-28; suplementasi asam folat (400–800 µg/hari) mencegah hingga 70% defek tabung saraf.',
             ],
           },
         },
@@ -146,23 +143,41 @@ export const fetusDevelopmentTopic: Topic = {
         {
           id: 'emb-2-sec-1',
           title: {
-            en: '1. Pharyngeal Arches, Cardiac Looping & Limb Buds',
-            id: '1. Lengkung Faring, Looping Jantung & Tunas Anggota Tubuh',
+            en: '1. Limb Bud Morphogenesis & Molecular Signaling Axes',
+            id: '1. Morfogenesis Kuncup Anggota Tubuh & Sinyal Molekuler',
           },
           content: {
-            en: 'Between weeks 5 and 8, the embryo undergoes intense organogenesis. This is the period of highest susceptibility to teratogenic agents (drugs, radiation, viral infections):\n\n• Upper and Lower Limb Buds: Appear at day 26–28 as paddle-shaped mesodermal outgrowths with an apical ectodermal ridge (AER). By week 7, programmed apoptosis in interdigital tissue forms separate fingers and toes.\n• Cardiac Looping: The linear heart tube bends and loops to the right (dextral looping), placing the primitive atria cranial and dorsal to the developing ventricles.\n• Pharyngeal (Branchial) Arches: Five pairs of arches form the jaw (mandibular arch I), ossicles of the middle ear, hyoid apparatus, and thyroid/parathyroid glandular foundations.',
-            id: 'Antara minggu ke-5 dan ke-8, embrio mengalami organogenesis intensif. Ini adalah periode dengan kerentanan tertinggi terhadap agen teratogenik (obat keras, radiasi, infeksi virus):\n\n• Tunas Anggota Tubuh Atas dan Bawah: Muncul pada hari ke 26–28 sebagai tonjolan mesodermal berbentuk dayung dengan apical ectodermal ridge (AER). Pada minggu ke-7, apoptosis terprogram pada jaringan interdigital memisahkan jari-jari tangan dan kaki.\n• Looping Jantung: Tabung jantung linier melipat dan berputar ke kanan (dextral looping), menempatkan atrium primitif di posisi kranial dan dorsal terhadap ventrikel.\n• Lengkung Faring (Branchial Arches): Lima pasang lengkung membentuk rahang (lengkung mandibular I), tulang pendengaran telinga tengah, aparatus hioid, dan dasar kelenjar tiroid/paratiroid.',
+            en: 'During Weeks 5 to 8, all major external and internal organ systems are established. Limb development begins at Day 26–28 with the outpouching of lateral plate mesoderm covered by a specialized rim of pseudostratified ectoderm known as the Apical Ectodermal Ridge (AER).\n\nThree coordinated molecular signaling centers orchestrate limb patterning:\n• Proximo-Distal Axis: Regulated by FGF-4 and FGF-8 secreted by the AER, maintaining underlying mesenchymal cells in a highly proliferative, undifferentiated state (Progress Zone).\n• Antero-Posterior Axis: Governed by the Zone of Polarizing Activity (ZPA) located at the posterior limb border, which secretes Sonic Hedgehog (Shh) morphogen gradients to specify digit identity (thumb = digit 1 to little finger = digit 5).\n• Dorso-Ventral Axis: Patterned by Wnt-7a in the dorsal ectoderm inducing Lmx-1 expression.',
+            id: 'Selama Minggu ke-5 hingga ke-8, seluruh sistem organ internal dan eksternal utama terbentuk. Pembentukan tunas anggota gerak dimulai pada Hari ke 26–28 melalui tonjolan mesoderm lempeng lateral yang dilapisi tepi ektoderm khusus bernama Apical Ectodermal Ridge (AER).\n\nTiga pusat sinyal molekuler terkoordinasi mengatur pola spasial anggota gerak:\n• Sumbu Proksimal-Distal: Diatur oleh sekresi FGF-4 dan FGF-8 dari AER yang mempertahankan mesenkim di bawahnya dalam keadaan proliferasi aktif.\n• Sumbu Anterior-Posterior: Diatur oleh Zone of Polarizing Activity (ZPA) di tepi posterior yang melepaskan gradien konsentrasi Sonic Hedgehog (Shh) untuk menentukan identitas jari (ibu jari = digit 1 hingga kelingking = digit 5).\n• Sumbu Dorso-Ventral: Ditentukan oleh ekspresi Wnt-7a pada ektoderm dorsal yang menginduksi gen Lmx-1.',
+          },
+          caseStudy: {
+            title: {
+              en: 'Thalidomide Embryopathy & Critical Teratogenic Windows',
+              id: 'Embriopati Talidomid & Jendela Kritis Teratogenesis',
+            },
+            context: {
+              en: 'In the late 1950s, thalidomide was prescribed as a non-barbiturate sedative for morning sickness.',
+              id: 'Pada akhir 1950-an, talidomid diresepkan sebagai obat penenang untuk meredakan morning sickness pada ibu hamil.',
+            },
+            analysis: {
+              en: 'Maternal exposure strictly between gestational Days 20 and 36 targeted cereblon (CRBN), destabilizing SALL4 transcription factors and disrupting angiogenesis, causing severe phocomelia (seal-like shortened limbs) and amelia.',
+              id: 'Paparan maternal antara Hari ke 20 hingga 36 menargetkan protein sereblon (CRBN), mendegradasi faktor transkripsi SALL4 dan menghambat angiogenesis, menyebabkan fokomelia berat dan amelia.',
+            },
+            takeaway: {
+              en: 'Weeks 3 to 8 represent the maximum susceptibility window for major congenital structural malformations.',
+              id: 'Minggu ke-3 hingga ke-8 merupakan jendela kerentanan tertinggi terhadap malformasi struktural kongenital berat.',
+            },
           },
           keyTakeaways: {
             en: [
-              'By the end of Week 8, the embryonic stage concludes: all fundamental adult organ systems are established in rudimentary form.',
-              'Crown-Rump Length (CRL) reaches approximately 30 mm (1.2 inches) by the 8th week.',
-              'The heart rate accelerates from ~100 bpm at week 5 to a peak of ~170 bpm at week 9.',
+              'Digital rays undergo programmed apoptosis (interdigital cell death) mediated by BMP signaling to separate fingers and toes.',
+              'Cardiac looping converts the straight primitive heart tube into the four-chambered spatial geometry by Day 28–35.',
+              'By the end of Week 8 (Day 56), the embryonic period concludes, and the organism is classified as a fetus.',
             ],
             id: [
-              'Pada akhir Minggu ke-8, fase embrio berakhir: semua sistem organ dewasa fundamental telah terbentuk dalam wujud rudimenter.',
-              'Panjang Puncak Kepala-Bokong (CRL) mencapai sekitar 30 mm pada minggu ke-8.',
-              'Denyut jantung janin meningkat dari ~100 bpm di minggu ke-5 hingga puncaknya ~170 bpm pada minggu ke-9.',
+              'Sinar digital menjalani apoptosis terprogram (kematian sel interdigital) yang dimediasi sinyal BMP untuk memisahkan jari-jemari tangan dan kaki.',
+              'Perputaran jantung (cardiac looping) mengubah tabung jantung lurus menjadi geometri empat ruang pada Hari ke 28–35.',
+              'Pada akhir Minggu ke-8 (Hari 56), periode embriogenesis berakhir dan organisme secara klinis diklasifikasikan sebagai janin (fetus).',
             ],
           },
         },
@@ -171,27 +186,17 @@ export const fetusDevelopmentTopic: Topic = {
         {
           id: 'emb-q2-1',
           question: {
-            en: 'Why are weeks 3 through 8 called the most critical teratogenic window during human prenatal development?',
-            id: 'Mengapa minggu ke-3 hingga ke-8 disebut sebagai jendela teratogenik paling kritis selama perkembangan prenatal manusia?',
+            en: 'Which morphogen signaling gradient secreted by the Zone of Polarizing Activity (ZPA) establishes the anterior-posterior digit identity (e.g., thumb vs. little finger)?',
+            id: 'Gradien konsentrasi morfogen apakah yang disekresikan oleh Zone of Polarizing Activity (ZPA) untuk menentukan identitas jari anterior-posterior?',
           },
           options: {
-            en: [
-              'Because this is the window of primary organogenesis, where major anatomical organs form and are most vulnerable to disruption',
-              'Because the fetus begins to breathe atmospheric air',
-              'Because the placenta stops functioning',
-              'Because maternal blood mixes directly with fetal blood',
-            ],
-            id: [
-              'Karena ini adalah periode organogenesis primer, di mana organ anatomi utama terbentuk dan sangat rentan terhadap kerusakan',
-              'Karena janin mulai menghirup udara atmosfer',
-              'Karena plasenta berhenti berfungsi',
-              'Karena darah ibu bercampur langsung dengan darah janin',
-            ],
+            en: ['Sonic Hedgehog (Shh)', 'Insulin-like Growth Factor (IGF-1)', 'Laminin', 'Myoglobin'],
+            id: ['Sonic Hedgehog (Shh)', 'Insulin-like Growth Factor (IGF-1)', 'Laminin', 'Mioglobin'],
           },
           correctAnswerIndex: 0,
           explanation: {
-            en: 'Organogenesis occurs during weeks 3–8. Exposure to teratogens (e.g., thalidomide, rubella) during this window causes severe congenital structural malformations.',
-            id: 'Organogenesis terjadi pada minggu 3–8. Paparan teratogen (misal talidomid, rubela) selama rentang ini menyebabkan malformasi struktural kongenital yang berat.',
+            en: 'Sonic hedgehog (Shh) is the principal morphogen produced by the ZPA; highest Shh concentrations specify posterior digits (little finger), while absence specifies anterior digits (thumb).',
+            id: 'Sonic hedgehog (Shh) adalah morfogen utama dari ZPA; konsentrasi Shh tertinggi menghasilkan digit posterior (kelingking), sedangkan ketiadaan Shh membentuk digit anterior (ibu jari).',
           },
         },
       ],
@@ -201,43 +206,43 @@ export const fetusDevelopmentTopic: Topic = {
       topicId: 'fetus-development',
       order: 3,
       title: {
-        en: 'Weeks 9–24: Fetal Growth, Skeletal Ossification & Ultrasound',
-        id: 'Minggu 9–24: Pertumbuhan Fetal, Osifikasi Tulang & USG',
+        en: 'Weeks 9–24: Fetal Growth, Hematopoiesis & Organ Maturation',
+        id: 'Minggu 9–24: Pertumbuhan Janin, Hematopoiesis & Maturasi Organ',
       },
       shortDescription: {
-        en: 'Rapid somatic growth, endochondral bone ossification, fetal circulation shunts, and clinical ultrasound biometry.',
-        id: 'Pertumbuhan somatik pesat, osifikasi endokondral tulang, pirau sirkulasi janin, dan biometri USG klinis.',
+        en: 'Linear skeletal ossification, fetal hemoglobin oxygen dynamics, and progressive pulmonary alveolar differentiation.',
+        id: 'Osifikasi rangka linier, dinamika afinitas oksigen hemoglobin janin, dan diferensiasi alveolar paru progresif.',
       },
-      durationMinutes: 22,
+      durationMinutes: 20,
       difficulty: 'Intermediate',
       difficultyId: 'Menengah',
-      interactiveType: 'ultrasound-scan',
+      interactiveType: 'embryo-timeline',
       sections: [
         {
           id: 'emb-3-sec-1',
           title: {
-            en: '1. Fetal Circulation Shunts (Ductus Venosus, Foramen Ovale, Ductus Arteriosus)',
-            id: '1. Pirau Sirkulasi Janin (Duktus Venosus, Foramen Ovale, Duktus Arteriosus)',
+            en: '1. Crown-Rump Growth Kinetics & Fetal Hemoglobin (HbF) Dynamics',
+            id: '1. Kinetika Pertumbuhan Crown-Rump & Dinamika Hemoglobin Janin (HbF)',
           },
           content: {
-            en: 'Because the fetal lungs are non-functional and fluid-filled, fetal circulation depends on three unique vascular shunts to route oxygenated blood from the placenta directly to the brain and heart:\n\n1. Ductus Venosus: Shunts ~50% of oxygen-rich blood from the umbilical vein directly into the inferior vena cava (IVC), bypassing the liver capillary bed.\n2. Foramen Ovale: An interatrial valve flap that directs highly oxygenated IVC blood from the right atrium straight into the left atrium, ensuring the carotid arteries and coronary arteries receive the highest oxygen tension.\n3. Ductus Arteriosus: Connects the pulmonary trunk to the descending aorta, diverting deoxygenated right ventricular blood away from the high-resistance pulmonary vascular bed into the lower body and umbilical arteries.\n\nAt birth, first breath lowers pulmonary vascular resistance, reversing atrial pressure and closing the foramen ovale within minutes.',
-            id: 'Karena paru-paru janin belum berfungsi dan terisi cairan, sirkulasi janin mengandalkan tiga pirau (shunt) vaskular unik untuk mengalirkan darah teroksigenasi dari plasenta langsung ke otak dan miokardium:\n\n1. Duktus Venosus: Mengalirkan ~50% darah kaya oksigen dari vena umbilikalis langsung ke vena kava inferior (IVC), melewati jaringan kapiler hati.\n2. Foramen Ovale: Katup interatrial yang mengalirkan darah beroksigen tinggi dari atrium kanan langsung ke atrium kiri, memastikan arteri karotis dan koroner menerima kadar oksigen tertinggi.\n3. Duktus Arteriosus: Menghubungkan batang pulmonal ke aorta desendens, mengalihkan darah ventrikel kanan dari resistensi paru yang tinggi ke tubuh bagian bawah dan arteri umbilikalis.\n\nSaat lahir, tarikan napas pertama menurunkan resistensi vaskular paru, membalikkan tekanan atrium dan menutup foramen ovale dalam hitungan menit.',
+            en: 'The fetal period (Week 9 to birth) is characterized by rapid somatic growth, tissue differentiation, and physiological maturation. Crown-Rump Length (CRL) scales predictably with gestational age.\n\nTo extract oxygen efficiently across the placental villous membrane where maternal arterial pO₂ is relatively low (~30–35 mmHg), the fetus synthesizes Fetal Hemoglobin (HbF, $\\alpha_2 \\gamma_2$):\n• The $\\gamma$-globin chains substitute serine for histidine at position 143, reducing affinity for 2,3-bisphosphoglycerate (2,3-BPG).\n• This shifts the oxygen-hemoglobin dissociation curve significantly to the left ($P_{50} \\approx 19\\text{ mmHg}$ for HbF vs $27\\text{ mmHg}$ for adult HbA), ensuring high oxygen saturation in the fetal bloodstream.',
+            id: 'Periode janin (Minggu ke-9 hingga kelahiran) ditandai dengan pertumbuhan somatik yang sangat pesat, diferensiasi jaringan, dan pematangan fungsi fisiologis. Panjang Crown-Rump Length (CRL) berkorelasi linier dengan usia gestasi.\n\nUntuk menyerap oksigen secara efektif melintasi membran vili plasenta di mana tekanan parsial oksigen darah maternal relatif rendah (~30–35 mmHg), janin memproduksi Hemoglobin Fetal (HbF, $\\alpha_2 \\gamma_2$):\n• Rantai $\\gamma$-globin mengganti asam amino histidin dengan serin pada posisi 143, sehingga menurunkan afinitas pengikatan terhadap 2,3-bisfosfogliserat (2,3-BPG).\n• Hal ini menggeser kurva disosiasi oksihemoglobin secara signifikan ke arah kiri ($P_{50} \\approx 19\\text{ mmHg}$ untuk HbF vs $27\\text{ mmHg}$ untuk HbA dewasa), memastikan saturasi oksigen darah janin tetap tinggi.',
           },
-          formula: '\\text{Umbilical Vein (80\\% } O_2) \\longrightarrow \\text{Ductus Venosus} \\longrightarrow \\text{IVC} \\longrightarrow \\text{Foramen Ovale} \\longrightarrow \\text{Left Ventricle} \\longrightarrow \\text{Brain & Coronaries}',
+          formula: 'P_{50}(\\text{HbF}) \\approx 19\\text{ mmHg} < P_{50}(\\text{HbA}) \\approx 27\\text{ mmHg}',
           formulaExplanation: {
-            en: 'Preferential high-oxygen blood route in the fetal circulatory hierarchy.',
-            id: 'Jalur preferensial darah beroksigen tinggi dalam hierarki sirkulasi janin.',
+            en: 'The left-shifted oxygen binding curve of fetal hemoglobin enables passive oxygen extraction from maternal oxyhemoglobin across the intervillous space (Double Bohr Effect).',
+            id: 'Kurva disosiasi bergeser ke kiri pada HbF memungkinkan penarikan oksigen dari oksihemoglobin maternal melintasi ruang intervili plasenta (Efek Bohr Ganda).',
           },
           keyTakeaways: {
             en: [
-              'Ultrasound biometry measures Crown-Rump Length (CRL), Biparietal Diameter (BPD), Head Circumference (HC), and Femur Length (FL) for gestational dating.',
-              'Fetal movements (quickening) are typically felt by the mother between weeks 16 and 20.',
-              'By week 20, lanugo hair and vernix caseosa coat the skin to protect against amniotic fluid maceration.',
+              'Between Weeks 20 and 24, Type II pneumocytes initiate dipalmitoylphosphatidylcholine (surfactant) synthesis, lowering alveolar surface tension.',
+              'Fetal movements (quickening) are typically perceived by the mother between Weeks 16 and 20.',
+              'Primary ossification centers expand within the long bones, visible on clinical radiographs and ultrasound.',
             ],
             id: [
-              'Biometri USG mengukur CRL, Diameter Biparietal (BPD), Lingkar Kepala (HC), dan Panjang Femur (FL) untuk penentuan usia kehamilan akurat.',
-              'Gerakan janin (quickening) umumnya mulai dirasakan ibu antara minggu ke-16 hingga ke-20.',
-              'Pada minggu ke-20, rambut halus lanugo dan verniks kaseosa melapisi kulit untuk melindungi dari maserasi cairan amnion.',
+              'Antara Minggu ke-20 dan 24, pneumosit tipe II mulai memproduksi surfaktan (dipalmitoilfosfatidilkolin) untuk menurunkan tegangan permukaan alveolus.',
+              'Gerakan janin (quickening) mulai dirasakan oleh ibu antara Minggu ke-16 dan ke-20.',
+              'Pusat osifikasi primer meluas pada tulang panjang, terlihat jelas pada pencitraan radiografi dan USG.',
             ],
           },
         },
@@ -246,17 +251,27 @@ export const fetusDevelopmentTopic: Topic = {
         {
           id: 'emb-q3-1',
           question: {
-            en: 'Which fetal vascular structure directs oxygen-rich blood from the right atrium directly into the left atrium, bypassing the non-aerated fetal lungs?',
-            id: 'Struktur vaskular janin manakah yang mengalirkan darah kaya oksigen dari atrium kanan langsung ke atrium kiri, melewati paru-paru yang belum bernapas?',
+            en: 'Why does Fetal Hemoglobin (HbF, α₂γ₂) have a higher oxygen binding affinity than adult hemoglobin (HbA, α₂β₂)?',
+            id: 'Mengapa Hemoglobin Janin (HbF, α₂γ₂) memiliki afinitas pengikatan oksigen yang lebih tinggi daripada hemoglobin dewasa (HbA, α₂β₂)?',
           },
           options: {
-            en: ['Foramen Ovale', 'Ductus Arteriosus', 'Ductus Venosus', 'Ligamentum Teres'],
-            id: ['Foramen Ovale', 'Duktus Arteriosus', 'Duktus Venosus', 'Ligamentum Teres'],
+            en: [
+              'Because the γ-chains have lower binding affinity for 2,3-bisphosphoglycerate (2,3-BPG)',
+              'Because fetal blood operates at a much higher temperature',
+              'Because fetal red blood cells lack cell membranes',
+              'Because fetal hemoglobin contains four iron atoms instead of two',
+            ],
+            id: [
+              'Karena rantai γ memiliki afinitas pengikatan yang lebih rendah terhadap 2,3-bisfosfogliserat (2,3-BPG)',
+              'Karena darah janin bekerja pada suhu yang jauh lebih tinggi',
+              'Karena sel darah merah janin tidak memiliki membran sel',
+              'Karena hemoglobin janin mengandung empat atom besi dan bukan dua',
+            ],
           },
           correctAnswerIndex: 0,
           explanation: {
-            en: 'The foramen ovale is an aperture between the right and left atrium allowing physiological right-to-left shunting in utero.',
-            id: 'Foramen ovale adalah celah katup antara atrium kanan dan kiri yang memungkinkan pirau fisiologis dari kanan ke kiri in utero.',
+            en: 'The γ-globin subunit has a neutral serine residue instead of positively charged histidine-143, reducing 2,3-BPG binding and shifting the curve left to bind O₂ avidly.',
+            id: 'Subunit γ-globin memiliki residu serin netral yang menggantikan histidin-143 bermuatan positif, sehingga mengurangi pengikatan 2,3-BPG dan menggeser kurva ke kiri untuk mengikat O₂ dengan kuat.',
           },
         },
       ],
@@ -266,43 +281,61 @@ export const fetusDevelopmentTopic: Topic = {
       topicId: 'fetus-development',
       order: 4,
       title: {
-        en: 'Weeks 25–40: Viability, Alveolar Surfactant & Birth Readiness',
-        id: 'Minggu 25–40: Viabilitas, Surfaktan Paru & Kesiapan Kelahiran',
+        en: 'Weeks 25–40: Placental Transport & Ultrasound Hemodynamics',
+        id: 'Minggu 25–40: Transpor Plasenta & Hemodinamik Ultrasonografi',
       },
       shortDescription: {
-        en: 'Third trimester neuromuscular maturation, pulmonary surfactant synthesis by type II pneumocytes, and preparation for extrauterine life.',
-        id: 'Pematangan neuromuskular trimester ketiga, sintesis surfaktan paru oleh pneumosit tipe II, dan adaptasi ekstrauterin.',
+        en: 'Three fetal circulatory shunts, placental counter-current hemodynamics, and Doppler ultrasound velocity shifts.',
+        id: 'Tiga pirau sirkulasi janin, hemodinamika arus balik plasenta, dan pergeseran frekuensi Doppler USG.',
       },
-      durationMinutes: 18,
+      durationMinutes: 22,
       difficulty: 'Advanced',
       difficultyId: 'Lanjutan',
-      interactiveType: 'embryo-timeline',
+      interactiveType: 'ultrasound-scan',
       sections: [
         {
           id: 'emb-4-sec-1',
           title: {
-            en: '1. Pulmonary Surfactant & The Threshold of Viability',
-            id: '1. Surfaktan Paru & Batas Viabilitas Janin',
+            en: '1. The Three Specialized Fetal Circulatory Shunts',
+            id: '1. Tiga Pirau Khusus Sirkulasi Janin',
           },
           content: {
-            en: 'Fetal viability (the ability to survive extrauterine life with specialized neonatal intensive care) begins around Week 24, where primitive terminal sacs (saccular stage) and vascularized capillary networks form.\n\nCrucially, Type II Alveolar Pneumocytes begin producing pulmonary surfactant (a lipoprotein complex predominantly dipalmitoylphosphatidylcholine [DPPC]) around week 24–28, reaching functional maturity around Week 34–35. Surfactant lowers surface tension at the air-liquid alveolar interface according to Laplace\'s law:\n\nΔP = 2γ / r\n\nWithout adequate surfactant, small alveoli (small radius r) develop immense collapsing pressure, leading to neonatal respiratory distress syndrome (NRDS). In the final weeks, brown adipose tissue (BAT) accumulates for non-shivering thermogenesis, and maternal IgG antibodies cross the syncytiotrophoblast to endow the newborn with passive immunity.',
-            id: 'Viabilitas janin (kemampuan bertahan hidup di luar rahim dengan perawatan intensif neonatal) dimulai sekitar Minggu ke-24, ketika kantung terminal primitif (stadium sakular) dan jaringan kapiler terbentuk.\n\nYang paling penting, Sel Pneumosit Tipe II mulai memproduksi surfaktan paru (kompleks lipoprotein dipalmitoilfosfatidilkolin [DPPC]) sekitar minggu 24–28, mencapai kematangan fungsional penuh pada Minggu ke 34–35. Surfaktan menurunkan tegangan permukaan pada antarmuka udara-cairan alveolus sesuai hukum Laplace:\n\nΔP = 2γ / r\n\nTanpa surfaktan yang cukup, alveolus kecil (jari-jari r kecil) mengalami tekanan kolaps yang sangat tinggi, menyebabkan sindrom distres pernapasan neonatus (NRDS). Pada minggu-minggu terakhir, jaringan lemak cokelat (brown adipose tissue) menumpuk untuk termogenesis, dan antibodi IgG ibu menembus sinsisiotrofoblas untuk memberikan imunitas pasif.',
+            en: 'Because the fetal lungs are fluid-filled and non-functional for gas exchange, and hepatic metabolism is partially bypassed, the fetal cardiovascular system operates with three specialized anatomical shunts:\n\n1. Ductus Venosus: Shunts ~50% of oxygen-rich blood from the umbilical vein directly into the inferior vena cava (IVC), bypassing hepatic sinusoidal microcirculation.\n2. Foramen Ovale: An interatrial valve that directs high-velocity oxygenated blood from the IVC straight into the left atrium, ensuring preferential delivery of oxygen to the ascending aorta, coronary arteries, and developing brain.\n3. Ductus Arteriosus: A muscular vascular conduit connecting the pulmonary artery directly to the descending aorta, diverting ~90% of right ventricular output away from the high-resistance pulmonary capillary bed.\n\nAt birth, lung expansion drops pulmonary vascular resistance, umbilical cord clamping eliminates placental low-resistance flow, and left atrial pressure rises, slamming the valve of the foramen ovale shut and initiating ductus arteriosus constriction.',
+            id: 'Karena paru-paru janin terisi cairan dan belum berfungsi untuk pertukaran gas, serta metabolisme hati dilewati sebagian, sirkulasi janin mengandalkan tiga pirau pembuluh darah khusus:\n\n1. Duktus Venosus: Mengalirkan ~50% darah kaya oksigen dari vena umbilikalis langsung ke vena kava inferior (IVC), melewati jaringan sinusoid hati.\n2. Foramen Ovale: Katup sekat antar-atrium yang mengarahkan darah kaya oksigen dari IVC langsung ke atrium kiri, memprioritaskan suplai oksigen ke aorta asendens, arteri koroner, dan otak janin.\n3. Duktus Arteriosus: Saluran vaskular berotot yang menghubungkan arteri pulmonalis langsung ke aorta desendens, mengalihkan ~90% curah ventrikel kanan dari pembuluh paru beresistensi tinggi.\n\nSaat lahir, ekspansi udara paru-paru menurunkan resistensi vaskular pulmonal secara drastis, penjepitan tali pusat menghilangkan sirkulasi plasenta, dan tekanan atrium kiri meningkat tajam, menutup foramen ovale serta memicu konstriksi duktus arteriosus.',
           },
-          formula: '\\Delta P = \\frac{2 \\gamma}{r} \\quad \\text{(Laplace\'s Law for Spherical Alveoli)}',
+          formula: 'v = \\frac{\\Delta f \\cdot c}{2 f_0 \\cos\\theta}, \\quad \\text{Pulsatility Index (PI)} = \\frac{v_{\\max} - v_{\\min}}{v_{\\text{mean}}}',
           formulaExplanation: {
-            en: 'Collapsing pressure ΔP is inversely proportional to alveolar radius r and directly proportional to surface tension γ. Surfactant dramatically decreases γ.',
-            id: 'Tekanan kolaps alveolus ΔP berbanding terbalik dengan jari-jari r dan berbanding lurus dengan tegangan permukaan γ. Surfaktan secara drastis menurunkan γ.',
+            en: 'Doppler ultrasound shift equation for calculating blood flow velocity (v) in the umbilical and middle cerebral arteries, where Δf is Doppler frequency shift, c is speed of sound in tissue (1540 m/s), f₀ is transducer frequency, and θ is insonation angle.',
+            id: 'Persamaan pergeseran Doppler USG untuk menghitung kecepatan aliran darah (v) pada arteri umbilikalis dan arteri serebri media, di mana Δf adalah pergeseran frekuensi, c adalah kecepatan suara pada jaringan (1540 m/s), f₀ adalah frekuensi transduser, dan θ adalah sudut insonasi.',
+          },
+          caseStudy: {
+            title: {
+              en: 'Brain-Sparing Effect in Fetal Growth Restriction (FGR)',
+              id: 'Efek Brain-Sparing pada Fetal Growth Restriction (FGR)',
+            },
+            context: {
+              en: 'In severe placental insufficiency, Doppler assessment reveals elevated resistance in the umbilical artery (absent or reversed end-diastolic velocity).',
+              id: 'Pada insufisiensi plasenta berat, pemeriksaan Doppler menunjukkan peningkatan resistensi pada arteri umbilikalis (aliran end-diastolik hilang atau berbalik arah).',
+            },
+            analysis: {
+              en: 'The fetus autoregulates cerebral circulation, causing marked vasodilation in the Middle Cerebral Artery (MCA) with lowered Pulsatility Index to maintain brain oxygenation at the expense of somatic organs.',
+              id: 'Janin melakukan autoregulasi sirkulasi serebral, memicu vasodilatasi arteri serebri media (MCA) dengan Pulsatility Index yang sangat rendah untuk mempertahankan suplai oksigen ke otak.',
+            },
+            takeaway: {
+              en: 'MCA Doppler and ductus venosus waveforms are critical parameters for determining emergency preterm delivery timing.',
+              id: 'Bentuk gelombang Doppler MCA dan duktus venosus adalah parameter klinis krusial dalam menentukan waktu terminasi kehamilan darurat.',
+            },
           },
           keyTakeaways: {
             en: [
-              'Lecithin/Sphingomyelin (L/S) ratio in amniotic fluid > 2.0 indicates mature fetal lung development.',
-              'Average full-term parameters: gestational age 38–40 weeks, weight 3.2–3.6 kg, crown-heel length 50 cm.',
-              'During the 9th month, the fetus shifts to the cephalic (vertex) presentation with head engaged in the maternal pelvic inlet.',
+              'Ductus venosus closes after birth to form the ligamentum venosum; foramen ovale becomes the fossa ovalis; ductus arteriosus becomes the ligamentum arteriosum.',
+              'Biometric ultrasound parameters include Biparietal Diameter (BPD), Head Circumference (HC), Abdominal Circumference (AC), and Femur Length (FL).',
+              'Surfactant replacement therapy and antenatal corticosteroid administration accelerate pulmonary readiness in premature deliveries.',
             ],
             id: [
-              'Rasio Lesitin/Sfingomielin (L/S) dalam cairan amnion > 2.0 mengindikasikan kematangan paru janin yang adekuat.',
-              'Parameter rata-rata cukup bulan: usia kehamilan 38–40 minggu, berat badan 3.2–3.6 kg, panjang kepala-tumit 50 cm.',
-              'Pada bulan ke-9, janin biasanya berada pada posisi presentasi sefalik (kepala di bawah) yang masuk ke pintu atas panggul ibu.',
+              'Duktus venosus menutup pasca kelahiran membentuk ligamentum venosum; foramen ovale menjadi fossa ovalis; duktus arteriosus menjadi ligamentum arteriosum.',
+              'Parameter biometri USG meliputi Biparietal Diameter (BPD), Lingkar Kepala (HC), Lingkar Abdomen (AC), dan Panjang Femur (FL).',
+              'Terapi penggantian surfaktan dan pemberian kortikosteroid antenatal mempercepat kesiapan paru pada kelahiran prematur.',
             ],
           },
         },
@@ -311,27 +344,17 @@ export const fetusDevelopmentTopic: Topic = {
         {
           id: 'emb-q4-1',
           question: {
-            en: 'What is the primary physiological function of pulmonary surfactant produced by fetal Type II pneumocytes?',
-            id: 'Apa fungsi fisiologis utama dari surfaktan paru yang diproduksi oleh sel pneumosit tipe II janin?',
+            en: 'Which vascular shunt carries oxygenated blood directly from the umbilical vein into the inferior vena cava, partially bypassing the fetal liver?',
+            id: 'Pirau vaskular manakah yang membawa darah beroksigen langsung dari vena umbilikalis ke vena kava inferior, melewati jaringan hati janin?',
           },
           options: {
-            en: [
-              'It lowers alveolar surface tension, preventing alveolar collapse during expiration',
-              'It thickens the alveolar wall to prevent fluid leaking',
-              'It provides glucose directly to the red blood cells',
-              'It accelerates cardiac contraction rate',
-            ],
-            id: [
-              'Menurunkan tegangan permukaan alveolus, mencegah kolapsnya alveolus saat ekspirasi',
-              'Menebalkan dinding alveolus untuk mencegah kebocoran cairan',
-              'Memberikan glukosa langsung ke sel darah merah',
-              'Mempercepat denyut kontraksi jantung',
-            ],
+            en: ['Ductus Venosus', 'Ductus Arteriosus', 'Foramen Ovale', 'Hypogastric Artery'],
+            id: ['Duktus Venosus', 'Duktus Arteriosus', 'Foramen Ovale', 'Arteri Hipogastrika'],
           },
           correctAnswerIndex: 0,
           explanation: {
-            en: 'Pulmonary surfactant disrupts water molecule hydrogen bonding at the alveolar surface, dramatically reducing surface tension and work of breathing.',
-            id: 'Surfaktan paru memutus ikatan hidrogen molekul air pada permukaan alveolus, secara drastis mengurangi tegangan permukaan dan kerja otot pernapasan.',
+            en: 'The ductus venosus connects the intra-abdominal umbilical vein directly to the inferior vena cava, preserving high oxygen tension for cardiac and cerebral perfusion.',
+            id: 'Duktus venosus menghubungkan vena umbilikalis langsung ke vena kava inferior, mempertahankan kadar oksigen tinggi untuk perfusi jantung dan otak.',
           },
         },
       ],

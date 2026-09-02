@@ -1,10 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useMemo, ReactNode } from 'react';
-import { Language, Theme, TopicId, UserProgress } from '@/types/learning';
+import { Language, Theme, TopicId, UserProgress, AppSettings } from '@/types/learning';
 import { allTopics, allBadges, getModuleById } from '@/lib/content';
 
-export type AppView = 'landing' | 'learn' | 'module' | 'progress';
+export type AppView = 'landing' | 'learn' | 'module' | 'progress' | 'settings';
 
 interface LearningContextType {
   language: Language;
@@ -18,6 +18,10 @@ interface LearningContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   userProgress: UserProgress;
+  settings: AppSettings;
+  updateSettings: (partial: Partial<AppSettings>) => void;
+  resetSettings: () => void;
+  importProgress: (jsonData: string) => boolean;
   navigateTo: (view: AppView, topicId?: TopicId | null, moduleId?: string) => void;
   markModuleComplete: (moduleId: string) => void;
   saveQuizScore: (moduleId: string, score: number) => void;
@@ -33,6 +37,21 @@ interface LearningContextType {
 const STORAGE_KEY_PROGRESS = 'aetheria_user_progress_v1';
 const STORAGE_KEY_THEME = 'aetheria_theme_v1';
 const STORAGE_KEY_LANG = 'aetheria_lang_v1';
+const STORAGE_KEY_SETTINGS = 'aetheria_settings_v1';
+
+export const defaultSettings: AppSettings = {
+  readerFontSize: 'base',
+  mathDisplayFormat: 'standard',
+  glossaryHighlighting: 'enabled',
+  glossaryTrigger: 'hover',
+  speechAudioEnabled: true,
+  graphicsQuality: 'high',
+  particleDensity: 100,
+  autoRotate3D: true,
+  showFpsOverlay: false,
+  soundEffects: true,
+  autoAdvanceQuiz: false,
+};
 
 const defaultProgress: UserProgress = {
   completedModules: [],
@@ -61,6 +80,19 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
       if (saved === 'light' || saved === 'dark') return saved;
     }
     return 'light'; // light mode default per prompt
+  });
+  const [settings, setSettingsState] = useState<AppSettings>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY_SETTINGS);
+      if (saved) {
+        try {
+          return { ...defaultSettings, ...JSON.parse(saved) };
+        } catch {
+          return defaultSettings;
+        }
+      }
+    }
+    return defaultSettings;
   });
   const [view, setView] = useState<AppView>('landing');
   const [selectedTopicId, setSelectedTopicId] = useState<TopicId | null>(null);
@@ -284,6 +316,46 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
     });
   };
 
+  const updateSettings = (partial: Partial<AppSettings>) => {
+    setSettingsState((prev) => {
+      const updated = { ...prev, ...partial };
+      try {
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  const resetSettings = () => {
+    setSettingsState(defaultSettings);
+    try {
+      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(defaultSettings));
+    } catch (e) {}
+  };
+
+  const importProgress = (jsonData: string): boolean => {
+    try {
+      const parsed = JSON.parse(jsonData);
+      if (parsed && typeof parsed === 'object' && Array.isArray(parsed.completedModules)) {
+        const validated: UserProgress = {
+          completedModules: parsed.completedModules || [],
+          quizScores: parsed.quizScores || {},
+          quizAttempts: parsed.quizAttempts || {},
+          notes: parsed.notes || {},
+          bookmarks: parsed.bookmarks || [],
+          userName: parsed.userName || 'Student of Science',
+          totalTimeMinutes: parsed.totalTimeMinutes || 45,
+          badges: parsed.badges || [],
+        };
+        saveProgressToStorage(validated);
+        return true;
+      }
+    } catch (e) {
+      console.error('Failed to import progress JSON:', e);
+    }
+    return false;
+  };
+
   const resetProgress = () => {
     setUserProgress(defaultProgress);
     try {
@@ -324,6 +396,10 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
         searchQuery,
         setSearchQuery,
         userProgress,
+        settings,
+        updateSettings,
+        resetSettings,
+        importProgress,
         navigateTo,
         markModuleComplete,
         saveQuizScore,

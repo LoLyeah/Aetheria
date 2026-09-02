@@ -20,6 +20,61 @@ export interface QuizQuestion {
   };
 }
 
+export interface FormulaVariable {
+  symbol: string;
+  name: {
+    en: string;
+    id: string;
+  };
+  unit?: string;
+  description: {
+    en: string;
+    id: string;
+  };
+}
+
+export interface DerivationStep {
+  title: {
+    en: string;
+    id: string;
+  };
+  math?: string;
+  explanation: {
+    en: string;
+    id: string;
+  };
+}
+
+export interface ComparisonTable {
+  headers: {
+    en: string[];
+    id: string[];
+  };
+  rows: Array<{
+    en: string[];
+    id: string[];
+  }>;
+}
+
+export interface CaseStudy {
+  title: {
+    en: string;
+    id: string;
+  };
+  context: {
+    en: string;
+    id: string;
+  };
+  analysis: {
+    en: string;
+    id: string;
+  };
+  takeaway: {
+    en: string;
+    id: string;
+  };
+}
+
 export interface ModuleSection {
   id: string;
   title: {
@@ -35,7 +90,11 @@ export interface ModuleSection {
     en: string;
     id: string;
   };
-  keyTakeaways: {
+  variables?: FormulaVariable[];
+  derivationSteps?: DerivationStep[];
+  comparisonTable?: ComparisonTable;
+  caseStudy?: CaseStudy;
+  keyTakeaways?: {
     en: string[];
     id: string[];
   };
@@ -120,4 +179,18 @@ export interface Badge {
   icon: string;
   requiredModuleIds?: string[];
   requiredScore?: number;
+}
+
+export interface AppSettings {
+  readerFontSize: 'sm' | 'base' | 'lg';
+  mathDisplayFormat: 'standard' | 'high-contrast';
+  glossaryHighlighting: 'enabled' | 'subtle' | 'disabled';
+  glossaryTrigger: 'hover' | 'click';
+  speechAudioEnabled: boolean;
+  graphicsQuality: 'high' | 'balanced' | 'performance';
+  particleDensity: number; // 100, 75, 50
+  autoRotate3D: boolean;
+  showFpsOverlay: boolean;
+  soundEffects: boolean;
+  autoAdvanceQuiz: boolean;
 }

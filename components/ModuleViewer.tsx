@@ -10,6 +10,7 @@ import { DoubleSlitViewer } from './3d/DoubleSlitViewer';
 import { EmbryoViewer } from './3d/EmbryoViewer';
 import { BatteryCellViewer } from './3d/BatteryCellViewer';
 import { EVPowertrainSimulator } from './simulators/EVPowertrainSimulator';
+import { TheoryReader } from './TheoryReader';
 import {
   Sparkles,
   BookOpen,
@@ -26,7 +27,11 @@ import {
   Lightbulb,
 } from 'lucide-react';
 
-export const ModuleViewer: React.FC = () => {
+interface ModuleViewerProps {
+  onOpenGlossary?: () => void;
+}
+
+export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) => {
   const {
     language,
     selectedTopicId,
@@ -240,58 +245,15 @@ export const ModuleViewer: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="max-w-4xl mx-auto space-y-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm"
             >
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-500 dark:text-slate-400 mb-2">
-                  <span>{topic.title[language]}</span>
-                  <span>•</span>
-                  <span>{currentModule.durationMinutes} min read</span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                  {currentModule.title[language]}
-                </h2>
-              </div>
-
-              {/* Structured Sections */}
-              <div className="space-y-8 divide-y divide-slate-100 dark:divide-slate-800">
-                {currentModule.sections.map((sec, idx) => (
-                  <div key={sec.id} className={idx > 0 ? 'pt-8' : ''}>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
-                      {sec.title[language]}
-                    </h3>
-                    <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-4 whitespace-pre-line">
-                      {sec.content[language]}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Key Takeaways Callout */}
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 font-mono">
-                  <Lightbulb className="w-4 h-4 text-amber-500" />
-                  <span>{language === 'en' ? 'Core Conceptual Takeaways' : 'Poin Kunci Konseptual'}</span>
-                </div>
-                <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-sky-500 font-bold">•</span>
-                    <span>
-                      {language === 'en'
-                        ? 'Physical phenomena at this scale require non-linear differential dynamics.'
-                        : 'Fenomena fisik pada skala ini memerlukan dinamika diferensial non-linear.'}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-sky-500 font-bold">•</span>
-                    <span>
-                      {language === 'en'
-                        ? 'Experimental verification validates the mathematical predictions observed in the 3D lab.'
-                        : 'Verifikasi eksperimental memvalidasi prediksi matematis yang diamati pada lab 3D.'}
-                    </span>
-                  </li>
-                </ul>
-              </div>
+              <TheoryReader
+                module={currentModule}
+                topic={topic}
+                language={language}
+                onNavigateToQuiz={() => setActiveTab('quiz')}
+                onNavigateTo3D={() => setActiveTab('interactive')}
+                onOpenGlossary={onOpenGlossary}
+              />
             </motion.div>
           )}
 
