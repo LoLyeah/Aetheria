@@ -223,6 +223,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               transition={{ duration: 0.25 }}
             >
               <TheoryReader
+                key={currentModule.id}
                 module={currentModule}
                 topic={topic}
                 language={language}
@@ -243,6 +244,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               transition={{ duration: 0.25 }}
             >
               <QuizComponent
+                key={currentModule.id}
                 module={currentModule}
                 topic={topic}
                 language={language}
@@ -250,7 +252,10 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
                 onNavigateToTheory={() => setActiveTab('theory')}
                 onNavigateToNextModule={
                   nextModule
-                    ? () => navigateTo('module', topic.id, nextModule.id)
+                    ? () => {
+                        setActiveTab('interactive');
+                        navigateTo('module', topic.id, nextModule.id);
+                      }
                     : () => navigateTo('learn', null)
                 }
               />

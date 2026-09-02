@@ -140,8 +140,8 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
     setNewlyUnlockedBadges([]);
   };
 
-  const answeredCount = Object.keys(selectedAnswers).length;
-  const isAllAnswered = answeredCount === questions.length;
+  const answeredCount = questions.filter((q) => selectedAnswers[q.id] !== undefined).length;
+  const isAllAnswered = answeredCount === questions.length && questions.length > 0;
   const isPassed = (quizScore ?? 0) >= 75;
 
   const formatTime = (seconds: number) => {

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { GlossaryTermData } from '@/lib/glossaryData';
 import { Language } from '@/types/learning';
@@ -14,7 +15,6 @@ import {
   Volume2,
   X,
   ExternalLink,
-  Sparkles,
 } from 'lucide-react';
 
 interface GlossaryTermProps {
@@ -22,6 +22,14 @@ interface GlossaryTermProps {
   displayedText: string;
   language: Language;
   onOpenFullGlossary?: () => void;
+}
+
+interface PopoverCoords {
+  top?: number;
+  bottom?: number;
+  left: number;
+  arrowLeft: number;
+  placement: 'top' | 'bottom';
 }
 
 export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
@@ -32,7 +40,9 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
 }) => {
   const { settings } = useLearning();
   const [isOpen, setIsOpen] = useState(false);
+  const [coords, setCoords] = useState<PopoverCoords | null>(null);
   const containerRef = useRef<HTMLSpanElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const categoryConfigs = {
@@ -65,10 +75,57 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
   const cat = categoryConfigs[termData.category] || categoryConfigs.general;
   const CategoryIcon = cat.icon;
 
+  const updateCoordinates = useCallback(() => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const popoverWidth = Math.min(320, window.innerWidth - 32);
+    const estimatedHeight = 220;
+    const spaceAbove = rect.top;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    
+    // Choose placement: top if space allows, otherwise bottom
+    const placement: 'top' | 'bottom' = spaceAbove >= estimatedHeight + 16 || spaceAbove > spaceBelow ? 'top' : 'bottom';
+
+    const targetCenterX = rect.left + rect.width / 2;
+    let left = targetCenterX - popoverWidth / 2;
+    const minLeft = 16;
+    const maxLeft = window.innerWidth - popoverWidth - 16;
+    left = Math.max(minLeft, Math.min(maxLeft, left));
+
+    const arrowLeft = Math.max(16, Math.min(popoverWidth - 16, targetCenterX - left));
+
+    if (placement === 'top') {
+      const bottom = window.innerHeight - rect.top + 8;
+      setCoords({ bottom, left, arrowLeft, placement });
+    } else {
+      const top = rect.bottom + 8;
+      setCoords({ top, left, arrowLeft, placement });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      updateCoordinates();
+      const handleScrollOrResize = () => updateCoordinates();
+      window.addEventListener('scroll', handleScrollOrResize, true);
+      window.addEventListener('resize', handleScrollOrResize);
+      return () => {
+        window.removeEventListener('scroll', handleScrollOrResize, true);
+        window.removeEventListener('resize', handleScrollOrResize);
+      };
+    }
+  }, [isOpen, updateCoordinates]);
+
   // Handle outside clicks to close popover
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(target) &&
+        popoverRef.current &&
+        !popoverRef.current.contains(target)
+      ) {
         setIsOpen(false);
       }
     }
@@ -85,6 +142,7 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
     }
+    updateCoordinates();
     setIsOpen(true);
   };
 
@@ -97,6 +155,9 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!isOpen) {
+      updateCoordinates();
+    }
     setIsOpen((prev) => !prev);
   };
 
@@ -123,123 +184,156 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
   }
 
   return (
-    <span
-      ref={containerRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="relative inline-block"
-    >
-      <button
-        type="button"
+    <>
+      <span
+        ref={containerRef}
+        role="button"
+        tabIndex={0}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick(e as unknown as React.MouseEvent);
+          }
+        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className={`inline text-inherit font-inherit text-left p-0 m-0 ${highlightStyle}`}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
       >
         {displayedText}
-      </button>
+      </span>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.span
-            initial={{ opacity: 0, y: 6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.97 }}
-            transition={{ duration: 0.16, ease: 'easeOut' }}
-            className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 sm:w-80 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 text-slate-900 dark:text-slate-100 text-left font-sans cursor-default pointer-events-auto select-text block"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {/* Popover Arrow */}
-            <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-3 h-3 rotate-45 bg-white dark:bg-slate-900 border-r border-b border-slate-200 dark:border-slate-800 block" />
-
-            {/* Header: Category & Close */}
-            <span className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
-              <span
-                className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${cat.badgeBg}`}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && coords && (
+              <motion.div
+                ref={popoverRef}
+                initial={{
+                  opacity: 0,
+                  y: coords.placement === 'top' ? 6 : -6,
+                  scale: 0.97,
+                }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{
+                  opacity: 0,
+                  y: coords.placement === 'top' ? 4 : -4,
+                  scale: 0.97,
+                }}
+                transition={{ duration: 0.16, ease: 'easeOut' }}
+                style={{
+                  position: 'fixed',
+                  top: coords.top !== undefined ? `${coords.top}px` : 'auto',
+                  bottom: coords.bottom !== undefined ? `${coords.bottom}px` : 'auto',
+                  left: `${coords.left}px`,
+                  width: 'min(320px, calc(100vw - 32px))',
+                }}
+                className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl z-[9999] text-slate-900 dark:text-slate-100 text-left font-sans cursor-default pointer-events-auto select-text"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
-                <CategoryIcon className="w-3 h-3" />
-                <span>{cat.label[language]}</span>
-              </span>
+                {/* Popover Arrow */}
+                <div
+                  style={{ left: `${coords.arrowLeft}px` }}
+                  className={`absolute w-3 h-3 rotate-45 bg-white dark:bg-slate-900 pointer-events-none ${
+                    coords.placement === 'top'
+                      ? 'top-full -translate-x-1/2 -mt-1.5 border-r border-b border-slate-200 dark:border-slate-800'
+                      : 'bottom-full -translate-x-1/2 -mb-1.5 border-l border-t border-slate-200 dark:border-slate-800'
+                  }`}
+                />
 
-              <span className="flex items-center gap-1">
-                {settings?.speechAudioEnabled !== false && (
-                  <button
-                    onClick={speakTerm}
-                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title={language === 'en' ? 'Listen to pronunciation' : 'Dengarkan pengucapan'}
+                {/* Header: Category & Close */}
+                <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${cat.badgeBg}`}
                   >
-                    <Volume2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsOpen(false);
-                  }}
-                  className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                  aria-label="Close popover"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            </span>
-
-            {/* Title & Mathematical Symbol */}
-            <span className="pt-2.5 pb-1 space-y-1 block">
-              <span className="flex items-baseline justify-between gap-2">
-                <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight block">
-                  {termData.term[language]}
-                </span>
-                {termData.pronunciation && (
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    {termData.pronunciation}
+                    <CategoryIcon className="w-3 h-3" />
+                    <span>{cat.label[language]}</span>
                   </span>
+
+                  <div className="flex items-center gap-1">
+                    {settings?.speechAudioEnabled !== false && (
+                      <button
+                        onClick={speakTerm}
+                        className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        title={language === 'en' ? 'Listen to pronunciation' : 'Dengarkan pengucapan'}
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(false);
+                      }}
+                      className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      aria-label="Close popover"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Title & Mathematical Symbol */}
+                <div className="pt-2.5 pb-1 space-y-1">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight">
+                      {termData.term[language]}
+                    </h4>
+                    {termData.pronunciation && (
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {termData.pronunciation}
+                      </span>
+                    )}
+                  </div>
+
+                  {termData.symbol && (
+                    <div className="py-1 px-2 rounded-lg bg-slate-950 text-cyan-300 text-xs font-serif inline-block border border-slate-800">
+                      <MathFormula formula={termData.symbol} displayMode={false} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Non-AI Clear Scientific Definition */}
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-1 pb-2">
+                  {termData.definition[language]}
+                </p>
+
+                {/* Real Lab & Clinical Context Callout */}
+                {termData.context && (
+                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5">
+                    <span className="font-bold text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-slate-400 block">
+                      {language === 'en' ? 'Laboratory Application' : 'Penerapan Laboratorium'}
+                    </span>
+                    <p className="leading-snug">{termData.context[language]}</p>
+                  </div>
                 )}
-              </span>
 
-              {termData.symbol && (
-                <span className="py-1 px-2 rounded-lg bg-slate-950 text-cyan-300 text-xs font-serif inline-block border border-slate-800">
-                  <MathFormula formula={termData.symbol} displayMode={false} />
-                </span>
-              )}
-            </span>
-
-            {/* Non-AI Clear Scientific Definition */}
-            <span className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-1 pb-2 block">
-              {termData.definition[language]}
-            </span>
-
-            {/* Real Lab & Clinical Context Callout */}
-            {termData.context && (
-              <span className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5 block">
-                <span className="font-bold text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-slate-400 block">
-                  {language === 'en' ? 'Laboratory Application' : 'Penerapan Laboratorium'}
-                </span>
-                <span className="leading-snug block">{termData.context[language]}</span>
-              </span>
+                {/* Footer CTA */}
+                {onOpenFullGlossary && (
+                  <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <span>{language === 'en' ? 'Scientific Terminology' : 'Terminologi Ilmiah'}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(false);
+                        onOpenFullGlossary();
+                      }}
+                      className="text-sky-600 dark:text-sky-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>{language === 'en' ? 'Open Lexicon' : 'Buka Glosarium'}</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                )}
+              </motion.div>
             )}
-
-            {/* Footer CTA */}
-            {onOpenFullGlossary && (
-              <span className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span>{language === 'en' ? 'Scientific Terminology' : 'Terminologi Ilmiah'}</span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsOpen(false);
-                    onOpenFullGlossary();
-                  }}
-                  className="text-sky-600 dark:text-sky-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
-                >
-                  <span>{language === 'en' ? 'Open Lexicon' : 'Buka Glosarium'}</span>
-                  <ExternalLink className="w-2.5 h-2.5" />
-                </button>
-              </span>
-            )}
-          </motion.span>
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
-    </span>
+    </>
   );
 };
+

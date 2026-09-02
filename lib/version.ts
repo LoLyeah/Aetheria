@@ -22,14 +22,75 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.0.9',
+  version: '1.0.12',
   major: 1,
   minor: 0,
-  patch: 9,
+  patch: 12,
   releaseDate: '2026-09-02',
-  buildNumber: 'build.20260902.09',
+  buildNumber: 'build.20260902.12',
   environment: 'production',
   changelog: [
+    {
+      version: '1.0.12',
+      date: '2026-09-02',
+      type: 'patch',
+      title: {
+        en: 'Module Transition State Reset & Quiz Auto-Completion Resolution',
+        id: 'Reset Status Transisi Modul & Resolusi Penyelesaian Otomatis Kuis',
+      },
+      highlights: {
+        en: [
+          'Fixed an issue where navigating to the next module retained the previous module completed quiz state and review screen.',
+          'Reset activeTab to the primary 3D Interactive Lab whenever transitioning to a new module.',
+          'Added keyed remounting and explicit state reset on module ID change in QuizComponent to ensure each assessment starts fresh.',
+        ],
+        id: [
+          'Memperbaiki masalah di mana navigasi ke modul berikutnya mempertahankan status kuis selesai dan layar tinjauan modul sebelumnya.',
+          'Mereset activeTab ke Lab Interaktif 3D utama setiap kali beralih ke modul baru.',
+          'Menambahkan remounting berdasar key dan reset status eksplisit saat ID modul berubah di QuizComponent untuk memastikan setiap evaluasi dimulai dari awal.',
+        ],
+      },
+    },
+    {
+      version: '1.0.11',
+      date: '2026-09-02',
+      type: 'patch',
+      title: {
+        en: 'Glossary Popover Positioning Fix & Nested Button DOM Hydration Resolution',
+        id: 'Perbaikan Posisi Popover Glosarium & Resolusi Hidrasi DOM Tombol Bersarang',
+      },
+      highlights: {
+        en: [
+          'Replaced Framer Motion CSS transform collisions with absolute bottom/top pixel anchoring to ensure popovers always position accurately above or below the hovered term.',
+          'Converted GlossaryTerm interactive trigger from <button> to accessible <span role="button"> to eliminate nested button errors inside quiz options and interactive components.',
+        ],
+        id: [
+          'Mengganti konflik CSS transform Framer Motion dengan penjangkaran piksel bottom/top absolut untuk memastikan posisi popover selalu tepat di atas atau di bawah istilah.',
+          'Mengonversi pemicu interaktif GlossaryTerm dari <button> ke <span role="button"> yang aksesibel untuk mengeliminasi error tombol bersarang di dalam opsi kuis.',
+        ],
+      },
+    },
+    {
+      version: '1.0.10',
+      date: '2026-09-02',
+      type: 'patch',
+      title: {
+        en: 'Glossary Popover Body Portaling & Clipping Prevention',
+        id: 'Portal Popover Glosarium ke Body & Pencegahan Pemotongan Kontainer',
+      },
+      highlights: {
+        en: [
+          'Portaled the glossary term popover directly to document.body using React createPortal with fixed floating coordinates.',
+          'Eliminated popover clipping inside structured comparison tables, horizontal scroll views, and cards with overflow restrictions.',
+          'Added automatic viewport collision detection and flipping between top and bottom placements.',
+        ],
+        id: [
+          'Memportal popover istilah glosarium langsung ke document.body menggunakan React createPortal dengan koordinat mengambang tetap.',
+          'Mengeliminasi pemotongan popover di dalam tabel perbandingan terstruktur, scroll horizontal, dan kartu dengan pembatasan overflow.',
+          'Menambahkan deteksi tabrakan viewport otomatis dan pergantian penempatan atas/bawah yang dinamis.',
+        ],
+      },
+    },
     {
       version: '1.0.9',
       date: '2026-09-02',
