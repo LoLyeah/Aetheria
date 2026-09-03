@@ -3,6 +3,8 @@ import { quantumMechanicsTopic } from './quantum';
 import { fetusDevelopmentTopic } from './embryo';
 import { evBatteryTopic } from './battery';
 import { pulmonologyPneumoniaTopic } from './pneumonia';
+import { cardiacArrestTopic } from './cardiac';
+import { hypertensionTopic } from './hypertension';
 import { allBadges } from './badges';
 
 export const allTopics: Topic[] = [
@@ -10,9 +12,19 @@ export const allTopics: Topic[] = [
   fetusDevelopmentTopic,
   evBatteryTopic,
   pulmonologyPneumoniaTopic,
+  cardiacArrestTopic,
+  hypertensionTopic,
 ];
 
-export { quantumMechanicsTopic, fetusDevelopmentTopic, evBatteryTopic, pulmonologyPneumoniaTopic, allBadges };
+export {
+  quantumMechanicsTopic,
+  fetusDevelopmentTopic,
+  evBatteryTopic,
+  pulmonologyPneumoniaTopic,
+  cardiacArrestTopic,
+  hypertensionTopic,
+  allBadges,
+};
 
 export function getTopicById(topicId: string): Topic | undefined {
   return allTopics.find((t) => t.id === topicId);

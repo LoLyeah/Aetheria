@@ -169,7 +169,7 @@ export const Navbar: React.FC<{
                           {module.title[language]}
                         </div>
                         <div className="text-[10px] text-slate-400 font-mono">
-                          {topic.title[language]} • Part {module.order}
+                          {topic.title[language]} • {language === 'en' ? `Part ${module.order}` : `Bagian ${module.order}`}
                         </div>
                       </div>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />

@@ -11,6 +11,8 @@ import {
   Dna,
   Zap,
   Activity,
+  HeartCrack,
+  Gauge,
   BookOpen,
   Volume2,
   X,
@@ -42,6 +44,8 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
     { id: 'biology', label: { en: 'Embryology', id: 'Embriologi' }, icon: Dna },
     { id: 'ev-battery', label: { en: 'EV Battery Tech', id: 'Baterai EV' }, icon: Zap },
     { id: 'pulmonology', label: { en: 'Pulmonology', id: 'Pulmonologi' }, icon: Activity },
+    { id: 'cardiology', label: { en: 'Cardiology & ACS', id: 'Kardiologi & SKA' }, icon: HeartCrack },
+    { id: 'hypertension', label: { en: 'Hypertension', id: 'Hipertensi' }, icon: Gauge },
   ];
 
   const filteredTerms = GLOSSARY_TERMS.filter((term) => {

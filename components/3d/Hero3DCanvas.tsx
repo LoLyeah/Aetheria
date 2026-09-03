@@ -20,6 +20,7 @@ import {
   ChevronRight,
   Eye,
   Activity,
+  HeartCrack,
   X,
   Info,
 } from 'lucide-react';
@@ -708,6 +709,122 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       });
       group.add(new THREE.Points(gGeo, gMat));
     }
+
+    // -------------------------------------------------------------
+    // TOPIC 5: CARDIAC ARREST & ACUTE CORONARY SYNDROMES
+    // -------------------------------------------------------------
+    if (selectedTopic === 'cardiac-arrest') {
+      const heartGeo = new THREE.SphereGeometry(1.2, 32, 24);
+      heartGeo.scale(1.0, 1.35, 0.85);
+      const heartMat = new THREE.MeshStandardMaterial({
+        color: isFlux ? 0xbe123c : 0x9f1239,
+        roughness: 0.35,
+        wireframe: isWire,
+      });
+      const heart = new THREE.Mesh(heartGeo, heartMat);
+      heart.position.set(0, -0.1, 0);
+      group.add(heart);
+      animatedObjectsRef.current.pulsers.push({ mesh: heart, baseScale: 1.0, speed: 3.2 });
+
+      const infarctGeo = new THREE.SphereGeometry(0.65, 20, 16);
+      infarctGeo.scale(1.1, 1.3, 0.6);
+      const infarctMat = new THREE.MeshStandardMaterial({
+        color: 0x1e1b4b,
+        roughness: 0.7,
+        wireframe: isWire,
+      });
+      const infarct = new THREE.Mesh(infarctGeo, infarctMat);
+      infarct.position.set(-0.15, -0.4, 0.6);
+      group.add(infarct);
+
+      const aortaCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0.9, 0),
+        new THREE.Vector3(0.15, 1.6, -0.1),
+        new THREE.Vector3(-0.35, 1.95, -0.3),
+        new THREE.Vector3(-0.7, 1.5, -0.5),
+      ]);
+      const aortaGeo = new THREE.TubeGeometry(aortaCurve, 24, 0.25, 12, false);
+      const aortaMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3, wireframe: isWire });
+      group.add(new THREE.Mesh(aortaGeo, aortaMat));
+
+      const defibMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.4 });
+      for (let r = 0; r < 3; r++) {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(1.6 + r * 0.25, 0.02, 8, 36), defibMat);
+        ring.rotation.x = (r * Math.PI) / 3;
+        ring.rotation.y = (r * Math.PI) / 4;
+        group.add(ring);
+        animatedObjectsRef.current.rotators.push(ring);
+      }
+
+      const pGeo = new THREE.BufferGeometry();
+      const pPos = new Float32Array(pointCount * 3);
+      for (let i = 0; i < pointCount * 3; i += 3) {
+        pPos[i] = (Math.random() - 0.5) * 3.2;
+        pPos[i + 1] = (Math.random() - 0.5) * 3.2;
+        pPos[i + 2] = (Math.random() - 0.5) * 3.2;
+      }
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      const pMat = new THREE.PointsMaterial({ color: 0xef4444, size: 0.048, transparent: true, opacity: 0.85 });
+      group.add(new THREE.Points(pGeo, pMat));
+    }
+
+    // -------------------------------------------------------------
+    // TOPIC 6: HYPERTENSION & VASCULAR HEMODYNAMICS
+    // -------------------------------------------------------------
+    if (selectedTopic === 'hypertension') {
+      const lumenGeo = new THREE.CylinderGeometry(0.72, 0.72, 3.4, 32, 1, true);
+      const lumenMat = new THREE.MeshStandardMaterial({
+        color: 0xfecdd3,
+        roughness: 0.25,
+        side: THREE.DoubleSide,
+        wireframe: isWire,
+      });
+      const lumen = new THREE.Mesh(lumenGeo, lumenMat);
+      lumen.rotation.z = Math.PI / 4;
+      group.add(lumen);
+
+      const mediaGeo = new THREE.CylinderGeometry(1.28, 1.28, 3.38, 32, 1, true);
+      const mediaMat = new THREE.MeshStandardMaterial({
+        color: isFlux ? 0x991b1b : 0xd97706,
+        roughness: 0.4,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: isWire ? 0.4 : 0.85,
+        wireframe: isWire,
+      });
+      const media = new THREE.Mesh(mediaGeo, mediaMat);
+      media.rotation.z = Math.PI / 4;
+      group.add(media);
+      animatedObjectsRef.current.pulsers.push({ mesh: media, baseScale: 1.0, speed: 2.8 });
+
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.7 });
+      for (let k = -1.4; k <= 1.4; k += 0.4) {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.025, 8, 36), ringMat);
+        ring.rotation.z = Math.PI / 4;
+        ring.position.set(k * 0.7, k * 0.7, 0);
+        group.add(ring);
+      }
+
+      const rbcGeo = new THREE.BufferGeometry();
+      const rbcPos = new Float32Array(pointCount * 3);
+      for (let i = 0; i < pointCount * 3; i += 3) {
+        const t = (Math.random() - 0.5) * 3.2;
+        const rad = Math.sqrt(Math.random()) * 0.65;
+        const theta = Math.random() * Math.PI * 2;
+        rbcPos[i] = t * Math.cos(Math.PI / 4) + Math.cos(theta) * rad;
+        rbcPos[i + 1] = t * Math.sin(Math.PI / 4) + Math.sin(theta) * rad;
+        rbcPos[i + 2] = (Math.random() - 0.5) * 1.2;
+      }
+      rbcGeo.setAttribute('position', new THREE.BufferAttribute(rbcPos, 3));
+      const rbcMat = new THREE.PointsMaterial({
+        color: 0xf59e0b,
+        size: 0.052,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      });
+      group.add(new THREE.Points(rbcGeo, rbcMat));
+    }
   }, [selectedTopic, renderStyle, particleDensity]);
 
   // Telemetry details based on selected topic
@@ -740,6 +857,20 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           { label: 'Shunt Fraction', val: 'Qs/Qt = 28.4% (Consolidation)' },
           { label: 'Alveolar Exudate', val: '74% Lumen Occlusion' },
           { label: 'CURB-65 Metric', val: 'Class 3 (High Inpatient Risk)' },
+        ];
+      case 'cardiac-arrest':
+        return [
+          { label: 'Cardiac Rhythm', val: 'Acute Anterior STEMI (LAD Occlusion)' },
+          { label: 'Coronary Perfusion', val: 'CPP = 24 mmHg (Ischemic Shock)' },
+          { label: 'Door-to-Balloon', val: 'Target ≤ 90 min (Primary PCI)' },
+          { label: 'Defibrillation', val: '200J Biphasic Truncated Exp.' },
+        ];
+      case 'hypertension':
+        return [
+          { label: 'Mean Arterial Press.', val: 'MAP = 138 mmHg (Crisis Stage)' },
+          { label: 'Vascular Resistance', val: 'SVR = 2,450 dynes·s/cm⁵' },
+          { label: 'Pulse Wave Velocity', val: 'PWV = 14.8 m/s (Arterial Stiffness)' },
+          { label: 'Media/Lumen Ratio', val: 'M/L = 0.48 (Hypertrophic Remodeling)' },
         ];
       default:
         return [];
@@ -797,6 +928,30 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           >
             <Activity className="w-3.5 h-3.5 text-rose-400" />
             <span>Pulmonary Alveoli</span>
+          </button>
+
+          <button
+            onClick={() => setSelectedTopic('cardiac-arrest')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
+              selectedTopic === 'cardiac-arrest'
+                ? 'bg-red-500/30 text-red-300 border border-red-400/60 shadow-xs ring-1 ring-red-400/40'
+                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+            }`}
+          >
+            <HeartCrack className="w-3.5 h-3.5 text-red-400" />
+            <span>Cardiac Arrest</span>
+          </button>
+
+          <button
+            onClick={() => setSelectedTopic('hypertension')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
+              selectedTopic === 'hypertension'
+                ? 'bg-amber-500/30 text-amber-300 border border-amber-400/60 shadow-xs ring-1 ring-amber-400/40'
+                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+            }`}
+          >
+            <Gauge className="w-3.5 h-3.5 text-amber-400" />
+            <span>Hypertension</span>
           </button>
         </div>
 

@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.0.18',
+  version: '1.1.0',
   major: 1,
-  minor: 0,
-  patch: 18,
-  releaseDate: '2026-09-03',
-  buildNumber: 'build.20260903.18',
+  minor: 1,
+  patch: 0,
+  releaseDate: '2026-09-04',
+  buildNumber: 'build.20260904.00',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.0',
+      date: '2026-09-04',
+      type: 'minor',
+      title: {
+        en: 'Cardiology (Cardiac Arrest & ACS) and Vascular Hypertension Curriculum Expansion',
+        id: 'Ekspansi Kurikulum Kardiologi (Henti Jantung & SKA) serta Hipertensi Vaskular',
+      },
+      highlights: {
+        en: [
+          'Added Cardiac Arrest & Acute Coronary Syndromes topic: STEMI, NSTEMI, Stable/Unstable/Prinzmetal Angina, 4 primary arrest rhythms, biphasic defibrillation physics, and CPR hemodynamics.',
+          'Added Hypertension & Vascular Hemodynamics topic: Primary HTN, RAAS dysregulation, all secondary etiologies (endocrine, renovascular, coarctation, OSA), hypertensive emergencies, isolated systolic HTN, and WHO Groups 1-5 pulmonary hypertension.',
+          'Built 3D interactive laboratories: Cardiac Electrophysiology & Coronary Occlusion Simulator with live 12-lead ECG strip, and Arterial Remodeling & Hemodynamic Flow Viewer.',
+          'Expanded curriculum to 6 foundational scientific disciplines with 24 deep interactive modules, comprehensive bilingual assessments, and rich glossary terms.',
+        ],
+        id: [
+          'Menambahkan topik Henti Jantung & Sindrom Koroner Akut: STEMI, NSTEMI, Angina Stabil/Tidak Stabil/Prinzmetal, 4 irama henti jantung, fisika defibrilasi bifasik, dan hemodinamika RJP.',
+          'Menambahkan topik Hipertensi & Hemodinamika Vaskular: Hipertensi Primer, disregulasi RAAS, seluruh etiologi sekunder (endokrin, renovaskular, koarktasio, OSA), krisis emergensi hipertensi, hipertensi sistolik terisolasi, dan hipertensi pulmonal WHO 1-5.',
+          'Membangun laboratorium interaktif 3D: Simulator Elektrofisiologi Jantung & Oklusi Koroner dengan monitor EKG 12-sadapan real-time, serta Penampil Remodeling Arteriol & Aliran Hemodinamika.',
+          'Memperluas kurikulum menjadi 6 disiplin sains inti dengan 24 modul interaktif mendalam, evaluasi bilingual komprehensif, dan istilah glosarium kaya.',
+        ],
+      },
+    },
     {
       version: '1.0.15',
       date: '2026-09-03',

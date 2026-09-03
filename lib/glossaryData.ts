@@ -1,4 +1,11 @@
-export type GlossaryCategory = 'quantum' | 'biology' | 'ev-battery' | 'pulmonology' | 'general';
+export type GlossaryCategory =
+  | 'quantum'
+  | 'biology'
+  | 'ev-battery'
+  | 'pulmonology'
+  | 'cardiology'
+  | 'hypertension'
+  | 'general';
 
 export interface GlossaryTermData {
   id: string;
@@ -21,7 +28,13 @@ export interface GlossaryTermData {
     en: string;
     id: string;
   };
-  relatedTopicId?: 'quantum-mechanics' | 'fetus-development' | 'ev-battery' | 'pulmonology-pneumonia';
+  relatedTopicId?:
+    | 'quantum-mechanics'
+    | 'fetus-development'
+    | 'ev-battery'
+    | 'pulmonology-pneumonia'
+    | 'cardiac-arrest'
+    | 'hypertension';
 }
 
 export const GLOSSARY_TERMS: GlossaryTermData[] = [
@@ -803,6 +816,221 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: 'Menghasilkan tanda fisik perkusi redup, suara napas bronkial, egofoni, serta gambaran radiologis air bronchogram.',
     },
     relatedTopicId: 'pulmonology-pneumonia',
+  },
+  // ================= CARDIOLOGY & CARDIAC ARREST =================
+  {
+    id: 'stemi',
+    term: {
+      en: 'ST-Elevation Myocardial Infarction (STEMI)',
+      id: 'Infark Miokard dengan Elevasi Segmen ST (STEMI)',
+    },
+    aliases: {
+      en: ['STEMI', 'ST elevation myocardial infarction', 'transmural myocardial infarction'],
+      id: ['STEMI', 'infark miokard elevasi ST', 'infark transmural'],
+    },
+    category: 'cardiology',
+    definition: {
+      en: 'A severe cardiovascular emergency caused by acute, complete, and persistent thrombotic occlusion of an epicardial coronary artery, producing transmural myocardial necrosis and diagnostic ST elevation on ECG.',
+      id: 'Kegawatdaruratan kardiovaskular berat akibat oklusi trombotik total dan persisten pada arteri koroner epikardium, memicu nekrosis miokardium transmural dan elevasi segmen ST diagnostik pada EKG.',
+    },
+    context: {
+      en: 'Requires emergent reperfusion via primary percutaneous coronary intervention (PCI) with Door-to-Balloon time ≤ 90 minutes.',
+      id: 'Memerlukan reperfusi darurat via intervensi koroner perkutan (PCI) primer dengan target Door-to-Balloon ≤ 90 menit.',
+    },
+    relatedTopicId: 'cardiac-arrest',
+  },
+  {
+    id: 'nstemi',
+    term: {
+      en: 'Non-ST-Elevation Myocardial Infarction (NSTEMI)',
+      id: 'Infark Miokard Tanpa Elevasi Segmen ST (NSTEMI)',
+    },
+    aliases: {
+      en: ['NSTEMI', 'non-ST elevation MI', 'subendocardial infarction'],
+      id: ['NSTEMI', 'infark miokard non-elevasi ST', 'infark subendokardium'],
+    },
+    category: 'cardiology',
+    definition: {
+      en: 'An acute coronary syndrome caused by partial or transient coronary artery obstruction leading to subendocardial myocardial necrosis, confirmed by elevated cardiac troponins without persistent ST-elevation.',
+      id: 'Sindrom koroner akut akibat obstruksi parsial atau sementara pada arteri koroner yang menimbulkan nekrosis miokardium subendokardium, dibuktikan oleh kenaikan troponin tanpa elevasi ST persisten.',
+    },
+    context: {
+      en: 'Manifests with ST depressions, T-wave inversions, or non-specific ECG findings, stratified using TIMI and GRACE risk scores.',
+      id: 'Bermanifestasi dengan depresi ST, inversi gelombang T, atau EKG non-spesifik, distratifikasi dengan skor risiko TIMI dan GRACE.',
+    },
+    relatedTopicId: 'cardiac-arrest',
+  },
+  {
+    id: 'angina-pectoris',
+    term: {
+      en: 'Angina Pectoris',
+      id: 'Angina Pektoris',
+    },
+    aliases: {
+      en: ['angina', 'stable angina', 'unstable angina', 'cardiac chest pain'],
+      id: ['angina', 'angina stabil', 'angina pektoris', 'nyeri dada kardiak'],
+    },
+    category: 'cardiology',
+    definition: {
+      en: 'Substernal chest discomfort, pressure, or tightness provoked by myocardial ischemia when myocardial oxygen demand exceeds coronary arterial oxygen supply.',
+      id: 'Rasa tertekan, berat, atau nyeri di area substernal yang dipicu oleh iskemia miokardium ketika kebutuhan oksigen melampaui pasokan arteri koroner.',
+    },
+    context: {
+      en: 'Categorized into Stable Angina (exertional, relieved by rest/nitroglycerin), Unstable Angina (crescendo/rest, no troponin rise), and Vasospastic/Prinzmetal Angina.',
+      id: 'Diklasifikasikan menjadi Angina Stabil (saat aktivitas, reda dengan istirahat/nitrat), Angina Tidak Stabil (saat istirahat, troponin normal), dan Angina Prinzmetal/Vasospastik.',
+    },
+    relatedTopicId: 'cardiac-arrest',
+  },
+  {
+    id: 'ventricular-fibrillation',
+    term: {
+      en: 'Ventricular Fibrillation (VF)',
+      id: 'Fibrilasi Ventrikel (VF)',
+    },
+    aliases: {
+      en: ['VF', 'V-fib', 'ventricular fibrillation'],
+      id: ['VF', 'fibrilasi ventrikel', 'v-fib'],
+    },
+    category: 'cardiology',
+    definition: {
+      en: 'A lethal cardiac dysrhythmia characterized by chaotic, disorganized ventricular electrical activity without mechanical ventricular contraction, causing immediate cardiac arrest and zero forward cardiac output.',
+      id: 'Disritmia jantung letal yang ditandai oleh aktivitas listrik ventrikel yang kacau dan tidak terorganisir tanpa kontraksi mekanis ventrikel, memicu henti jantung seketika dan hilangnya curah jantung.',
+    },
+    context: {
+      en: 'The primary shockable rhythm in sudden cardiac arrest, treated with immediate unsynchronized electrical defibrillation and CPR.',
+      id: 'Irama shockable utama pada henti jantung mendadak, ditangani dengan defibrilasi listrik asinkron seketika dan RJP.',
+    },
+    relatedTopicId: 'cardiac-arrest',
+  },
+  {
+    id: 'coronary-perfusion-pressure',
+    term: {
+      en: 'Coronary Perfusion Pressure (CPP)',
+      id: 'Tekanan Perfusi Koroner (CPP)',
+    },
+    aliases: {
+      en: ['CPP', 'myocardial perfusion pressure'],
+      id: ['CPP', 'tekanan perfusi miokardium'],
+    },
+    category: 'cardiology',
+    symbol: 'CPP',
+    definition: {
+      en: 'The physiological pressure gradient driving coronary capillary blood flow to the myocardium during diastole, calculated as Aortic Diastolic Pressure minus Left Ventricular End-Diastolic Pressure (or Right Atrial Pressure during CPR).',
+      id: 'Gradien tekanan fisiologis yang mengalirkan darah kapiler koroner ke miokardium saat diastol, dihitung dari Tekanan Diastolik Aorta dikurangi Tekanan Akhir Diastolik Ventrikel Kiri (atau Tekanan Atrium Kanan saat RJP).',
+    },
+    context: {
+      en: 'A minimum CPP of 15 mmHg during CPR decompression is essential for achieving Return of Spontaneous Circulation (ROSC).',
+      id: 'Target CPP minimum 15 mmHg selama fase dekompresi RJP mutlak diperlukan untuk mencapai Return of Spontaneous Circulation (ROSC).',
+    },
+    relatedTopicId: 'cardiac-arrest',
+  },
+  // ================= HYPERTENSION & VASCULAR HEMODYNAMICS =================
+  {
+    id: 'raas-axis',
+    term: {
+      en: 'Renin-Angiotensin-Aldosterone System (RAAS)',
+      id: 'Sistem Renin-Angiotensin-Aldosteron (RAAS)',
+    },
+    aliases: {
+      en: ['RAAS', 'renin-angiotensin system', 'RAS'],
+      id: ['RAAS', 'sistem renin angiotensin', 'aksis RAAS'],
+    },
+    category: 'hypertension',
+    definition: {
+      en: 'A systemic neurohumoral endocrine pathway regulating arterial blood pressure, extracellular fluid volume, and systemic vascular resistance via sequential enzymatic conversion of angiotensinogen to Ang I and Ang II, and aldosterone release.',
+      id: 'Jalur endokrin neurohumoral sistemik yang mengatur tekanan darah arteri, volume cairan ekstraseluler, dan resistansi vaskular perifer melalui konversi enzimatik bertahap dari angiotensinogen ke Ang I dan Ang II, serta sekresi aldosteron.',
+    },
+    context: {
+      en: 'Target of major first-line antihypertensive drug classes including ACE inhibitors, ARBs, and mineralocorticoid receptor antagonists.',
+      id: 'Sasaran utama kelas obat antihipertensi lini pertama mencakup inhibitor ACE, ARB, dan antagonis reseptor mineralokortikoid.',
+    },
+    relatedTopicId: 'hypertension',
+  },
+  {
+    id: 'mean-arterial-pressure',
+    term: {
+      en: 'Mean Arterial Pressure (MAP)',
+      id: 'Tekanan Arteri Rata-rata (MAP)',
+    },
+    aliases: {
+      en: ['MAP', 'mean blood pressure'],
+      id: ['MAP', 'tekanan arteri rata-rata'],
+    },
+    category: 'hypertension',
+    symbol: 'MAP',
+    definition: {
+      en: 'The time-weighted average arterial pressure throughout a complete cardiac cycle, representing the physiological driving perfusion pressure delivering blood to vital organs (MAP = DBP + 1/3[SBP - DBP]).',
+      id: 'Rata-rata tertimbang tekanan arteri sepanjang satu siklus jantung penuh, yang mewakili tekanan perfusi pendorong fisiologis ke organ-organ vital (MAP = TDD + 1/3[TDS - TDD]).',
+    },
+    context: {
+      en: 'Normal resting MAP is 70–100 mmHg; titrated cautiously in hypertensive emergencies to prevent cerebral watershed infarction.',
+      id: 'Nilai MAP istirahat normal berkisar 70–100 mmHg; dititrasi hati-hati pada krisis hipertensi emergensi guna mencegah stroke perbatasan.',
+    },
+    relatedTopicId: 'hypertension',
+  },
+  {
+    id: 'pulse-wave-velocity',
+    term: {
+      en: 'Pulse Wave Velocity (PWV)',
+      id: 'Kecepatan Gelombang Nadi (PWV)',
+    },
+    aliases: {
+      en: ['PWV', 'aortic pulse wave velocity', 'carotid-femoral PWV'],
+      id: ['PWV', 'kecepatan gelombang denyut', 'kecepatan rambat nadi'],
+    },
+    category: 'hypertension',
+    symbol: 'PWV',
+    definition: {
+      en: 'The velocity at which the pressure wave generated by left ventricular ejection travels along the arterial tree, serving as the clinical gold standard metric for central arterial stiffness.',
+      id: 'Kecepatan perambatan gelombang tekanan yang dihasilkan oleh ejeksi ventrikel kiri melintasi percabangan arteri, merupakan baku emas klinis untuk mengukur kekakuan arteri sentral.',
+    },
+    context: {
+      en: 'PWV > 10 m/s indicates advanced arterial stiffening and drives isolated systolic hypertension through premature wave reflection.',
+      id: 'Nilai PWV > 10 m/s menandai kekakuan arteri lanjut dan memicu hipertensi sistolik terisolasi akibat gelombang pantul prematur.',
+    },
+    relatedTopicId: 'hypertension',
+  },
+  {
+    id: 'hypertensive-emergency',
+    term: {
+      en: 'Hypertensive Emergency',
+      id: 'Hipertensi Emergensi',
+    },
+    aliases: {
+      en: ['hypertensive crisis with TOD', 'malignant hypertension', 'hypertensive emergency'],
+      id: ['krisis hipertensi emergensi', 'hipertensi maligna', 'hipertensi emergensi'],
+    },
+    category: 'hypertension',
+    definition: {
+      en: 'Severe elevation in arterial blood pressure (>180/120 mmHg) accompanied by acute, progressive Target Organ Damage involving the brain, heart, aorta, kidneys, or retina.',
+      id: 'Peningkatan berat tekanan darah arteri (>180/120 mmHg) yang disertai oleh bukti kerusakan organ target akut yang mengancam nyawa pada otak, jantung, aorta, ginjal, atau retina.',
+    },
+    context: {
+      en: 'Mandates immediate ICU admission and parenteral IV antihypertensive titration (reducing MAP by 20–25% in the first hour).',
+      id: 'Menuntut perawatan intensif di ICU dan titrasi obat antihipertensi parenteral IV segera (menurunkan MAP 20–25% di jam pertama).',
+    },
+    relatedTopicId: 'hypertension',
+  },
+  {
+    id: 'pulmonary-arterial-hypertension',
+    term: {
+      en: 'Pulmonary Arterial Hypertension (PAH)',
+      id: 'Hipertensi Arteri Pulmonal (PAH)',
+    },
+    aliases: {
+      en: ['PAH', 'WHO Group 1 PH', 'pulmonary hypertension'],
+      id: ['PAH', 'hipertensi pulmonal', 'PH grup 1 WHO'],
+    },
+    category: 'hypertension',
+    definition: {
+      en: 'A progressive precapillary pulmonary vasculopathy defined by resting mean pulmonary arterial pressure >20 mmHg, pulmonary vascular resistance ≥2 Wood units, and PCWP ≤15 mmHg on right heart catheterization.',
+      id: 'Vaskulopati paru prekapiler progresif yang ditandai oleh peningkatan tekanan arteri pulmonalis rata-rata >20 mmHg, resistansi vaskular paru ≥2 Wood unit, dan PCWP ≤15 mmHg pada kateterisasi jantung kanan.',
+    },
+    context: {
+      en: 'Characterized by plexiform lesions and vascular remodeling, treated with targeted endothelin antagonists, PDE-5 inhibitors, and prostacyclin analogs.',
+      id: 'Dicirikan oleh lesi pleksiform dan remodeling vaskular mikroskopis, diobati dengan antagonis endotelin, inhibitor PDE-5, dan analog prostasiklin.',
+    },
+    relatedTopicId: 'hypertension',
   },
 ];
 

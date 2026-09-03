@@ -12,6 +12,8 @@ import {
   Dna,
   Zap,
   Activity,
+  HeartCrack,
+  Gauge,
   BookOpen,
   Volume2,
   X,
@@ -70,6 +72,18 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       badgeBg: 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
       icon: Activity,
       accentBorder: 'border-rose-500/30',
+    },
+    cardiology: {
+      label: { en: 'Cardiology & Emergency', id: 'Kardiologi & Kegawatdaruratan' },
+      badgeBg: 'bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800',
+      icon: HeartCrack,
+      accentBorder: 'border-red-500/30',
+    },
+    hypertension: {
+      label: { en: 'Hypertension & Hemodynamics', id: 'Hipertensi & Hemodinamika' },
+      badgeBg: 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+      icon: Gauge,
+      accentBorder: 'border-amber-500/30',
     },
     general: {
       label: { en: 'Scientific Principle', id: 'Prinsip Ilmiah' },

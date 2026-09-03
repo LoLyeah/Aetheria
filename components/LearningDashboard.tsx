@@ -20,6 +20,8 @@ import {
   Bookmark,
   ChevronRight,
   Layers,
+  HeartCrack,
+  Gauge,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -28,6 +30,8 @@ const topicIcons: Record<TopicId, React.ReactNode> = {
   'fetus-development': <HeartPulse className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
   'ev-battery': <Zap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
   'pulmonology-pneumonia': <Activity className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
+  'cardiac-arrest': <HeartCrack className="w-5 h-5 text-red-600 dark:text-red-400" />,
+  'hypertension': <Gauge className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
 };
 
 export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ onOpenProgress }) => {
@@ -229,7 +233,7 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-8"
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {allTopics.map((topic, idx) => {
                   const completedCount = topic.modules.filter((m) => userProgress.completedModules.includes(m.id)).length;
                   const pct = Math.round((completedCount / topic.modules.length) * 100);

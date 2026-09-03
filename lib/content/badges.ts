@@ -66,6 +66,32 @@ export const allBadges: Badge[] = [
     requiredModuleIds: ['pne-mod-1', 'pne-mod-2', 'pne-mod-3', 'pne-mod-4'],
   },
   {
+    id: 'cardiac-master',
+    title: {
+      en: 'Resuscitation Cardiologist',
+      id: 'Kardiolog Resusitasi',
+    },
+    description: {
+      en: 'Completed all 4 modules in Cardiac Arrest & Acute Coronary Syndromes.',
+      id: 'Menyelesaikan seluruh 4 modul dalam Henti Jantung & Sindrom Koroner Akut.',
+    },
+    icon: 'HeartCrack',
+    requiredModuleIds: ['cardiac-mod-1', 'cardiac-mod-2', 'cardiac-mod-3', 'cardiac-mod-4'],
+  },
+  {
+    id: 'hypertension-master',
+    title: {
+      en: 'Vascular Hemodynamicist',
+      id: 'Pakar Hemodinamika Vaskular',
+    },
+    description: {
+      en: 'Completed all 4 modules in Hypertension & Vascular Hemodynamics.',
+      id: 'Menyelesaikan seluruh 4 modul dalam Hipertensi & Hemodinamika Vaskular.',
+    },
+    icon: 'Gauge',
+    requiredModuleIds: ['hyp-mod-1', 'hyp-mod-2', 'hyp-mod-3', 'hyp-mod-4'],
+  },
+  {
     id: 'quiz-ace',
     title: {
       en: 'Academic Excellence',
@@ -85,8 +111,8 @@ export const allBadges: Badge[] = [
       id: 'Polimat Agung Aetheria',
     },
     description: {
-      en: 'Completed all 16 modules across all 4 foundational scientific disciplines.',
-      id: 'Menyelesaikan seluruh 16 modul di keempat disiplin ilmu sains dasar.',
+      en: 'Completed all 24 modules across all 6 foundational scientific disciplines.',
+      id: 'Menyelesaikan seluruh 24 modul di keenam disiplin ilmu sains dasar.',
     },
     icon: 'GraduationCap',
   },

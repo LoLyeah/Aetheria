@@ -20,6 +20,8 @@ import {
   Sparkles,
   Layers,
   ArrowUpRight,
+  HeartCrack,
+  Gauge,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -53,6 +55,8 @@ export const LandingPage: React.FC = () => {
     'fetus-development': <HeartPulse className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
     'ev-battery': <Zap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
     'pulmonology-pneumonia': <Activity className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
+    'cardiac-arrest': <HeartCrack className="w-5 h-5 text-red-600 dark:text-red-400" />,
+    'hypertension': <Gauge className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
   };
 
   return (
@@ -119,7 +123,7 @@ export const LandingPage: React.FC = () => {
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 dark:border-slate-800/80 text-left">
                 <div>
                   <div className="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white">
-                    3
+                    {allTopics.length}
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     {language === 'en' ? 'Core Disciplines' : 'Disiplin Utama'}
@@ -169,7 +173,7 @@ export const LandingPage: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {allTopics.map((topic, idx) => {
             const completedCount = topic.modules.filter((m) => userProgress.completedModules.includes(m.id)).length;
             const progressPct = Math.round((completedCount / topic.modules.length) * 100);

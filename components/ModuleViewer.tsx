@@ -10,6 +10,8 @@ import { DoubleSlitViewer } from './3d/DoubleSlitViewer';
 import { EmbryoViewer } from './3d/EmbryoViewer';
 import { BatteryCellViewer } from './3d/BatteryCellViewer';
 import { PulmonaryAlveoliViewer } from './3d/PulmonaryAlveoliViewer';
+import { CardiacArrestViewer } from './3d/CardiacArrestViewer';
+import { HypertensionVascularViewer } from './3d/HypertensionVascularViewer';
 import { EVPowertrainSimulator } from './simulators/EVPowertrainSimulator';
 import { TheoryReader } from './TheoryReader';
 import { QuizComponent } from './QuizComponent';
@@ -212,6 +214,8 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               {currentModule.interactiveType === 'cell-cross-section' && <BatteryCellViewer />}
               {currentModule.interactiveType === 'ev-powertrain' && <EVPowertrainSimulator />}
               {currentModule.interactiveType === 'pulmonary-alveoli' && <PulmonaryAlveoliViewer />}
+              {currentModule.interactiveType === 'cardiac-hemodynamics' && <CardiacArrestViewer />}
+              {currentModule.interactiveType === 'vascular-hemodynamics' && <HypertensionVascularViewer />}
             </motion.div>
           )}
 

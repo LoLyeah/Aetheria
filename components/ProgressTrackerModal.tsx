@@ -18,6 +18,9 @@ import {
   Atom,
   HeartPulse,
   Zap,
+  Activity,
+  HeartCrack,
+  Gauge,
 } from 'lucide-react';
 
 export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
@@ -188,6 +191,9 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                             {topic.id === 'quantum-mechanics' && <Atom className="w-4 h-4 text-sky-500" />}
                             {topic.id === 'fetus-development' && <HeartPulse className="w-4 h-4 text-rose-500" />}
                             {topic.id === 'ev-battery' && <Zap className="w-4 h-4 text-emerald-500" />}
+                            {topic.id === 'pulmonology-pneumonia' && <Activity className="w-4 h-4 text-rose-500" />}
+                            {topic.id === 'cardiac-arrest' && <HeartCrack className="w-4 h-4 text-red-500" />}
+                            {topic.id === 'hypertension' && <Gauge className="w-4 h-4 text-amber-500" />}
                           </div>
                           <div>
                             <div className="text-xs font-bold text-slate-900 dark:text-white">
