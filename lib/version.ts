@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.0.12',
+  version: '1.0.15',
   major: 1,
   minor: 0,
-  patch: 12,
-  releaseDate: '2026-09-02',
-  buildNumber: 'build.20260902.12',
+  patch: 15,
+  releaseDate: '2026-09-03',
+  buildNumber: 'build.20260903.15',
   environment: 'production',
   changelog: [
+    {
+      version: '1.0.15',
+      date: '2026-09-03',
+      type: 'patch',
+      title: {
+        en: 'Embryonic 3D Anatomical Texture Mapping & Organ Viewport Refinement',
+        id: 'Pemetaan Tekstur Anatomi 3D Embrio & Penyempurnaan Posisi Organ',
+      },
+      highlights: {
+        en: [
+          'Refactored Embryonic Development 3D scene with procedural textures for skin, epidermal micro-bump, cardiac muscle, cornea/iris, and cartilage/bone scaffolding.',
+          'Re-anchored anatomical organ positions (optic cups, heart prominence, limbs, somites) to eliminate clipping across all gestational stages from Week 1 to Week 36.',
+          'Added automatic WebGL canvas texture lifecycle disposal to prevent memory leaks during rapid gestational stage transitions.',
+          'Resolved all React Hook dependency linting warnings across EmbryoViewer, DoubleSlitViewer, BatteryCellViewer, and QuantumOrbitalViewer.',
+        ],
+        id: [
+          'Memperbarui model 3D Perkembangan Embrio dengan tekstur prosedural kulit, mikro-bump epidermal, otot jantung, kornea/iris, dan struktur tulang rawan/tulang keras.',
+          'Menata ulang koordinat organ anatomi (cawan optik mata, tonjolan jantung, tunas anggota badan, somit) untuk mengeliminasi pemotongan mesh pada semua tahap dari Minggu 1 hingga Minggu 36.',
+          'Menambahkan pembersihan siklus hidup tekstur kanvas WebGL otomatis untuk mencegah kebocoran memori saat transisi cepat antar minggu kehamilan.',
+          'Menyelesaikan seluruh peringatan linting React Hook pada EmbryoViewer, DoubleSlitViewer, BatteryCellViewer, dan QuantumOrbitalViewer.',
+        ],
+      },
+    },
     {
       version: '1.0.12',
       date: '2026-09-02',

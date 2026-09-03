@@ -4,15 +4,21 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { Eye, EyeOff, Play, Pause, RotateCcw, Sparkles } from 'lucide-react';
+import { TelemetryHUD } from './TelemetryHUD';
 
 export const DoubleSlitViewer: React.FC = () => {
-  const { language } = useLearning();
+  const { language, settings } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
   const [detectorActive, setDetectorActive] = useState<boolean>(false);
   const [wavelength, setWavelength] = useState<number>(550); // nm
   const [slitDistance, setSlitDistance] = useState<number>(1.2); // mm
   const [isRunning, setIsRunning] = useState<boolean>(true);
   const [accumulatedHits, setAccumulatedHits] = useState<number>(0);
+
+  // Telemetry state
+  const [fps, setFps] = useState<number>(60);
+  const [drawCalls, setDrawCalls] = useState<number>(0);
+  const [triangles, setTriangles] = useState<number>(0);
 
   // References for dynamic updates to avoid tearing down WebGL renderer and re-renders
   const detectorActiveRef = useRef(detectorActive);
@@ -26,6 +32,11 @@ export const DoubleSlitViewer: React.FC = () => {
     slitDistanceRef.current = slitDistance;
     isRunningRef.current = isRunning;
   }, [detectorActive, wavelength, slitDistance, isRunning]);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
 
   const sceneRef = useRef<THREE.Scene | null>(null);
   const waveMeshRef = useRef<THREE.Mesh | null>(null);
@@ -47,9 +58,19 @@ export const DoubleSlitViewer: React.FC = () => {
     camera.position.set(0, 7, 13);
     camera.lookAt(0, 0, -1);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: settings.graphicsQuality !== 'performance',
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const maxPr =
+      settings.graphicsQuality === 'performance'
+        ? 1.0
+        : settings.graphicsQuality === 'balanced'
+        ? Math.min(window.devicePixelRatio, 1.25)
+        : Math.min(window.devicePixelRatio, 2.0);
+    renderer.setPixelRatio(maxPr);
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
@@ -167,11 +188,22 @@ export const DoubleSlitViewer: React.FC = () => {
     let animId: number;
     let time = 0;
     let frameCount = 0;
+    let frameCounter = 0;
+    let fpsTimer = performance.now();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
       frameCount++;
-      time += 0.04;
+      const now = performance.now();
+      frameCounter++;
+      if (now - fpsTimer >= 500) {
+        setFps((frameCounter * 1000) / (now - fpsTimer));
+        frameCounter = 0;
+        fpsTimer = now;
+      }
+
+      const speed = settingsRef.current.physicsSpeed || 1.0;
+      time += 0.04 * speed;
 
       const currentIsRunning = isRunningRef.current;
       const currentDetectorActive = detectorActiveRef.current;
@@ -208,8 +240,12 @@ export const DoubleSlitViewer: React.FC = () => {
       }
 
       // Spawn photon/electron hits on the detector screen
+      const densityScale = (settingsRef.current.particleDensity || 100) / 100;
+      const spawnBatches = Math.max(1, Math.round(2 * densityScale * speed));
+
       if (currentIsRunning && particlesRef.current && hitCountRef.current < maxHits) {
-        for (let h = 0; h < 2; h++) {
+        for (let h = 0; h < spawnBatches; h++) {
+          if (hitCountRef.current >= maxHits) break;
           const hitIdx = hitCountRef.current;
           let screenX = 0;
 
@@ -235,7 +271,7 @@ export const DoubleSlitViewer: React.FC = () => {
             if (!accepted) screenX = candX;
           }
 
-          const screenY = (Math.random() * 2 - 1) * 1.4;
+          const screenY = (Math.random() * 2 - 1) * 1.5;
           const posAttr = particlesRef.current.geometry.attributes.position as THREE.BufferAttribute;
           posAttr.setXYZ(hitIdx, screenX, screenY, -3.95);
           posAttr.needsUpdate = true;
@@ -249,6 +285,8 @@ export const DoubleSlitViewer: React.FC = () => {
       }
 
       renderer.render(scene, camera);
+      setDrawCalls(renderer.info.render.calls);
+      setTriangles(renderer.info.render.triangles);
     };
 
     animate();
@@ -270,7 +308,7 @@ export const DoubleSlitViewer: React.FC = () => {
       ro.disconnect();
       renderer.dispose();
     };
-  }, []);
+  }, [settings.graphicsQuality]);
 
   const resetSimulation = () => {
     if (particlesRef.current) {
@@ -326,6 +364,13 @@ export const DoubleSlitViewer: React.FC = () => {
 
       {/* Main 3D Canvas Stage */}
       <div className="relative h-[380px] sm:h-[440px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner flex flex-col">
+        <TelemetryHUD
+          fps={fps}
+          drawCalls={drawCalls}
+          triangles={triangles}
+          particleCount={accumulatedHits}
+        />
+
         <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing canvas-container" />
 
         {/* Overlay Badges */}

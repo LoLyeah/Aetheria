@@ -28,6 +28,8 @@ import {
   BookOpen,
   Eye,
   Sliders,
+  Zap,
+  Activity,
 } from 'lucide-react';
 import { APP_VERSION_DATA } from '@/lib/version';
 
@@ -607,6 +609,89 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     checked={settings?.autoRotate3D !== false}
                     onChange={(e) => updateSettings({ autoRotate3D: e.target.checked })}
                     className="w-5 h-5 rounded accent-sky-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Physics Simulation Speed */}
+                <div className="space-y-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-amber-500" />
+                    <span>{language === 'en' ? 'Physics Time Multiplier' : 'Pengali Waktu Simulasi Fisika'}</span>
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { speed: 0.5, label: '0.5× Slow' },
+                      { speed: 1.0, label: '1.0× Real' },
+                      { speed: 1.5, label: '1.5× Fast' },
+                      { speed: 2.0, label: '2.0× Max' },
+                    ].map((s) => {
+                      const active = (settings?.physicsSpeed || 1.0) === s.speed;
+                      return (
+                        <button
+                          key={s.speed}
+                          onClick={() => updateSettings({ physicsSpeed: s.speed })}
+                          className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                            active
+                              ? 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/40 font-bold text-amber-900 dark:text-amber-200'
+                              : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                          }`}
+                        >
+                          <div className="text-xs font-bold font-mono">{s.label}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Physics Integration Engine */}
+                <div className="space-y-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-rose-500" />
+                    <span>{language === 'en' ? 'Physics Integration Solver' : 'Algoritma Integrator Fisika'}</span>
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: 'verlet', name: 'Velocity-Verlet', desc: { en: 'Energy-conserving', id: 'Konservasi energi' } },
+                      { id: 'rk4', name: 'Runge-Kutta 4', desc: { en: 'High-precision ODE', id: 'Presisi tinggi' } },
+                      { id: 'euler', name: 'Symplectic Euler', desc: { en: 'Lightweight fast', id: 'Komputasi cepat' } },
+                    ].map((eng) => {
+                      const active = (settings?.physicsEngine || 'verlet') === eng.id;
+                      return (
+                        <button
+                          key={eng.id}
+                          onClick={() => updateSettings({ physicsEngine: eng.id as any })}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            active
+                              ? 'border-rose-500 bg-rose-50/50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                              : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                          }`}
+                        >
+                          <div className="text-xs font-bold font-mono">{eng.name}</div>
+                          <div className="text-[10px] text-slate-500 mt-0.5">{eng.desc[language]}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Real-time FPS & Telemetry HUD */}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <Gauge className="w-4 h-4 text-emerald-500" />
+                      <span>{language === 'en' ? 'Show Real-Time Telemetry HUD' : 'Tampilkan HUD Telemetri Real-Time'}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {language === 'en'
+                        ? 'Displays live FPS, draw calls, triangles count, and WebGL/WebGPU pipeline metrics on 3D viewports.'
+                        : 'Menampilkan FPS real-time, panggilan gambar, jumlah poligon, dan telemetri WebGL/WebGPU pada viewport 3D.'}
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={settings?.showFpsOverlay === true}
+                    onChange={(e) => updateSettings({ showFpsOverlay: e.target.checked })}
+                    className="w-5 h-5 rounded accent-emerald-500 cursor-pointer"
                   />
                 </div>
               </motion.div>

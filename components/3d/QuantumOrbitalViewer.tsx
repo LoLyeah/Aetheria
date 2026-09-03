@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { RotateCcw, Play, Pause, Layers, Eye, Sparkles, Sliders, Maximize2 } from 'lucide-react';
+import { TelemetryHUD } from './TelemetryHUD';
 
 export type OrbitalKey = '1s' | '2s' | '2px' | '2pz' | '3dz2' | '3dxy' | '4fxyz';
 
@@ -121,7 +122,7 @@ const ORBITALS: Record<OrbitalKey, OrbitalData> = {
 };
 
 export const QuantumOrbitalViewer: React.FC = () => {
-  const { language } = useLearning();
+  const { language, settings } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
   const [selectedOrbital, setSelectedOrbital] = useState<OrbitalKey>('2pz');
   const [renderMode, setRenderMode] = useState<'cloud' | 'mesh' | 'both'>('cloud');
@@ -130,6 +131,23 @@ export const QuantumOrbitalViewer: React.FC = () => {
   const [showSlice, setShowSlice] = useState<boolean>(false);
   const [showBohrOrbit, setShowBohrOrbit] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+
+  // Telemetry state
+  const [fps, setFps] = useState<number>(60);
+  const [drawCalls, setDrawCalls] = useState<number>(0);
+  const [triangles, setTriangles] = useState<number>(0);
+
+  // Dynamic settings ref for animation loop without recreating scene
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+
+  // Derived active particle count
+  const activeParticleCount =
+    renderMode === 'mesh'
+      ? 0
+      : Math.round(particleDensity * ((settings.particleDensity || 100) / 100));
 
   // Dynamic references to prevent WebGL canvas re-mounting on rotation toggle
   const isRotatingRef = useRef(isRotating);
@@ -223,9 +241,19 @@ export const QuantumOrbitalViewer: React.FC = () => {
     cameraRef.current = camera;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: settings.graphicsQuality !== 'performance',
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const maxPr =
+      settings.graphicsQuality === 'performance'
+        ? 1.0
+        : settings.graphicsQuality === 'balanced'
+        ? Math.min(window.devicePixelRatio, 1.25)
+        : Math.min(window.devicePixelRatio, 2.0);
+    renderer.setPixelRatio(maxPr);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     rendererRef.current = renderer;
 
@@ -308,23 +336,37 @@ export const QuantumOrbitalViewer: React.FC = () => {
 
     // Animation Loop
     let animationFrameId: number;
+    let frameCounter = 0;
+    let fpsTimer = performance.now();
+
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      if (isRotatingRef.current && !isDragging) {
-        scene.rotation.y += 0.004;
+      const now = performance.now();
+      frameCounter++;
+      if (now - fpsTimer >= 500) {
+        setFps((frameCounter * 1000) / (now - fpsTimer));
+        frameCounter = 0;
+        fpsTimer = now;
+      }
+
+      const speed = settingsRef.current.physicsSpeed || 1.0;
+      if (isRotatingRef.current && settingsRef.current.autoRotate3D !== false && !isDragging) {
+        scene.rotation.y += 0.004 * speed;
       }
 
       // Pulse nucleus
-      const t = Date.now() * 0.003;
+      const t = Date.now() * 0.003 * speed;
       nucleus.scale.setScalar(1 + 0.08 * Math.sin(t));
 
       // Rotate Bohr orbit electron if active
       if (bohrGroupRef.current) {
-        bohrGroupRef.current.rotation.y += 0.03;
+        bohrGroupRef.current.rotation.y += 0.03 * speed;
       }
 
       renderer.render(scene, camera);
+      setDrawCalls(renderer.info.render.calls);
+      setTriangles(renderer.info.render.triangles);
     };
 
     animate();
@@ -350,7 +392,7 @@ export const QuantumOrbitalViewer: React.FC = () => {
       resizeObserver.disconnect();
       renderer.dispose();
     };
-  }, []);
+  }, [settings.graphicsQuality]);
 
   // Rebuild 3D Orbital Geometry on parameters change
   useEffect(() => {
@@ -392,7 +434,8 @@ export const QuantumOrbitalViewer: React.FC = () => {
 
       const maxR = orbitalData.n * 2.8;
       let count = 0;
-      const targetCount = particleDensity;
+      const densityRatio = (settings.particleDensity || 100) / 100;
+      const targetCount = Math.round(particleDensity * densityRatio);
       let iterations = 0;
       const maxIterations = targetCount * 50;
 
@@ -556,7 +599,7 @@ export const QuantumOrbitalViewer: React.FC = () => {
       bohrGroupRef.current = bohrGroup;
       scene.add(bohrGroup);
     }
-  }, [selectedOrbital, renderMode, particleDensity, showSlice, showBohrOrbit, orbitalData.n]);
+  }, [selectedOrbital, renderMode, particleDensity, showSlice, showBohrOrbit, orbitalData.n, settings.particleDensity]);
 
   const resetCamera = () => {
     if (cameraRef.current && sceneRef.current) {
@@ -608,6 +651,13 @@ export const QuantumOrbitalViewer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* 3D Canvas Stage */}
         <div className="lg:col-span-3 relative h-[420px] sm:h-[480px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner flex flex-col">
+          <TelemetryHUD
+            fps={fps}
+            drawCalls={drawCalls}
+            triangles={triangles}
+            particleCount={renderMode === 'mesh' ? 0 : activeParticleCount}
+          />
+
           <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing canvas-container" />
 
           {/* Floating Canvas Overlays */}

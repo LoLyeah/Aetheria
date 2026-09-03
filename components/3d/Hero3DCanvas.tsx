@@ -191,14 +191,24 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
 
     // Render loop & FPS telemetry
     let animId: number;
-    let clock = new THREE.Clock();
+    let lastFrameTime = 0;
+    let elapsedTime = 0;
     let frameCount = 0;
-    let lastFpsTime = performance.now();
+    let lastFpsTime = 0;
 
-    const animate = () => {
+    const animate = (timestamp: number) => {
       animId = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
-      const time = clock.getElapsedTime() * speedRef.current;
+
+      if (lastFrameTime === 0) {
+        lastFrameTime = timestamp;
+        lastFpsTime = timestamp;
+      }
+
+      // Spike-safe delta (cap at 100ms in case of tab-switching)
+      const rawDelta = Math.min((timestamp - lastFrameTime) / 1000, 0.1);
+      lastFrameTime = timestamp;
+      elapsedTime += rawDelta;
+      const time = elapsedTime * speedRef.current;
 
       // Auto-rotation
       if (autoRotateRef.current && !isDragging) {
@@ -240,15 +250,14 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
 
       // Measure FPS
       frameCount++;
-      const now = performance.now();
-      if (now - lastFpsTime >= 1000) {
-        setFps(Math.round((frameCount * 1000) / (now - lastFpsTime)));
+      if (timestamp - lastFpsTime >= 1000) {
+        setFps(Math.round((frameCount * 1000) / (timestamp - lastFpsTime)));
         frameCount = 0;
-        lastFpsTime = now;
+        lastFpsTime = timestamp;
       }
     };
 
-    animate();
+    animate(0);
 
     const handleResize = () => {
       if (!container || !renderer || !camera) return;

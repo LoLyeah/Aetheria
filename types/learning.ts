@@ -193,4 +193,6 @@ export interface AppSettings {
   showFpsOverlay: boolean;
   soundEffects: boolean;
   autoAdvanceQuiz: boolean;
+  physicsSpeed?: number; // 0.5, 1.0, 1.5, 2.0
+  physicsEngine?: 'euler' | 'verlet' | 'rk4';
 }

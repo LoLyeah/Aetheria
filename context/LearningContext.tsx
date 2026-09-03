@@ -7,6 +7,7 @@ import { allTopics, allBadges, getModuleById } from '@/lib/content';
 export type AppView = 'landing' | 'learn' | 'module' | 'progress' | 'settings';
 
 interface LearningContextType {
+  isHydrated: boolean;
   language: Language;
   setLanguage: (lang: Language) => void;
   theme: Theme;
@@ -51,6 +52,8 @@ export const defaultSettings: AppSettings = {
   showFpsOverlay: false,
   soundEffects: true,
   autoAdvanceQuiz: false,
+  physicsSpeed: 1.0,
+  physicsEngine: 'verlet',
 };
 
 const defaultProgress: UserProgress = {
@@ -67,52 +70,50 @@ const defaultProgress: UserProgress = {
 const LearningContext = createContext<LearningContextType | undefined>(undefined);
 
 export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY_LANG) as Language | null;
-      if (saved === 'en' || saved === 'id') return saved;
-    }
-    return 'en';
-  });
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY_THEME) as Theme | null;
-      if (saved === 'light' || saved === 'dark') return saved;
-    }
-    return 'light'; // light mode default per prompt
-  });
-  const [settings, setSettingsState] = useState<AppSettings>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY_SETTINGS);
-      if (saved) {
-        try {
-          return { ...defaultSettings, ...JSON.parse(saved) };
-        } catch {
-          return defaultSettings;
-        }
-      }
-    }
-    return defaultSettings;
-  });
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [language, setLanguageState] = useState<Language>('en');
+  const [theme, setThemeState] = useState<Theme>('light');
+  const [settings, setSettingsState] = useState<AppSettings>(defaultSettings);
   const [view, setView] = useState<AppView>('landing');
   const [selectedTopicId, setSelectedTopicId] = useState<TopicId | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [userProgress, setUserProgress] = useState<UserProgress>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY_PROGRESS);
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {
-          return defaultProgress;
-        }
-      }
-    }
-    return defaultProgress;
-  });
+  const [userProgress, setUserProgress] = useState<UserProgress>(defaultProgress);
   const [isWebGPUSupported, setIsWebGPUSupported] = useState<boolean>(false);
   const [gpuRendererInfo, setGpuRendererInfo] = useState<string>('Initializing 3D Engine...');
+
+  // Hydrate stored preferences on client mount only to eliminate SSR mismatches
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const savedLang = localStorage.getItem(STORAGE_KEY_LANG) as Language | null;
+        const savedTheme = localStorage.getItem(STORAGE_KEY_THEME) as Theme | null;
+        const savedSettings = localStorage.getItem(STORAGE_KEY_SETTINGS);
+        const savedProgress = localStorage.getItem(STORAGE_KEY_PROGRESS);
+
+        queueMicrotask(() => {
+          if (savedLang === 'en' || savedLang === 'id') setLanguageState(savedLang);
+          if (savedTheme === 'light' || savedTheme === 'dark') setThemeState(savedTheme);
+          if (savedSettings) {
+            try {
+              setSettingsState({ ...defaultSettings, ...JSON.parse(savedSettings) });
+            } catch {}
+          }
+          if (savedProgress) {
+            try {
+              setUserProgress(JSON.parse(savedProgress));
+            } catch {}
+          }
+          setIsHydrated(true);
+        });
+      }
+    } catch (e) {
+      console.error('Storage hydration failed:', e);
+      queueMicrotask(() => {
+        setIsHydrated(true);
+      });
+    }
+  }, []);
 
   // Sync theme class to document
   useEffect(() => {
@@ -396,6 +397,7 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
     <LearningContext.Provider
       value={{
+        isHydrated,
         language,
         setLanguage,
         theme,

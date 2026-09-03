@@ -4,17 +4,35 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { Zap, Thermometer, BatteryCharging, RotateCcw, Play, Pause, Flame, Sliders, Layers } from 'lucide-react';
+import { TelemetryHUD } from './TelemetryHUD';
 
 export type CellFormat = '4680-cylindrical' | 'prismatic-module' | 'pack-cooling';
 
 export const BatteryCellViewer: React.FC = () => {
-  const { language } = useLearning();
+  const { language, settings } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
   const [cellFormat, setCellFormat] = useState<CellFormat>('4680-cylindrical');
   const [isCharging, setIsCharging] = useState<boolean>(true); // Charging vs Discharging Li+ flow
   const [cRate, setCRate] = useState<number>(2.0); // 0.5C to 4.0C fast charge
   const [showThermalHeatmap, setShowThermalHeatmap] = useState<boolean>(false);
   const [isRotating, setIsRotating] = useState<boolean>(true);
+
+  // Telemetry state
+  const [fps, setFps] = useState<number>(60);
+  const [drawCalls, setDrawCalls] = useState<number>(0);
+  const [triangles, setTriangles] = useState<number>(0);
+
+  // Dynamic settings ref to avoid tearing down WebGL on settings toggle
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+
+  // Derived active particle count
+  const activeParticleCount =
+    cellFormat === '4680-cylindrical'
+      ? Math.round(1500 * ((settings.particleDensity || 100) / 100))
+      : 0;
 
   // References for dynamic updates to avoid tearing down WebGL context
   const isChargingRef = useRef(isCharging);
@@ -49,9 +67,19 @@ export const BatteryCellViewer: React.FC = () => {
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: settings.graphicsQuality !== 'performance',
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const maxPr =
+      settings.graphicsQuality === 'performance'
+        ? 1.0
+        : settings.graphicsQuality === 'balanced'
+        ? Math.min(window.devicePixelRatio, 1.25)
+        : Math.min(window.devicePixelRatio, 2.0);
+    renderer.setPixelRatio(maxPr);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     rendererRef.current = renderer;
 
@@ -102,20 +130,33 @@ export const BatteryCellViewer: React.FC = () => {
 
     // Animation Loop
     let animId: number;
-    let clock = new THREE.Clock();
+    let frameCounter = 0;
+    let fpsTimer = 0;
 
-    const animate = () => {
+    const animate = (timestamp: number) => {
       animId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
 
-      if (isRotatingRef.current && !isDragging) {
-        modelGroup.rotation.y += 0.005;
+      if (fpsTimer === 0) {
+        fpsTimer = timestamp;
+      }
+
+      frameCounter++;
+      if (timestamp - fpsTimer >= 500) {
+        setFps((frameCounter * 1000) / (timestamp - fpsTimer));
+        frameCounter = 0;
+        fpsTimer = timestamp;
+      }
+
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+
+      if (isRotatingRef.current && settingsRef.current.autoRotate3D !== false && !isDragging) {
+        modelGroup.rotation.y += 0.005 * physicsMultiplier;
       }
 
       // Animate Lithium Ion migration particles along jellyroll spiral / cross-section
       if (ionParticlesRef.current) {
         const pos = ionParticlesRef.current.geometry.attributes.position as THREE.BufferAttribute;
-        const speed = (isChargingRef.current ? 1 : -1) * (cRateRef.current * 0.02);
+        const speed = (isChargingRef.current ? 1 : -1) * (cRateRef.current * 0.02 * physicsMultiplier);
 
         for (let i = 0; i < pos.count; i++) {
           let y = pos.getY(i) + speed;
@@ -127,9 +168,11 @@ export const BatteryCellViewer: React.FC = () => {
       }
 
       renderer.render(scene, camera);
+      setDrawCalls(renderer.info.render.calls);
+      setTriangles(renderer.info.render.triangles);
     };
 
-    animate();
+    animate(0);
 
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
@@ -148,7 +191,7 @@ export const BatteryCellViewer: React.FC = () => {
       ro.disconnect();
       renderer.dispose();
     };
-  }, []);
+  }, [settings.graphicsQuality]);
 
   // Rebuild 3D Battery Model on parameter changes
   useEffect(() => {
@@ -234,7 +277,8 @@ export const BatteryCellViewer: React.FC = () => {
       group.add(pin);
 
       // Li+ Ion Migration Particles inside Jellyroll
-      const ionCount = 1500;
+      const densityScale = (settings.particleDensity || 100) / 100;
+      const ionCount = Math.round(1500 * densityScale);
       const ionGeo = new THREE.BufferGeometry();
       const ionPositions = new Float32Array(ionCount * 3);
       for (let i = 0; i < ionCount; i++) {
@@ -327,7 +371,7 @@ export const BatteryCellViewer: React.FC = () => {
         group.add(ribbon);
       }
     }
-  }, [cellFormat, showThermalHeatmap, isCharging]);
+  }, [cellFormat, showThermalHeatmap, isCharging, settings.particleDensity]);
 
   return (
     <div className="flex flex-col gap-4 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm">
@@ -387,6 +431,13 @@ export const BatteryCellViewer: React.FC = () => {
       {/* 3D Canvas Stage */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <div className="lg:col-span-3 relative h-[420px] sm:h-[480px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner flex flex-col">
+          <TelemetryHUD
+            fps={fps}
+            drawCalls={drawCalls}
+            triangles={triangles}
+            particleCount={cellFormat === '4680-cylindrical' ? activeParticleCount : 0}
+          />
+
           <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing canvas-container" />
 
           {/* Floating Badges */}
