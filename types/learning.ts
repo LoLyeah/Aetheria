@@ -1,7 +1,7 @@
 export type Language = 'en' | 'id';
 export type Theme = 'light' | 'dark';
 
-export type TopicId = 'quantum-mechanics' | 'fetus-development' | 'ev-battery';
+export type TopicId = 'quantum-mechanics' | 'fetus-development' | 'ev-battery' | 'pulmonology-pneumonia';
 
 export interface QuizQuestion {
   id: string;
@@ -108,7 +108,8 @@ export type InteractiveLabType =
   | 'embryo-timeline'
   | 'ultrasound-scan'
   | 'cell-cross-section'
-  | 'ev-powertrain';
+  | 'ev-powertrain'
+  | 'pulmonary-alveoli';
 
 export interface LearningModule {
   id: string;
@@ -128,6 +129,11 @@ export interface LearningModule {
   quiz: QuizQuestion[];
   difficulty?: string;
   difficultyId?: string;
+  caseStudy?: CaseStudy;
+  keyTakeaways?: {
+    en: string[];
+    id: string[];
+  };
 }
 
 export interface Topic {

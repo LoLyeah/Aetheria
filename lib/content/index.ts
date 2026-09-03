@@ -2,15 +2,17 @@ import { Topic, LearningModule, TopicId } from '@/types/learning';
 import { quantumMechanicsTopic } from './quantum';
 import { fetusDevelopmentTopic } from './embryo';
 import { evBatteryTopic } from './battery';
+import { pulmonologyPneumoniaTopic } from './pneumonia';
 import { allBadges } from './badges';
 
 export const allTopics: Topic[] = [
   quantumMechanicsTopic,
   fetusDevelopmentTopic,
   evBatteryTopic,
+  pulmonologyPneumoniaTopic,
 ];
 
-export { quantumMechanicsTopic, fetusDevelopmentTopic, evBatteryTopic, allBadges };
+export { quantumMechanicsTopic, fetusDevelopmentTopic, evBatteryTopic, pulmonologyPneumoniaTopic, allBadges };
 
 export function getTopicById(topicId: string): Topic | undefined {
   return allTopics.find((t) => t.id === topicId);

@@ -11,6 +11,7 @@ import {
   Atom,
   HeartPulse,
   Zap,
+  Activity,
   Cpu,
   Award,
   Globe2,
@@ -51,6 +52,7 @@ export const LandingPage: React.FC = () => {
     'quantum-mechanics': <Atom className="w-5 h-5 text-sky-600 dark:text-sky-400" />,
     'fetus-development': <HeartPulse className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
     'ev-battery': <Zap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+    'pulmonology-pneumonia': <Activity className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
   };
 
   return (

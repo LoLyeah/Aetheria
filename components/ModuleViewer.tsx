@@ -9,6 +9,7 @@ import { QuantumOrbitalViewer } from './3d/QuantumOrbitalViewer';
 import { DoubleSlitViewer } from './3d/DoubleSlitViewer';
 import { EmbryoViewer } from './3d/EmbryoViewer';
 import { BatteryCellViewer } from './3d/BatteryCellViewer';
+import { PulmonaryAlveoliViewer } from './3d/PulmonaryAlveoliViewer';
 import { EVPowertrainSimulator } from './simulators/EVPowertrainSimulator';
 import { TheoryReader } from './TheoryReader';
 import { QuizComponent } from './QuizComponent';
@@ -75,7 +76,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
   const nextModule = currentIdx < topic.modules.length - 1 ? topic.modules[currentIdx + 1] : null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-24">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       {/* 1. Header Breadcrumbs & Controls */}
       <div className="w-full bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -210,6 +211,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               {(currentModule.interactiveType === 'embryo-timeline' || currentModule.interactiveType === 'ultrasound-scan') && <EmbryoViewer />}
               {currentModule.interactiveType === 'cell-cross-section' && <BatteryCellViewer />}
               {currentModule.interactiveType === 'ev-powertrain' && <EVPowertrainSimulator />}
+              {currentModule.interactiveType === 'pulmonary-alveoli' && <PulmonaryAlveoliViewer />}
             </motion.div>
           )}
 
@@ -299,20 +301,27 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* 4. Bottom Navigation Footer Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        {/* 4. Module Navigation (below the module, not floating with the user) */}
+        <div className="mt-12 pt-6 pb-16 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           {prevModule ? (
             <motion.button
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigateTo('module', topic.id, prevModule.id)}
-              className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              onClick={() => {
+                setActiveTab('interactive');
+                navigateTo('module', topic.id, prevModule.id);
+              }}
+              className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-3 transition-all shadow-xs cursor-pointer group"
             >
-              <ChevronLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">{prevModule.title[language]}</span>
-              <span className="sm:hidden">{t.moduleViewer.prevModule}</span>
+              <ChevronLeft className="w-4 h-4 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white transition-colors shrink-0" />
+              <div className="text-left min-w-0">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">
+                  {t.moduleViewer.prevModule}
+                </div>
+                <div className="font-bold text-slate-800 dark:text-slate-200 truncate">
+                  {prevModule.title[language]}
+                </div>
+              </div>
             </motion.button>
           ) : (
             <div />
@@ -321,20 +330,29 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           {nextModule ? (
             <motion.button
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigateTo('module', topic.id, nextModule.id)}
-              className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              onClick={() => {
+                setActiveTab('interactive');
+                navigateTo('module', topic.id, nextModule.id);
+              }}
+              className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white text-xs font-bold flex items-center justify-between sm:justify-start gap-3 transition-all shadow-sm hover:shadow-md cursor-pointer group"
             >
-              <span className="hidden sm:inline">{nextModule.title[language]}</span>
-              <span className="sm:hidden">{t.moduleViewer.nextModule}</span>
-              <ChevronRight className="w-4 h-4" />
+              <div className="text-left sm:text-right min-w-0">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">
+                  {t.moduleViewer.nextModule}
+                </div>
+                <div className="font-bold truncate">
+                  {nextModule.title[language]}
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
             </motion.button>
           ) : (
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => navigateTo('learn', null)}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
             >
-              <span>{language === 'en' ? 'Back to Topics' : 'Kembali ke Topik'}</span>
+              <span>{language === 'en' ? 'Back to Curriculum' : 'Kembali ke Kurikulum'}</span>
               <ChevronRight className="w-4 h-4" />
             </motion.button>
           )}

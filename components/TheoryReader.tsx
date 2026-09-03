@@ -179,33 +179,127 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
             {/* Main Narrative Prose with Glossary Highlighting */}
             <div className={`text-slate-700 dark:text-slate-300 space-y-4 ${fontSizeClasses[fontSize]}`}>
               {sec.content[language].split('\n\n').map((paragraph, pIdx) => {
-                if (paragraph.startsWith('•') || paragraph.startsWith('-') || paragraph.startsWith('1.')) {
-                  const items = paragraph.split('\n');
+                const lines = paragraph.split('\n');
+
+                // Check if any line in this paragraph block has list markers
+                const hasListItems = lines.some((l) => /^\s*(?:[•\-\*]|\d+[\.\)])\s+/.test(l));
+
+                if (!hasListItems) {
                   return (
-                    <ul key={pIdx} className="space-y-2 pl-2 my-3">
-                      {items.map((item, itemIdx) => (
-                        <li key={itemIdx} className="flex items-start gap-2.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-2 flex-shrink-0" />
-                          <span>
-                            <GlossaryText
-                              text={item.replace(/^[•\-\d\.]\s*/, '')}
-                              language={language}
-                              onOpenFullGlossary={onOpenGlossary}
-                            />
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                    <p key={pIdx} className="leading-relaxed">
+                      <GlossaryText
+                        text={paragraph}
+                        language={language}
+                        onOpenFullGlossary={onOpenGlossary}
+                      />
+                    </p>
                   );
                 }
+
+                // Group consecutive lines into blocks (prose, numbered, or bullet)
+                const groups: Array<{
+                  type: 'text' | 'bullet' | 'numbered';
+                  items: Array<{ text: string; num?: string }>;
+                }> = [];
+
+                for (const rawLine of lines) {
+                  const line = rawLine.trim();
+                  if (!line) continue;
+
+                  const numMatch = line.match(/^(\d+)[\.\)]\s+(.*)$/);
+                  const bulletMatch = line.match(/^[•\-\*]\s+(.*)$/);
+
+                  if (numMatch) {
+                    const last = groups[groups.length - 1];
+                    if (last && last.type === 'numbered') {
+                      last.items.push({ text: numMatch[2], num: numMatch[1] });
+                    } else {
+                      groups.push({
+                        type: 'numbered',
+                        items: [{ text: numMatch[2], num: numMatch[1] }],
+                      });
+                    }
+                  } else if (bulletMatch) {
+                    const last = groups[groups.length - 1];
+                    if (last && last.type === 'bullet') {
+                      last.items.push({ text: bulletMatch[1] });
+                    } else {
+                      groups.push({
+                        type: 'bullet',
+                        items: [{ text: bulletMatch[1] }],
+                      });
+                    }
+                  } else {
+                    const last = groups[groups.length - 1];
+                    if (last && last.type === 'text') {
+                      last.items.push({ text: line });
+                    } else {
+                      groups.push({
+                        type: 'text',
+                        items: [{ text: line }],
+                      });
+                    }
+                  }
+                }
+
                 return (
-                  <p key={pIdx} className="leading-relaxed">
-                    <GlossaryText
-                      text={paragraph}
-                      language={language}
-                      onOpenFullGlossary={onOpenGlossary}
-                    />
-                  </p>
+                  <div key={pIdx} className="space-y-3">
+                    {groups.map((grp, gIdx) => {
+                      if (grp.type === 'numbered') {
+                        return (
+                          <ol key={gIdx} className="space-y-2.5 my-3 pl-0.5">
+                            {grp.items.map((item, itemIdx) => (
+                              <li key={itemIdx} className="flex items-start gap-3">
+                                <span className="w-5 h-5 rounded-md bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-sky-200/90 dark:border-sky-800/80 shadow-2xs">
+                                  {item.num || itemIdx + 1}
+                                </span>
+                                <span className="flex-1 leading-relaxed">
+                                  <GlossaryText
+                                    text={item.text}
+                                    language={language}
+                                    onOpenFullGlossary={onOpenGlossary}
+                                  />
+                                </span>
+                              </li>
+                            ))}
+                          </ol>
+                        );
+                      }
+
+                      if (grp.type === 'bullet') {
+                        return (
+                          <ul key={gIdx} className="space-y-2 my-3 pl-2">
+                            {grp.items.map((item, itemIdx) => (
+                              <li key={itemIdx} className="flex items-start gap-2.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-2 shrink-0" />
+                                <span className="flex-1 leading-relaxed">
+                                  <GlossaryText
+                                    text={item.text}
+                                    language={language}
+                                    onOpenFullGlossary={onOpenGlossary}
+                                  />
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }
+
+                      return (
+                        <div key={gIdx} className="space-y-2">
+                          {grp.items.map((item, itemIdx) => (
+                            <p key={itemIdx} className="leading-relaxed">
+                              <GlossaryText
+                                text={item.text}
+                                language={language}
+                                onOpenFullGlossary={onOpenGlossary}
+                              />
+                            </p>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
                 );
               })}
             </div>
@@ -431,6 +525,53 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
           </article>
         ))}
       </div>
+
+      {/* Module-Level Real-World Case Study (if present) */}
+      {module.caseStudy && (
+        <div className="my-6 p-6 sm:p-8 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 space-y-4 shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+            <Cpu className="w-4 h-4" />
+            <span>{language === 'en' ? 'Module Clinical / Engineering Case Study' : 'Studi Kasus Klinis / Rekayasa Modul'}</span>
+          </div>
+
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            {module.caseStudy.title[language]}
+          </h3>
+
+          <div className="space-y-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p>
+              <strong className="text-slate-900 dark:text-white font-semibold">
+                {language === 'en' ? 'Context & Problem: ' : 'Konteks & Masalah: '}
+              </strong>
+              <GlossaryText
+                text={module.caseStudy.context[language]}
+                language={language}
+                onOpenFullGlossary={onOpenGlossary}
+              />
+            </p>
+            <p>
+              <strong className="text-slate-900 dark:text-white font-semibold">
+                {language === 'en' ? 'Scientific Analysis: ' : 'Analisis Ilmiah: '}
+              </strong>
+              <GlossaryText
+                text={module.caseStudy.analysis[language]}
+                language={language}
+                onOpenFullGlossary={onOpenGlossary}
+              />
+            </p>
+            <div className="p-4 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-amber-200/90 dark:border-amber-900/70 text-amber-900 dark:text-amber-200 font-medium">
+              <strong className="block mb-1 text-xs font-mono uppercase tracking-wider text-amber-800 dark:text-amber-300">
+                {language === 'en' ? 'Takeaway & Clinical / Engineering Outcome:' : 'Hasil & Kesimpulan Klinis / Rekayasa:'}
+              </strong>
+              <GlossaryText
+                text={module.caseStudy.takeaway[language]}
+                language={language}
+                onOpenFullGlossary={onOpenGlossary}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 3. Bottom Next Steps & Assessment CTA Box */}
       <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white border border-slate-800 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6">

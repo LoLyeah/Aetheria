@@ -614,6 +614,100 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         explodedPos: new THREE.Vector3(0, 3.2, 0),
       });
     }
+
+    // -------------------------------------------------------------
+    // TOPIC 4: PULMONOLOGY, ALVEOLAR SACS & PNEUMONIA CONSOLIDATION
+    // -------------------------------------------------------------
+    if (selectedTopic === 'pulmonology-pneumonia') {
+      // 1. Terminal Bronchiole Airway
+      const bronchioleGeo = new THREE.CylinderGeometry(0.28, 0.42, 1.5, 20, 1, true);
+      const bronchioleMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        roughness: 0.35,
+        wireframe: isWire,
+      });
+      const bronchiole = new THREE.Mesh(bronchioleGeo, bronchioleMat);
+      bronchiole.position.set(0, 1.85, 0);
+      group.add(bronchiole);
+
+      // 2. Alveolar Acinus (Cluster of 6 interconnected micro-sacs)
+      const sacCenters: [number, number, number][] = [
+        [0, 0.1, 0],
+        [-0.8, -0.2, 0.5],
+        [0.8, -0.2, 0.5],
+        [-0.8, -0.4, -0.5],
+        [0.8, -0.4, -0.5],
+        [0, -0.9, 0],
+      ];
+
+      const sacMat = new THREE.MeshPhysicalMaterial({
+        color: isFlux ? 0xf43f5e : 0xfb7185,
+        roughness: 0.15,
+        transmission: isWire ? 0 : 0.82,
+        opacity: isWire ? 0.35 : 0.72,
+        transparent: true,
+        wireframe: isWire,
+        ior: 1.35,
+      });
+
+      sacCenters.forEach(([sx, sy, sz], idx) => {
+        const sacGeo = new THREE.SphereGeometry(0.75, 24, 20);
+        const sacMesh = new THREE.Mesh(sacGeo, sacMat);
+        sacMesh.position.set(sx, sy, sz);
+        group.add(sacMesh);
+
+        // Exploded view expands the outer sacs away from the central duct
+        animatedObjectsRef.current.explodedMeshes?.push({
+          mesh: sacMesh,
+          originalPos: new THREE.Vector3(sx, sy, sz),
+          explodedPos: new THREE.Vector3(sx * 1.85, sy * 1.85, sz * 1.85),
+        });
+      });
+
+      // 3. Intra-Alveolar Exudate Consolidation Core
+      const exudateGeo = new THREE.SphereGeometry(0.55, 20, 16);
+      const exudateMat = new THREE.MeshStandardMaterial({
+        color: 0xbe123c, // Deep consolidation red
+        roughness: 0.4,
+        emissive: 0x881337,
+        emissiveIntensity: 0.4,
+      });
+      const exudateMesh = new THREE.Mesh(exudateGeo, exudateMat);
+      exudateMesh.position.set(0, -0.2, 0);
+      group.add(exudateMesh);
+      animatedObjectsRef.current.pulsers.push({ mesh: exudateMesh, baseScale: 1.0, speed: 2.2 });
+
+      // 4. Capillary Rings
+      const capMatDeox = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.3 });
+      const capMatOx = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 });
+      for (let c = 0; c < 8; c++) {
+        const torus = new THREE.Mesh(
+          new THREE.TorusGeometry(1.45, 0.04, 8, 24),
+          c % 2 === 0 ? capMatDeox : capMatOx
+        );
+        torus.rotation.x = (c * Math.PI) / 8;
+        torus.rotation.y = (c * Math.PI) / 4;
+        group.add(torus);
+      }
+
+      // 5. Gas Particles / Pathogen Spores
+      const gGeo = new THREE.BufferGeometry();
+      const gPos = new Float32Array(pointCount * 3);
+      for (let i = 0; i < pointCount * 3; i += 3) {
+        gPos[i] = (Math.random() - 0.5) * 2.8;
+        gPos[i + 1] = (Math.random() - 0.5) * 3.5;
+        gPos[i + 2] = (Math.random() - 0.5) * 2.8;
+      }
+      gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
+      const gMat = new THREE.PointsMaterial({
+        color: 0xf43f5e,
+        size: 0.05,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+      });
+      group.add(new THREE.Points(gGeo, gMat));
+    }
   }, [selectedTopic, renderStyle, particleDensity]);
 
   // Telemetry details based on selected topic
@@ -639,6 +733,13 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           { label: 'Dimensions', val: 'Ø 46 mm × H 80 mm (Tabless)' },
           { label: 'Operating Voltage', val: '3.87 V (Nominal)' },
           { label: 'Current Flux', val: 'J_Li+ = 18.4 mA/cm² @ 3C' },
+        ];
+      case 'pulmonology-pneumonia':
+        return [
+          { label: 'PaO2 / FiO2 Ratio', val: '185 mmHg (Moderate ARDS)' },
+          { label: 'Shunt Fraction', val: 'Qs/Qt = 28.4% (Consolidation)' },
+          { label: 'Alveolar Exudate', val: '74% Lumen Occlusion' },
+          { label: 'CURB-65 Metric', val: 'Class 3 (High Inpatient Risk)' },
         ];
       default:
         return [];
@@ -684,6 +785,18 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           >
             <Zap className="w-3.5 h-3.5 text-emerald-400" />
             <span>EV 4680 Powertrain</span>
+          </button>
+
+          <button
+            onClick={() => setSelectedTopic('pulmonology-pneumonia')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
+              selectedTopic === 'pulmonology-pneumonia'
+                ? 'bg-rose-500/30 text-rose-300 border border-rose-400/60 shadow-xs ring-1 ring-rose-400/40'
+                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+            }`}
+          >
+            <Activity className="w-3.5 h-3.5 text-rose-400" />
+            <span>Pulmonary Alveoli</span>
           </button>
         </div>
 

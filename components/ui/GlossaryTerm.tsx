@@ -11,6 +11,7 @@ import {
   Atom,
   Dna,
   Zap,
+  Activity,
   BookOpen,
   Volume2,
   X,
@@ -63,6 +64,12 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       badgeBg: 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
       icon: Zap,
       accentBorder: 'border-amber-500/30',
+    },
+    pulmonology: {
+      label: { en: 'Pulmonology & Medicine', id: 'Pulmonologi & Kedokteran' },
+      badgeBg: 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+      icon: Activity,
+      accentBorder: 'border-rose-500/30',
     },
     general: {
       label: { en: 'Scientific Principle', id: 'Prinsip Ilmiah' },

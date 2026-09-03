@@ -53,6 +53,19 @@ export const allBadges: Badge[] = [
     requiredModuleIds: ['bat-mod-1', 'bat-mod-2', 'bat-mod-3', 'bat-mod-4'],
   },
   {
+    id: 'pne-master',
+    title: {
+      en: 'Pulmonary Pathophysiologist',
+      id: 'Pakar Patofisiologi Pulmonal',
+    },
+    description: {
+      en: 'Completed all 4 modules in Pneumonia & Pulmonary Pathophysiology.',
+      id: 'Menyelesaikan seluruh 4 modul dalam Pneumonia & Patofisiologi Infeksi Pulmonal.',
+    },
+    icon: 'Activity',
+    requiredModuleIds: ['pne-mod-1', 'pne-mod-2', 'pne-mod-3', 'pne-mod-4'],
+  },
+  {
     id: 'quiz-ace',
     title: {
       en: 'Academic Excellence',
@@ -72,8 +85,8 @@ export const allBadges: Badge[] = [
       id: 'Polimat Agung Aetheria',
     },
     description: {
-      en: 'Completed all 12 modules across all 3 scientific disciplines.',
-      id: 'Menyelesaikan seluruh 12 modul di ketiga disiplin ilmu sains.',
+      en: 'Completed all 16 modules across all 4 foundational scientific disciplines.',
+      id: 'Menyelesaikan seluruh 16 modul di keempat disiplin ilmu sains dasar.',
     },
     icon: 'GraduationCap',
   },

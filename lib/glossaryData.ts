@@ -1,4 +1,4 @@
-export type GlossaryCategory = 'quantum' | 'biology' | 'ev-battery' | 'general';
+export type GlossaryCategory = 'quantum' | 'biology' | 'ev-battery' | 'pulmonology' | 'general';
 
 export interface GlossaryTermData {
   id: string;
@@ -21,7 +21,7 @@ export interface GlossaryTermData {
     en: string;
     id: string;
   };
-  relatedTopicId?: 'quantum-mechanics' | 'fetus-development' | 'ev-battery';
+  relatedTopicId?: 'quantum-mechanics' | 'fetus-development' | 'ev-battery' | 'pulmonology-pneumonia';
 }
 
 export const GLOSSARY_TERMS: GlossaryTermData[] = [
@@ -671,6 +671,138 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: 'SEI yang stabil sangat krusial untuk masa pakai baterai jangka panjang; penebalan berlebih meningkatkan hambatan internal dan degradasi kapasitas.',
     },
     relatedTopicId: 'ev-battery',
+  },
+  // ================= PULMONOLOGY & PNEUMONIA =================
+  {
+    id: 'cap',
+    term: {
+      en: 'Community-Acquired Pneumonia (CAP)',
+      id: 'Pneumonia Komunitas (CAP)',
+    },
+    aliases: {
+      en: ['CAP', 'community acquired pneumonia', 'lobar pneumonia'],
+      id: ['cap', 'pneumonia komunitas', 'pneumonia lobaris'],
+    },
+    category: 'pulmonology',
+    symbol: 'CAP',
+    definition: {
+      en: 'Acute infection and inflammatory consolidation of the pulmonary parenchyma acquired outside of hospitals or long-term care facilities, most commonly caused by Streptococcus pneumoniae.',
+      id: 'Infeksi inflamasi akut dan konsolidasi parenkim paru yang didapat di luar rumah sakit atau fasilitas perawatan jangka panjang, paling sering dipicu oleh Streptococcus pneumoniae.',
+    },
+    context: {
+      en: 'Evaluated using clinical risk prediction rules such as CURB-65 and the Pneumonia Severity Index (PSI/PORT).',
+      id: 'Dievaluasi menggunakan instrumen stratifikasi risiko klinis seperti skor CURB-65 dan Pneumonia Severity Index (PSI/PORT).',
+    },
+    relatedTopicId: 'pulmonology-pneumonia',
+  },
+  {
+    id: 'hap-vap',
+    term: {
+      en: 'Hospital-Acquired / Ventilator-Associated Pneumonia (HAP/VAP)',
+      id: 'Pneumonia Nosokomial & Terkait Ventilator (HAP/VAP)',
+    },
+    aliases: {
+      en: ['HAP', 'VAP', 'nosocomial pneumonia', 'ventilator-associated pneumonia'],
+      id: ['hap', 'vap', 'pneumonia nosokomial', 'pneumonia ventilator'],
+    },
+    category: 'pulmonology',
+    symbol: 'HAP/VAP',
+    definition: {
+      en: 'Pneumonia developing ≥48 hours following hospital admission (HAP) or endotracheal intubation (VAP), frequently driven by multidrug-resistant pathogens (Pseudomonas, MRSA, Acinetobacter).',
+      id: 'Pneumonia yang terjadi ≥48 jam setelah admisi rumah sakit (HAP) atau pasca intubasi endotrakeal (VAP), kerap disebabkan kuman resistan obat (Pseudomonas, MRSA, Acinetobacter).',
+    },
+    context: {
+      en: 'Pathophysiology centers around oropharyngeal colonization, microaspiration past endotracheal tube cuffs, and biofilm formation.',
+      id: 'Patofisiologinya berpusat pada kolonisasi orofaring, mikroaspirasi di sekitar balon cuff pipa endotrakeal, dan pembentukan biofilm lumen.',
+    },
+    relatedTopicId: 'pulmonology-pneumonia',
+  },
+  {
+    id: 'curb65',
+    term: {
+      en: 'CURB-65 Score',
+      id: 'Skor CURB-65',
+    },
+    aliases: {
+      en: ['CURB-65', 'curb 65', 'curb-65 score', 'CURB score'],
+      id: ['skor curb-65', 'curb 65', 'curb-65'],
+    },
+    category: 'pulmonology',
+    symbol: 'CURB-65',
+    definition: {
+      en: 'A 6-point clinical prediction score (Confusion, Urea > 7 mmol/L, Respiratory rate ≥ 30, Blood pressure < 90/60, Age ≥ 65) predicting 30-day mortality and guiding outpatient vs inpatient disposition in CAP.',
+      id: 'Skor prediksi klinis 6-poin (Konfusi, Urea > 7 mmol/L, Laju napas ≥ 30, Tekanan darah < 90/60, Usia ≥ 65) untuk memprediksi mortalitas 30-hari dan menentukan rawat jalan vs rawat inap pada CAP.',
+    },
+    context: {
+      en: 'Scores of 0–1 are low-risk for outpatient care; scores ≥3 mandate inpatient admission and critical care assessment.',
+      id: 'Skor 0–1 berisiko rendah untuk rawat jalan; skor ≥3 mewajibkan rawat inap dan evaluasi perawatan intensif.',
+    },
+    relatedTopicId: 'pulmonology-pneumonia',
+  },
+  {
+    id: 'tuberculosis',
+    term: {
+      en: 'Mycobacterium tuberculosis',
+      id: 'Tuberkulosis Paru (TB)',
+    },
+    aliases: {
+      en: ['TB', 'tuberculosis', 'mtb', 'consumption', 'mycobacterium'],
+      id: ['tb', 'tbc', 'tuberkulosis', 'mycobacterium tuberculosis'],
+    },
+    category: 'pulmonology',
+    symbol: 'Mtb',
+    definition: {
+      en: 'An acid-fast, slow-growing obligate aerobic bacillus whose lipid-rich mycolic acid cell wall and cord factor promote intracellular survival inside macrophages, inducing caseating granulomatous inflammation.',
+      id: 'Basil tahan asam aerob obligat yang tumbuh lambat, dengan dinding sel kaya asam mikolat dan cord factor yang memungkinkannya bertahan hidup di dalam makrofag dan memicu granuloma kaseosa.',
+    },
+    context: {
+      en: 'Standard 6-month treatment follows 2HRZE/4HR; rapid molecular diagnosis is performed via GeneXpert MTB/RIF Ultra.',
+      id: 'Regimen standar 6-bulan menggunakan 2HRZE/4HR; diagnosis molekuler cepat ditegakkan melalui GeneXpert MTB/RIF Ultra.',
+    },
+    relatedTopicId: 'pulmonology-pneumonia',
+  },
+  {
+    id: 'ards',
+    term: {
+      en: 'Acute Respiratory Distress Syndrome (ARDS)',
+      id: 'Sindrom Distres Pernapasan Akut (ARDS)',
+    },
+    aliases: {
+      en: ['ARDS', 'acute respiratory distress syndrome', 'diffuse alveolar damage'],
+      id: ['ards', 'sindrom distres pernapasan akut', 'diffuse alveolar damage'],
+    },
+    category: 'pulmonology',
+    symbol: 'ARDS',
+    definition: {
+      en: 'A life-threatening form of non-cardiogenic pulmonary edema and diffuse alveolar damage (DAD) characterized by bilateral radiographic infiltrates, surfactant collapse, eosinophilic hyaline membranes, and PaO2/FiO2 ≤ 300 mmHg.',
+      id: 'Bentuk edema paru non-kardiogenik yang mengancam jiwa dengan kerusakan alveolar difus (DAD), ditandai infiltrat bilateral, kolaps surfaktan, membran hialin eosinofilik, dan rasio PaO2/FiO2 ≤ 300 mmHg.',
+    },
+    context: {
+      en: 'Managed with ARDSNet lung-protective low tidal volume ventilation (4–8 mL/kg PBW) and prone positioning for ≥16 h/day.',
+      id: 'Ditatalaksana dengan ventilasi proteksi volume tidal rendah (4–8 mL/kg PBW) dan posisi prone selama ≥16 jam/hari.',
+    },
+    relatedTopicId: 'pulmonology-pneumonia',
+  },
+  {
+    id: 'alveolar-consolidation',
+    term: {
+      en: 'Alveolar Consolidation',
+      id: 'Konsolidasi Alveolar',
+    },
+    aliases: {
+      en: ['consolidation', 'lobar consolidation', 'alveolar exudate'],
+      id: ['konsolidasi', 'konsolidasi alveolar', 'eksudat alveolar'],
+    },
+    category: 'pulmonology',
+    definition: {
+      en: 'The pathological replacement of air inside alveolar spaces by inflammatory exudate, polymorphonuclear neutrophils, fibrin, and cellular debris, transforming spongy lung tissue into a dense, solid mass.',
+      id: 'Penggantian udara di dalam ruang alveolus oleh eksudat inflamasi, neutrofil, benang fibrin, dan debris seluler, mengubah jaringan paru berongga menjadi massa padat kedap udara.',
+    },
+    context: {
+      en: 'Produces physical findings of dullness to percussion, bronchial breathing, egophony, and radiological air bronchograms.',
+      id: 'Menghasilkan tanda fisik perkusi redup, suara napas bronkial, egofoni, serta gambaran radiologis air bronchogram.',
+    },
+    relatedTopicId: 'pulmonology-pneumonia',
   },
 ];
 

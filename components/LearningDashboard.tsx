@@ -9,6 +9,7 @@ import {
   Atom,
   HeartPulse,
   Zap,
+  Activity,
   ArrowLeft,
   CheckCircle2,
   Clock,
@@ -26,6 +27,7 @@ const topicIcons: Record<TopicId, React.ReactNode> = {
   'quantum-mechanics': <Atom className="w-5 h-5 text-sky-600 dark:text-sky-400" />,
   'fetus-development': <HeartPulse className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
   'ev-battery': <Zap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+  'pulmonology-pneumonia': <Activity className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
 };
 
 export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ onOpenProgress }) => {
