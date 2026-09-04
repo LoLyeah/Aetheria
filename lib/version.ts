@@ -22,14 +22,39 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.1',
+  version: '1.1.2',
   major: 1,
   minor: 1,
-  patch: 1,
+  patch: 2,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.01',
+  buildNumber: 'build.20260904.02',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.2',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Theory-First Pedagogical Flow & Module Tab Sequence Reorganization',
+        id: 'Alur Pedagogis Teori-Pertama & Reorganisasi Urutan Tab Modul',
+      },
+      highlights: {
+        en: [
+          'Reordered workspace tabs to present Theory & Principles as the first default view ahead of the 3D Interactive Lab, aligning with STEM learning pedagogy.',
+          'Configured automatic tab reset ensuring every module opens directly to Theory & Principles regardless of entry point.',
+          'Added seamless post-theory progression button in TheoryReader prominently leading into the 3D Interactive Lab.',
+          'Added interactive lab completion and transition card enabling smooth navigation between theory review and checkpoint quizzes.',
+          'Updated module pagination and post-assessment flows to open following modules on the theory tab.',
+        ],
+        id: [
+          'Mengatur ulang urutan tab ruang kerja untuk menampilkan Teori & Prinsip sebagai tampilan awal default sebelum Lab Interaktif 3D, selaras dengan pedagogi pembelajaran STEM.',
+          'Mengonfigurasi reset tab otomatis untuk memastikan setiap modul selalu terbuka langsung pada tab Teori & Prinsip.',
+          'Menambahkan tombol transisi terarah pada TheoryReader untuk mengarahkan pengguna langsung ke Lab Interaktif 3D setelah selesai membaca teori.',
+          'Menambahkan bilah transisi interaktif di bawah Lab 3D untuk memudahkan siswa berpindah antara ulasan teori dan kuis evaluasi.',
+          'Memperbarui paginasi modul dan alur pasca-kuis agar modul berikutnya selalu dimulai dari tab teori.',
+        ],
+      },
+    },
     {
       version: '1.1.1',
       date: '2026-09-04',

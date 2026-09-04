@@ -44,7 +44,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
   } = useLearning();
 
   const t = translations[language];
-  const [activeTab, setActiveTab] = useState<'interactive' | 'theory' | 'quiz' | 'notes'>('interactive');
+  const [activeTab, setActiveTab] = useState<'theory' | 'interactive' | 'quiz' | 'notes'>('theory');
 
   const topic = getTopicById(selectedTopicId || 'quantum-mechanics');
   const currentModule = getModuleById(selectedModuleId || 'qm-mod-1')?.module || topic?.modules[0];
@@ -53,6 +53,11 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [selectedModuleId, activeTab]);
+
+  // Reset tab to Theory & Principles when switching to a different module
+  useEffect(() => {
+    setActiveTab('theory');
+  }, [selectedModuleId]);
 
   if (!topic || !currentModule) {
     return (
@@ -141,18 +146,6 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
         {/* 2. Workspace Tabs with Smooth Indicator */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto border-t border-slate-100 dark:border-slate-800 text-xs font-bold">
           <button
-            onClick={() => setActiveTab('interactive')}
-            className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
-              activeTab === 'interactive'
-                ? 'border-sky-500 text-sky-600 dark:text-sky-400'
-                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-sky-500" />
-            <span>{t.moduleViewer.tab3DLab}</span>
-          </button>
-
-          <button
             onClick={() => setActiveTab('theory')}
             className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
               activeTab === 'theory'
@@ -162,6 +155,18 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           >
             <BookOpen className="w-4 h-4 text-indigo-500" />
             <span>{t.moduleViewer.tabOverview}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('interactive')}
+            className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
+              activeTab === 'interactive'
+                ? 'border-sky-500 text-sky-600 dark:text-sky-400'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-sky-500" />
+            <span>{t.moduleViewer.tab3DLab}</span>
           </button>
 
           <button
@@ -198,28 +203,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
       {/* 3. Main Dynamic Content Container with AnimatePresence */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <AnimatePresence mode="wait">
-          {/* TAB 1: 3D INTERACTIVE LAB */}
-          {activeTab === 'interactive' && (
-            <motion.div
-              key="interactive"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
-              className="space-y-6"
-            >
-              {(currentModule.interactiveType === 'orbital-cloud' || currentModule.interactiveType === 'bloch-sphere') && <QuantumOrbitalViewer />}
-              {(currentModule.interactiveType === 'double-slit' || currentModule.interactiveType === 'quantum-tunneling') && <DoubleSlitViewer />}
-              {(currentModule.interactiveType === 'embryo-timeline' || currentModule.interactiveType === 'ultrasound-scan') && <EmbryoViewer />}
-              {currentModule.interactiveType === 'cell-cross-section' && <BatteryCellViewer />}
-              {currentModule.interactiveType === 'ev-powertrain' && <EVPowertrainSimulator />}
-              {currentModule.interactiveType === 'pulmonary-alveoli' && <PulmonaryAlveoliViewer />}
-              {currentModule.interactiveType === 'cardiac-hemodynamics' && <CardiacArrestViewer />}
-              {currentModule.interactiveType === 'vascular-hemodynamics' && <HypertensionVascularViewer />}
-            </motion.div>
-          )}
-
-          {/* TAB 2: THEORY & PRINCIPLES */}
+          {/* TAB 1: THEORY & PRINCIPLES */}
           {activeTab === 'theory' && (
             <motion.div
               key="theory"
@@ -237,6 +221,58 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
                 onNavigateTo3D={() => setActiveTab('interactive')}
                 onOpenGlossary={onOpenGlossary}
               />
+            </motion.div>
+          )}
+
+          {/* TAB 2: 3D INTERACTIVE LAB */}
+          {activeTab === 'interactive' && (
+            <motion.div
+              key="interactive"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="space-y-6"
+            >
+              {(currentModule.interactiveType === 'orbital-cloud' || currentModule.interactiveType === 'bloch-sphere') && <QuantumOrbitalViewer />}
+              {(currentModule.interactiveType === 'double-slit' || currentModule.interactiveType === 'quantum-tunneling') && <DoubleSlitViewer />}
+              {(currentModule.interactiveType === 'embryo-timeline' || currentModule.interactiveType === 'ultrasound-scan') && <EmbryoViewer />}
+              {currentModule.interactiveType === 'cell-cross-section' && <BatteryCellViewer />}
+              {currentModule.interactiveType === 'ev-powertrain' && <EVPowertrainSimulator />}
+              {currentModule.interactiveType === 'pulmonary-alveoli' && <PulmonaryAlveoliViewer />}
+              {currentModule.interactiveType === 'cardiac-hemodynamics' && <CardiacArrestViewer />}
+              {currentModule.interactiveType === 'vascular-hemodynamics' && <HypertensionVascularViewer />}
+
+              {/* Lab Completion & Action Bar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+                <div className="text-xs">
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {language === 'en' ? 'Done with the 3D simulation?' : 'Selesai bereksperimen di lab 3D?'}
+                  </span>
+                  <p className="text-slate-500 dark:text-slate-400 mt-0.5">
+                    {language === 'en'
+                      ? 'Revisit theoretical principles or proceed to the checkpoint quiz to test your comprehension.'
+                      : 'Tinjau kembali perumusan teori atau lanjutkan ke kuis evaluasi untuk menguji pemahaman Anda.'}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
+                  <button
+                    onClick={() => setActiveTab('theory')}
+                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>{t.moduleViewer.tabOverview}</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('quiz')}
+                    className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-slate-950" />
+                    <span>{t.moduleViewer.tabQuiz}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -259,7 +295,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
                 onNavigateToNextModule={
                   nextModule
                     ? () => {
-                        setActiveTab('interactive');
+                        setActiveTab('theory');
                         navigateTo('module', topic.id, nextModule.id);
                       }
                     : () => navigateTo('learn', null)
@@ -312,7 +348,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => {
-                setActiveTab('interactive');
+                setActiveTab('theory');
                 navigateTo('module', topic.id, prevModule.id);
               }}
               className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-3 transition-all shadow-xs cursor-pointer group"
@@ -335,7 +371,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => {
-                setActiveTab('interactive');
+                setActiveTab('theory');
                 navigateTo('module', topic.id, nextModule.id);
               }}
               className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white text-xs font-bold flex items-center justify-between sm:justify-start gap-3 transition-all shadow-sm hover:shadow-md cursor-pointer group"

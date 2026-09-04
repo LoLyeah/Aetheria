@@ -585,27 +585,27 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
           </h3>
           <p className="text-xs text-slate-300 max-w-md">
             {language === 'en'
-              ? 'Test your comprehension with the checkpoint quiz or experiment hands-on in the 3D Interactive Lab.'
-              : 'Uji pemahaman Anda dengan kuis evaluasi atau langsung bereksperimen di Lab Interaktif 3D.'}
+              ? 'Explore the physical phenomena hands-on in the 3D Interactive Lab, or verify your comprehension with the checkpoint quiz.'
+              : 'Eksplorasi fenomena fisik secara langsung di Lab Interaktif 3D, atau uji pemahaman Anda dengan kuis evaluasi.'}
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <button
             onClick={onNavigateTo3D}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700 cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-sky-400" />
+            <Sparkles className="w-4 h-4 text-slate-950" />
             <span>{language === 'en' ? 'Open 3D Lab' : 'Buka Lab 3D'}</span>
+            <ChevronRight className="w-4 h-4" />
           </button>
 
           <button
             onClick={onNavigateToQuiz}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700 cursor-pointer"
           >
-            <HelpCircle className="w-4 h-4 text-slate-950" />
+            <HelpCircle className="w-4 h-4 text-slate-300" />
             <span>{language === 'en' ? 'Take Checkpoint Quiz' : 'Mulai Kuis Evaluasi'}</span>
-            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
