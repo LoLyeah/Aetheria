@@ -17,6 +17,8 @@ export const BatteryCellViewer: React.FC = () => {
   const [cRate, setCRate] = useState<number>(2.0); // 0.5C to 4.0C fast charge
   const [showThermalHeatmap, setShowThermalHeatmap] = useState<boolean>(false);
   const [isRotating, setIsRotating] = useState<boolean>(true);
+  const [showMobileControls, setShowMobileControls] = useState<boolean>(false);
+  const [contextLost, setContextLost] = useState<boolean>(false);
 
   // Telemetry state
   const [fps, setFps] = useState<number>(60);
@@ -188,12 +190,27 @@ export const BatteryCellViewer: React.FC = () => {
       renderer.setSize(w, h);
     };
 
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      setContextLost(true);
+    };
+
+    const handleContextRestored = () => {
+      setContextLost(false);
+    };
+
+    const domElem = renderer.domElement;
+    domElem.addEventListener('webglcontextlost', handleContextLost, false);
+    domElem.addEventListener('webglcontextrestored', handleContextRestored, false);
+
     const ro = new ResizeObserver(handleResize);
     ro.observe(container);
 
     return () => {
       cancelAnimationFrame(animId);
       detachControls();
+      domElem.removeEventListener('webglcontextlost', handleContextLost);
+      domElem.removeEventListener('webglcontextrestored', handleContextRestored);
       ro.disconnect();
       renderer.dispose();
     };
@@ -479,18 +496,124 @@ export const BatteryCellViewer: React.FC = () => {
             </div>
           )}
 
+          {/* Screen Reader Dynamic Simulation State Announcement */}
+          <div className="sr-only" aria-live="polite" aria-atomic="true">
+            {language === 'en'
+              ? `EV Battery Cell Simulation. Active format: ${cellFormat}. Mode: ${isCharging ? 'Fast charging with lithium ions migrating from cathode to graphite anode' : 'Discharging under vehicle load'}. Current C-rate: ${cRate.toFixed(1)}C. Thermal heatmap is ${showThermalHeatmap ? 'active showing internal cell gradient' : 'disabled'}.`
+              : `Simulasi Sel Baterai EV. Format aktif: ${cellFormat}. Mode: ${isCharging ? 'Pengisian cepat dengan migrasi ion litium dari katoda ke anoda grafit' : 'Pengosongan daya saat berkendara'}. Laju arus C-rate: ${cRate.toFixed(1)}C. Peta gradien termal ${showThermalHeatmap ? 'aktif menunjukkan distribusi suhu internal' : 'nonaktif'}.`}
+          </div>
+
+          {/* WebGL Context Loss Recovery Overlay */}
+          {contextLost && (
+            <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+              <p className="text-sm font-bold text-rose-400 mb-2">
+                {language === 'en' ? '3D Graphics Context Suspended' : 'Konteks Grafis 3D Ditangguhkan'}
+              </p>
+              <p className="text-xs text-slate-400 max-w-sm mb-4">
+                {language === 'en'
+                  ? 'Your GPU context was temporarily reclaimed by the browser or operating system.'
+                  : 'Konteks GPU perangkat Anda dihentikan sementara oleh peramban atau sistem operasi.'}
+              </p>
+              <button
+                onClick={() => {
+                  setContextLost(false);
+                  window.location.reload();
+                }}
+                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold shadow-md cursor-pointer transition-all"
+              >
+                {language === 'en' ? 'Reload 3D Simulation' : 'Muat Ulang Simulasi 3D'}
+              </button>
+            </div>
+          )}
+
+          {/* Mobile Quick Parameter Drawer */}
+          {showMobileControls && (
+            <div className="lg:hidden absolute bottom-14 left-3 right-3 p-3.5 rounded-xl bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white shadow-2xl space-y-3 z-10 animate-fadeIn">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span className="text-xs font-mono font-bold text-emerald-400">
+                  {language === 'en' ? 'Quick Parameters' : 'Parameter Cepat'}
+                </span>
+                <button
+                  onClick={() => setShowMobileControls(false)}
+                  className="text-xs text-slate-400 hover:text-white px-1.5 py-0.5 cursor-pointer"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Fast Charge vs Discharge Switch */}
+              <div className="grid grid-cols-2 gap-1 p-1 bg-slate-800 rounded-lg text-xs font-medium">
+                <button
+                  onClick={() => setIsCharging(true)}
+                  className={`py-1 rounded text-center transition-all cursor-pointer ${
+                    isCharging ? 'bg-emerald-600 text-white font-bold' : 'text-slate-400'
+                  }`}
+                >
+                  {language === 'en' ? 'Fast Charge' : 'Isi Cepat'}
+                </button>
+                <button
+                  onClick={() => setIsCharging(false)}
+                  className={`py-1 rounded text-center transition-all cursor-pointer ${
+                    !isCharging ? 'bg-sky-600 text-white font-bold' : 'text-slate-400'
+                  }`}
+                >
+                  {language === 'en' ? 'Discharge' : 'Kosongkan'}
+                </button>
+              </div>
+
+              {/* C-Rate Slider */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-slate-300 font-mono">
+                  <span>C-Rate</span>
+                  <span className="text-emerald-400">{cRate.toFixed(1)}C</span>
+                </div>
+                <input
+                  type="range"
+                  min={0.5}
+                  max={4.0}
+                  step={0.5}
+                  value={cRate}
+                  onChange={(e) => setCRate(Number(e.target.value))}
+                  className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                />
+              </div>
+
+              {/* Thermal Heatmap quick toggle */}
+              <button
+                onClick={() => setShowThermalHeatmap(!showThermalHeatmap)}
+                className={`w-full py-1.5 px-2.5 rounded-lg text-[11px] font-mono border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  showThermalHeatmap
+                    ? 'bg-rose-950/80 text-rose-300 border-rose-700'
+                    : 'bg-slate-800 text-slate-400 border-slate-700'
+                }`}
+              >
+                <Flame className="w-3.5 h-3.5" />
+                <span>{showThermalHeatmap ? 'Thermal Map: ACTIVE' : 'Thermal Map: OFF'}</span>
+              </button>
+            </div>
+          )}
+
           {/* Controls */}
           <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
             <button
+              onClick={() => setShowMobileControls(!showMobileControls)}
+              className="lg:hidden p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
+              title={language === 'en' ? 'Quick Parameters' : 'Parameter Cepat'}
+              aria-expanded={showMobileControls}
+            >
+              <Sliders className="w-4 h-4 text-emerald-400" />
+            </button>
+            <button
               onClick={() => setIsRotating(!isRotating)}
-              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
               title={isRotating ? 'Pause Rotation' : 'Auto Rotate'}
             >
               {isRotating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             </button>
             <button
               onClick={resetCamera}
-              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
               title="Reset Camera View"
             >
               <RotateCcw className="w-4 h-4" />

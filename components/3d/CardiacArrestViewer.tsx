@@ -186,6 +186,28 @@ export const CARDIAC_CONDITIONS: Record<CardiacCondition, ConditionDetails> = {
   },
 };
 
+const CARDIAC_CATEGORIES: {
+  category: { en: string; id: string };
+  conditions: CardiacCondition[];
+}[] = [
+  {
+    category: { en: 'Baseline Rhythm', id: 'Irama Fisiologis' },
+    conditions: ['normal'],
+  },
+  {
+    category: { en: 'Coronary Ischemia (ACS)', id: 'Iskemia Koroner (SKA)' },
+    conditions: ['angina', 'nstemi', 'stemi'],
+  },
+  {
+    category: { en: 'Shockable Arrest (Defib)', id: 'Henti Jantung Shockable' },
+    conditions: ['vf', 'pvt'],
+  },
+  {
+    category: { en: 'Non-Shockable Arrest (CPR)', id: 'Henti Jantung Non-Shockable' },
+    conditions: ['asystole'],
+  },
+];
+
 export const CardiacArrestViewer: React.FC = () => {
   const { language } = useLearning();
 
@@ -981,37 +1003,47 @@ export const CardiacArrestViewer: React.FC = () => {
             <span>{language === 'en' ? 'CARDIAC RHYTHM & PATHOLOGY' : 'IRAMA & PATOLOGI KARDIAK'}</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-2">
-            {(Object.keys(CARDIAC_CONDITIONS) as CardiacCondition[]).map((condKey) => {
-              const item = CARDIAC_CONDITIONS[condKey];
-              const isSelected = condition === condKey;
-              return (
-                <button
-                  key={condKey}
-                  onClick={() => handleSelectCondition(condKey)}
-                  className={`text-left p-2.5 rounded-xl border text-xs transition-all cursor-pointer flex items-center justify-between ${
-                    isSelected
-                      ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold border-transparent shadow-xs'
-                      : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <div className="truncate pr-2">
-                    <div className="truncate">{item.title[language]}</div>
-                    <div
-                      className={`text-[10px] truncate ${isSelected ? 'text-slate-300 dark:text-slate-600' : 'text-slate-400'}`}
-                    >
-                      {item.shockable
-                        ? (language === 'en' ? 'Shockable Rhythm' : 'Irama Shockable')
-                        : (language === 'en' ? 'Non-Shockable / Ischemia' : 'Non-Shockable / Iskemia')}
-                    </div>
-                  </div>
-                  <span
-                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: item.accentColor }}
-                  />
-                </button>
-              );
-            })}
+          <div className="space-y-3">
+            {CARDIAC_CATEGORIES.map((cat) => (
+              <div key={cat.category.en} className="space-y-1.5">
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">
+                  {cat.category[language]}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-1.5">
+                  {cat.conditions.map((condKey) => {
+                    const item = CARDIAC_CONDITIONS[condKey];
+                    const isSelected = condition === condKey;
+                    return (
+                      <button
+                        key={condKey}
+                        onClick={() => handleSelectCondition(condKey)}
+                        className={`text-left p-2.5 rounded-xl border text-xs transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold border-transparent shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }`}
+                        aria-pressed={isSelected}
+                      >
+                        <div className="truncate pr-2">
+                          <div className="truncate">{item.title[language]}</div>
+                          <div
+                            className={`text-[10px] truncate ${isSelected ? 'text-slate-300 dark:text-slate-600' : 'text-slate-400'}`}
+                          >
+                            {item.shockable
+                              ? (language === 'en' ? 'Shockable Rhythm' : 'Irama Shockable')
+                              : (language === 'en' ? 'Non-Shockable / Ischemia' : 'Non-Shockable / Iskemia')}
+                          </div>
+                        </div>
+                        <span
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: item.accentColor }}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

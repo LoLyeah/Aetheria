@@ -22,12 +22,12 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.6',
+  version: '1.1.7',
   major: 1,
   minor: 1,
-  patch: 6,
+  patch: 7,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.06',
+  buildNumber: 'build.20260904.07',
   environment: 'production',
   changelog: [
     {

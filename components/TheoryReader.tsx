@@ -342,8 +342,8 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
                           key={vIdx}
                           className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-2.5"
                         >
-                          <span className="px-2 py-0.5 rounded bg-slate-800 text-cyan-300 font-mono font-bold text-xs">
-                            {v.symbol}
+                          <span className="px-2 py-0.5 rounded bg-slate-800 text-cyan-300 text-xs inline-flex items-center shrink-0">
+                            <MathFormula formula={v.symbol} displayMode={false} />
                           </span>
                           <div className="space-y-0.5">
                             <div className="font-semibold text-slate-200 flex items-center gap-1.5">

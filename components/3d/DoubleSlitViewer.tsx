@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
-import { Eye, EyeOff, Play, Pause, RotateCcw, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, Play, Pause, RotateCcw, Sparkles, Sliders } from 'lucide-react';
 import { TelemetryHUD } from './TelemetryHUD';
 import { attachCanvasControls } from '@/lib/canvasControls';
 
@@ -15,6 +15,8 @@ export const DoubleSlitViewer: React.FC = () => {
   const [slitDistance, setSlitDistance] = useState<number>(1.2); // mm
   const [isRunning, setIsRunning] = useState<boolean>(true);
   const [accumulatedHits, setAccumulatedHits] = useState<number>(0);
+  const [showMobileControls, setShowMobileControls] = useState<boolean>(false);
+  const [contextLost, setContextLost] = useState<boolean>(false);
 
   // Telemetry state
   const [fps, setFps] = useState<number>(60);
@@ -307,12 +309,27 @@ export const DoubleSlitViewer: React.FC = () => {
       renderer.setSize(w, h);
     };
 
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      setContextLost(true);
+    };
+
+    const handleContextRestored = () => {
+      setContextLost(false);
+    };
+
+    const domElem = renderer.domElement;
+    domElem.addEventListener('webglcontextlost', handleContextLost, false);
+    domElem.addEventListener('webglcontextrestored', handleContextRestored, false);
+
     const ro = new ResizeObserver(handleResize);
     ro.observe(container);
 
     return () => {
       cancelAnimationFrame(animId);
       detachControls();
+      domElem.removeEventListener('webglcontextlost', handleContextLost);
+      domElem.removeEventListener('webglcontextrestored', handleContextRestored);
       ro.disconnect();
       renderer.dispose();
     };
@@ -398,18 +415,110 @@ export const DoubleSlitViewer: React.FC = () => {
           </div>
         </div>
 
+        {/* Screen Reader Dynamic Simulation State Announcement */}
+        <div className="sr-only" aria-live="polite" aria-atomic="true">
+          {language === 'en'
+            ? `Double-slit quantum simulation. State: ${detectorActive ? 'Wavefunction collapsed into two classical particle bands due to observer decoherence' : 'Coherent quantum superposition creating wave interference fringes'}. De Broglie wavelength: ${wavelength} nanometers, slit separation distance: ${slitDistance.toFixed(1)} millimeters. Total screen hits: ${accumulatedHits}.`
+            : `Simulasi kuantum celah ganda. Status: ${detectorActive ? 'Fungsi gelombang runtuh menjadi dua pita partikel klasik akibat dekoherensi pengamat' : 'Superposisi kuantum koheren menciptakan pola interferensi gelombang'}. Panjang gelombang De Broglie: ${wavelength} nanometer, jarak celah: ${slitDistance.toFixed(1)} milimeter. Total partikel terdeteksi: ${accumulatedHits}.`}
+        </div>
+
+        {/* WebGL Context Loss Recovery Overlay */}
+        {contextLost && (
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+            <p className="text-sm font-bold text-rose-400 mb-2">
+              {language === 'en' ? '3D Graphics Context Suspended' : 'Konteks Grafis 3D Ditangguhkan'}
+            </p>
+            <p className="text-xs text-slate-400 max-w-sm mb-4">
+              {language === 'en'
+                ? 'Your GPU context was temporarily reclaimed by the browser or operating system.'
+                : 'Konteks GPU perangkat Anda dihentikan sementara oleh peramban atau sistem operasi.'}
+            </p>
+            <button
+              onClick={() => {
+                setContextLost(false);
+                window.location.reload();
+              }}
+              className="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold shadow-md cursor-pointer transition-all"
+            >
+              {language === 'en' ? 'Reload 3D Simulation' : 'Muat Ulang Simulasi 3D'}
+            </button>
+          </div>
+        )}
+
+        {/* Mobile Quick Parameter Drawer */}
+        {showMobileControls && (
+          <div className="sm:hidden absolute bottom-14 left-3 right-3 p-3.5 rounded-xl bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white shadow-2xl space-y-3 z-10 animate-fadeIn">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span className="text-xs font-mono font-bold text-indigo-400">
+                {language === 'en' ? 'Quick Parameters' : 'Parameter Cepat'}
+              </span>
+              <button
+                onClick={() => setShowMobileControls(false)}
+                className="text-xs text-slate-400 hover:text-white px-1.5 py-0.5 cursor-pointer"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-1">
+              <div className="flex justify-between text-[11px] text-slate-300 font-mono">
+                <span>Wavelength (λ)</span>
+                <span className="text-indigo-400">{wavelength} nm</span>
+              </div>
+              <input
+                type="range"
+                min={400}
+                max={750}
+                step={25}
+                value={wavelength}
+                onChange={(e) => {
+                  setWavelength(Number(e.target.value));
+                  resetSimulation();
+                }}
+                className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <div className="flex justify-between text-[11px] text-slate-300 font-mono">
+                <span>Slit Separation (d)</span>
+                <span className="text-indigo-400">{slitDistance.toFixed(1)} mm</span>
+              </div>
+              <input
+                type="range"
+                min={0.6}
+                max={2.4}
+                step={0.2}
+                value={slitDistance}
+                onChange={(e) => {
+                  setSlitDistance(Number(e.target.value));
+                  resetSimulation();
+                }}
+                className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+              />
+            </div>
+          </div>
+        )}
+
         {/* Bottom Control Bar */}
         <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
           <button
+            onClick={() => setShowMobileControls(!showMobileControls)}
+            className="sm:hidden p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
+            title={language === 'en' ? 'Quick Parameters' : 'Parameter Cepat'}
+            aria-expanded={showMobileControls}
+          >
+            <Sliders className="w-4 h-4 text-indigo-400" />
+          </button>
+          <button
             onClick={() => setIsRunning(!isRunning)}
-            className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md"
+            className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md cursor-pointer transition-colors"
             title="Play/Pause Emitter"
           >
             {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           </button>
           <button
             onClick={resetSimulation}
-            className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md"
+            className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md cursor-pointer transition-colors"
             title="Reset Screen Hits"
           >
             <RotateCcw className="w-4 h-4" />

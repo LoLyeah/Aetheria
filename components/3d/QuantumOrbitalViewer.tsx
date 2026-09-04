@@ -122,6 +122,13 @@ const ORBITALS: Record<OrbitalKey, OrbitalData> = {
   },
 };
 
+const SUBSHELL_GROUPS: { subshell: string; l: number; keys: OrbitalKey[] }[] = [
+  { subshell: 's (l=0)', l: 0, keys: ['1s', '2s'] },
+  { subshell: 'p (l=1)', l: 1, keys: ['2px', '2pz'] },
+  { subshell: 'd (l=2)', l: 2, keys: ['3dz2', '3dxy'] },
+  { subshell: 'f (l=3)', l: 3, keys: ['4fxyz'] },
+];
+
 export const QuantumOrbitalViewer: React.FC = () => {
   const { language, settings } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
@@ -132,6 +139,8 @@ export const QuantumOrbitalViewer: React.FC = () => {
   const [showSlice, setShowSlice] = useState<boolean>(false);
   const [showBohrOrbit, setShowBohrOrbit] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [showMobileControls, setShowMobileControls] = useState<boolean>(false);
+  const [contextLost, setContextLost] = useState<boolean>(false);
 
   // Telemetry state
   const [fps, setFps] = useState<number>(60);
@@ -376,12 +385,27 @@ export const QuantumOrbitalViewer: React.FC = () => {
       renderer.setSize(w, h);
     };
 
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      setContextLost(true);
+    };
+
+    const handleContextRestored = () => {
+      setContextLost(false);
+    };
+
+    const domElem = renderer.domElement;
+    domElem.addEventListener('webglcontextlost', handleContextLost, false);
+    domElem.addEventListener('webglcontextrestored', handleContextRestored, false);
+
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       detachControls();
+      domElem.removeEventListener('webglcontextlost', handleContextLost);
+      domElem.removeEventListener('webglcontextrestored', handleContextRestored);
       resizeObserver.disconnect();
       renderer.dispose();
     };
@@ -622,20 +646,32 @@ export const QuantumOrbitalViewer: React.FC = () => {
           </p>
         </div>
 
-        {/* Orbital Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl">
-          {(Object.keys(ORBITALS) as OrbitalKey[]).map((key) => (
-            <button
-              key={key}
-              onClick={() => setSelectedOrbital(key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                selectedOrbital === key
-                  ? 'bg-white dark:bg-sky-600 text-sky-600 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
+        {/* Subshell-Chunked Orbital Buttons */}
+        <div className="flex flex-wrap items-center gap-2">
+          {SUBSHELL_GROUPS.map((group) => (
+            <div
+              key={group.subshell}
+              className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60"
             >
-              {key}
-            </button>
+              <span className="px-1.5 text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase select-none">
+                {group.subshell}
+              </span>
+              {group.keys.map((key) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedOrbital(key)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    selectedOrbital === key
+                      ? 'bg-white dark:bg-sky-600 text-sky-600 dark:text-white shadow-xs font-bold'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                  aria-pressed={selectedOrbital === key}
+                  title={`Select orbital ${key}`}
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -682,25 +718,136 @@ export const QuantumOrbitalViewer: React.FC = () => {
             </span>
           </div>
 
+          {/* Screen Reader Dynamic Simulation State Announcement */}
+          <div className="sr-only" aria-live="polite" aria-atomic="true">
+            {language === 'en'
+              ? `Currently viewing 3D quantum orbital ${orbitalData.name}. Principal quantum number n equals ${orbitalData.n}, angular momentum l equals ${orbitalData.l}, magnetic quantum number m_l equals ${orbitalData.ml}. Radial nodes: ${orbitalData.nodes.radial}, angular nodal planes: ${orbitalData.nodes.angular}. Energy: ${orbitalData.energy}.`
+              : `Sedang menampilkan orbital kuantum 3D ${orbitalData.name}. Bilangan kuantum utama n sama dengan ${orbitalData.n}, momentum sudut l sama dengan ${orbitalData.l}, bilangan kuantum magnetik m_l sama dengan ${orbitalData.ml}. Simpul radial: ${orbitalData.nodes.radial}, bidang simpul sudut: ${orbitalData.nodes.angular}. Energi: ${orbitalData.energy}.`}
+          </div>
+
+          {/* WebGL Context Loss Recovery Overlay */}
+          {contextLost && (
+            <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+              <p className="text-sm font-bold text-rose-400 mb-2">
+                {language === 'en' ? '3D Graphics Context Suspended' : 'Konteks Grafis 3D Ditangguhkan'}
+              </p>
+              <p className="text-xs text-slate-400 max-w-sm mb-4">
+                {language === 'en'
+                  ? 'Your GPU context was temporarily reclaimed by the browser or operating system.'
+                  : 'Konteks GPU perangkat Anda dihentikan sementara oleh peramban atau sistem operasi.'}
+              </p>
+              <button
+                onClick={() => {
+                  setContextLost(false);
+                  window.location.reload();
+                }}
+                className="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md cursor-pointer transition-all"
+              >
+                {language === 'en' ? 'Reload 3D Simulation' : 'Muat Ulang Simulasi 3D'}
+              </button>
+            </div>
+          )}
+
+          {/* Mobile Quick Parameter Drawer */}
+          {showMobileControls && (
+            <div className="lg:hidden absolute bottom-14 left-3 right-3 p-3.5 rounded-xl bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white shadow-2xl space-y-3 z-10 animate-fadeIn">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span className="text-xs font-mono font-bold text-sky-400">
+                  {language === 'en' ? 'Quick Parameters' : 'Parameter Cepat'}
+                </span>
+                <button
+                  onClick={() => setShowMobileControls(false)}
+                  className="text-xs text-slate-400 hover:text-white px-1.5 py-0.5 cursor-pointer"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              {/* Density slider */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-slate-300 font-mono">
+                  <span>{language === 'en' ? 'Particle Density' : 'Kepadatan Partikel'}</span>
+                  <span className="text-sky-400">{particleDensity.toLocaleString()} pts</span>
+                </div>
+                <input
+                  type="range"
+                  min={3000}
+                  max={24000}
+                  step={1000}
+                  value={particleDensity}
+                  onChange={(e) => setParticleDensity(Number(e.target.value))}
+                  className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500"
+                />
+              </div>
+              {/* Mode & Slice */}
+              <div className="flex items-center justify-between gap-2 pt-1">
+                <div className="grid grid-cols-3 gap-1 flex-1 text-[11px] font-medium bg-slate-800 p-1 rounded-lg">
+                  <button
+                    onClick={() => setRenderMode('cloud')}
+                    className={`py-1 rounded text-center cursor-pointer transition-all ${
+                      renderMode === 'cloud' ? 'bg-sky-500 text-white font-bold' : 'text-slate-300'
+                    }`}
+                  >
+                    Cloud
+                  </button>
+                  <button
+                    onClick={() => setRenderMode('mesh')}
+                    className={`py-1 rounded text-center cursor-pointer transition-all ${
+                      renderMode === 'mesh' ? 'bg-sky-500 text-white font-bold' : 'text-slate-300'
+                    }`}
+                  >
+                    Mesh
+                  </button>
+                  <button
+                    onClick={() => setRenderMode('both')}
+                    className={`py-1 rounded text-center cursor-pointer transition-all ${
+                      renderMode === 'both' ? 'bg-sky-500 text-white font-bold' : 'text-slate-300'
+                    }`}
+                  >
+                    Both
+                  </button>
+                </div>
+                <button
+                  onClick={() => setShowSlice(!showSlice)}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-mono border transition-all cursor-pointer ${
+                    showSlice
+                      ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                      : 'bg-slate-800 text-slate-400 border-slate-700'
+                  }`}
+                >
+                  {showSlice ? 'Slice: ON' : 'Slice: OFF'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Canvas Floating Action Buttons */}
           <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
             <button
+              onClick={() => setShowMobileControls(!showMobileControls)}
+              className="lg:hidden p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
+              title={language === 'en' ? 'Quick Parameters' : 'Parameter Cepat'}
+              aria-expanded={showMobileControls}
+            >
+              <Sliders className="w-4 h-4 text-sky-400" />
+            </button>
+            <button
               onClick={() => setIsRotating(!isRotating)}
-              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
               title={isRotating ? 'Pause Rotation' : 'Auto Rotate'}
             >
               {isRotating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             </button>
             <button
               onClick={resetCamera}
-              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
               title="Reset Camera View"
             >
               <RotateCcw className="w-4 h-4" />
             </button>
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors cursor-pointer"
               title="Toggle Fullscreen"
             >
               <Maximize2 className="w-4 h-4" />
