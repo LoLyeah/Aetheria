@@ -113,6 +113,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   const [particleDensity, setParticleDensity] = useState<'normal' | 'ultra'>('normal');
   const [fps, setFps] = useState<number>(60);
   const [showTelemetry, setShowTelemetry] = useState<boolean>(false);
+  const [webglError, setWebglError] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -187,7 +188,14 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    } catch (err) {
+      console.warn('WebGL context creation failed:', err);
+      setWebglError(true);
+      return;
+    }
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1083,6 +1091,23 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         tabIndex={0}
         className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing select-none touch-none outline-hidden focus-visible:ring-2 focus-visible:ring-sky-500/80"
       />
+
+      {/* Fallback overlay when WebGL hardware acceleration is not supported */}
+      {webglError && (
+        <div className="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center p-6 text-center z-20">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-3">
+            <Sparkles className="w-6 h-6 text-amber-400" />
+          </div>
+          <p className="text-sm font-bold text-slate-200 mb-1">
+            {language === 'en' ? 'WebGL Hardware Acceleration Required' : 'Akselerasi Perangkat Keras WebGL Diperlukan'}
+          </p>
+          <p className="text-xs text-slate-400 max-w-sm">
+            {language === 'en'
+              ? 'Enable hardware acceleration in your browser settings to render real-time interactive 3D simulations.'
+              : 'Aktifkan akselerasi perangkat keras di pengaturan peramban untuk merender simulasi 3D interaktif real-time.'}
+          </p>
+        </div>
+      )}
 
       {/* 4. BOTTOM INTERACTIVE STAGE CONTROLS TOOLBAR */}
       <div className="relative z-30 flex flex-wrap items-center justify-between gap-3 pt-3">

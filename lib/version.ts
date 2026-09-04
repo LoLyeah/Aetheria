@@ -22,14 +22,56 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.7',
+  version: '1.1.8',
   major: 1,
   minor: 1,
-  patch: 7,
+  patch: 8,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.07',
+  buildNumber: 'build.20260904.08',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.8',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Visual Inspection Fixes: WebGL Fallback Guard & Mobile Typography Scaling',
+        id: 'Perbaikan Inspeksi Visual: Pengaman WebGL Fallback & Skalabilitas Tipografi Seluler',
+      },
+      highlights: {
+        en: [
+          'Added try/catch WebGL context creation guard with in-situ hardware acceleration fallback banner in Hero3DCanvas.',
+          'Fixed mobile viewport headline truncation and wrapping on 390px screens in LandingPage.',
+          'Verified zero regressions across headless browser captures and automated linters.',
+        ],
+        id: [
+          'Menambahkan pengaman pembuatan konteks WebGL try/catch dengan banner fallback akselerasi perangkat keras di Hero3DCanvas.',
+          'Memperbaiki pemotongan teks judul dan tata letak pada layar seluler 390px di LandingPage.',
+          'Memverifikasi nol regresi melalui tangkapan peramban headless dan linter otomatis.',
+        ],
+      },
+    },
+    {
+      version: '1.1.7',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Impeccable Critique Refinements: 3D Camera Reset, Quiz Feedback & Mobile Touch',
+        id: 'Penyempurnaan Kritik Impeccable: Reset Kamera 3D, Umpan Balik Kuis & Sentuhan Seluler',
+      },
+      highlights: {
+        en: [
+          'Added camera reset buttons with smooth spherical coordinate restoration across all 3D viewers.',
+          'Introduced actionable concept remediation banners and explanation tags for incorrect quiz answers.',
+          'Streamlined mobile touch handling with explicit rotate/zoom gesture guidance overlays.',
+        ],
+        id: [
+          'Menambahkan tombol reset kamera dengan pemulihan koordinat bola halus di semua penampil 3D.',
+          'Memperkenalkan banner remediasi konsep dan tag penjelasan yang dapat ditindaklanjuti untuk jawaban kuis yang salah.',
+          'Menyederhanakan penanganan sentuhan seluler dengan panduan gestur putar/zoom yang eksplisit.',
+        ],
+      },
+    },
     {
       version: '1.1.5',
       date: '2026-09-04',

@@ -81,9 +81,9 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Main Headline - Clean, High Contrast, No AI Slop Rainbow Text */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.12]">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-snug sm:leading-[1.12] break-words">
                 {t.landing.heroTitlePrefix}{' '}
-                <span className="text-sky-600 dark:text-sky-400 underline decoration-sky-500/30 decoration-2 underline-offset-8">
+                <span className="inline-block text-sky-600 dark:text-sky-400 underline decoration-sky-500/30 decoration-2 underline-offset-4 sm:underline-offset-8">
                   {t.landing.heroTitleHighlight}
                 </span>{' '}
                 {t.landing.heroTitleSuffix}
