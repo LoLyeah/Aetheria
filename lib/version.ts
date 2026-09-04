@@ -22,14 +22,60 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.3',
+  version: '1.1.5',
   major: 1,
   minor: 1,
-  patch: 3,
+  patch: 5,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.03',
+  buildNumber: 'build.20260904.05',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.5',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Expansive Scientific Study Notes Workspace with Live KaTeX Preview',
+        id: 'Ruang Kerja Catatan Belajar Sains Luas dengan Pratinjau Langsung KaTeX',
+      },
+      highlights: {
+        en: [
+          'Expanded study notes editor from narrow fixed card to full-width responsive scientific lab workspace (write, split, and preview modes).',
+          'Integrated interactive scientific symbol palette (Greek letters, quantum/calculus operators, sub/superscripts, discipline formulas).',
+          'Added live KaTeX mathematical formula rendering and rich Markdown support with tables, checklists, and code highlighting.',
+          'Added distraction-free Zen Fullscreen mode, quick lab note templates, and one-click markdown note export/copy tools.',
+        ],
+        id: [
+          'Memperluas editor catatan studi dari kartu sempit menjadi ruang kerja lab sains responsif selebar layar (mode tulis, split, dan pratinjau).',
+          'Mengintegrasikan palet simbol sains interaktif (huruf Yunani, operator kuantum/kalkulus, sub/superscript, rumus disiplin ilmu).',
+          'Menambahkan perenderan rumus matematika KaTeX langsung dan dukungan Markdown lengkap dengan tabel, checklist, dan penyorotan kode.',
+          'Menambahkan mode Layar Penuh Zen bebas distraksi, templat catatan lab cepat, dan alat ekspor/salin catatan markdown 1-klik.',
+        ],
+      },
+    },
+    {
+      version: '1.1.4',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Progressive Web App (PWA) Standalone Installation & Vector App Icons',
+        id: 'Pemasangan Mandiri Aplikasi Web Progresif (PWA) & Ikon Aplikasi Vektor',
+      },
+      highlights: {
+        en: [
+          'Generated multi-resolution favicon.ico (16, 32, 48px), adaptive SVG favicon with dark/light scheme support, and standard/maskable 192 & 512px app icons based on the slate-900 Atom brand logo.',
+          'Configured standard Web App Manifest (display: standalone) with topic shortcuts and offline-capable Service Worker.',
+          'Added global PWA installation store using useSyncExternalStore with 1-click install triggers in Navbar and Settings.',
+          'Added URL search parameter topic routing to support PWA shortcuts directly from OS app launcher.',
+        ],
+        id: [
+          'Membuat favicon.ico multi-resolusi (16, 32, 48px), favicon SVG adaptif skema terang/gelap, dan ikon aplikasi 192 & 512px (standar & maskable) berdasarkan logo Atom slate-900.',
+          'Mengonfigurasi Manifest Aplikasi Web standar (tampilan: standalone) dengan pintasan topik dan Service Worker berkemampuan luring.',
+          'Menambahkan state PWA global dengan useSyncExternalStore dan tombol pasang 1-klik di Navbar serta Pengaturan.',
+          'Menambahkan perutean parameter URL topik untuk mendukung pintasan PWA langsung dari peluncur aplikasi sistem operasi.',
+        ],
+      },
+    },
     {
       version: '1.1.3',
       date: '2026-09-04',

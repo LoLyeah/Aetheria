@@ -1,0 +1,83 @@
+import type { MetadataRoute } from 'next';
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'Aetheria - Interactive 3D Science Platform',
+    short_name: 'Aetheria',
+    description: 'An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Cardiovascular Electrophysiology, and Pulmonary Mechanics.',
+    start_url: '/',
+    id: '/?source=pwa',
+    scope: '/',
+    display: 'standalone',
+    display_override: ['window-controls-overlay', 'standalone', 'minimal-ui'],
+    background_color: '#0f172a',
+    theme_color: '#0f172a',
+    orientation: 'any',
+    categories: ['education', 'science', 'productivity'],
+    icons: [
+      {
+        src: '/favicon.ico',
+        sizes: '16x16 32x32 48x48',
+        type: 'image/x-icon',
+      },
+      {
+        src: '/icon.svg',
+        sizes: 'any',
+        type: 'image/svg+xml',
+        purpose: 'any',
+      },
+      {
+        src: '/icon-192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icon-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icon-maskable-192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/icon-maskable-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/apple-touch-icon.png',
+        sizes: '180x180',
+        type: 'image/png',
+      },
+    ],
+    shortcuts: [
+      {
+        name: 'Quantum Mechanics',
+        short_name: 'Quantum',
+        description: 'Atomic orbitals, wavefunctions, double slit & tunneling',
+        url: '/?topic=quantum-mechanics',
+        icons: [{ src: '/icon-192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Embryonic Biology',
+        short_name: 'Embryo',
+        description: 'Cellular cleavage, organogenesis & Doppler ultrasound',
+        url: '/?topic=fetus-development',
+        icons: [{ src: '/icon-192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'EV Battery Physics',
+        short_name: 'Battery',
+        description: '4680 jellyroll, regenerative braking & powertrain',
+        url: '/?topic=ev-battery',
+        icons: [{ src: '/icon-192.png', sizes: '192x192' }],
+      },
+    ],
+  };
+}

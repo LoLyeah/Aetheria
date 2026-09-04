@@ -15,6 +15,7 @@ import { HypertensionVascularViewer } from './3d/HypertensionVascularViewer';
 import { EVPowertrainSimulator } from './simulators/EVPowertrainSimulator';
 import { TheoryReader } from './TheoryReader';
 import { QuizComponent } from './QuizComponent';
+import { StudyNotesWorkspace } from './StudyNotesWorkspace';
 import {
   Sparkles,
   BookOpen,
@@ -45,6 +46,11 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
 
   const t = translations[language];
   const [activeTab, setActiveTab] = useState<'theory' | 'interactive' | 'quiz' | 'notes'>('theory');
+  const [prevModuleId, setPrevModuleId] = useState<string | null>(selectedModuleId);
+  if (selectedModuleId !== prevModuleId) {
+    setPrevModuleId(selectedModuleId);
+    setActiveTab('theory');
+  }
 
   const topic = getTopicById(selectedTopicId || 'quantum-mechanics');
   const currentModule = getModuleById(selectedModuleId || 'qm-mod-1')?.module || topic?.modules[0];
@@ -53,11 +59,6 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [selectedModuleId, activeTab]);
-
-  // Reset tab to Theory & Principles when switching to a different module
-  useEffect(() => {
-    setActiveTab('theory');
-  }, [selectedModuleId]);
 
   if (!topic || !currentModule) {
     return (
@@ -312,31 +313,15 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="max-w-3xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4"
+              className="w-full"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                    {language === 'en' ? 'Personal Study Notes' : 'Catatan Belajar Pribadi'}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {language === 'en'
-                      ? 'Notes are saved locally in your browser for this module.'
-                      : 'Catatan disimpan secara lokal di peramban untuk modul ini.'}
-                  </p>
-                </div>
-              </div>
-
-              <textarea
-                rows={12}
-                value={currentNote}
-                onChange={(e) => saveNote(currentModule.id, e.target.value)}
-                placeholder={
-                  language === 'en'
-                    ? 'Record formulas, observations, or questions here...'
-                    : 'Catat rumus, hasil observasi simulasi 3D, atau pertanyaan di sini...'
-                }
-                className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-sky-500 font-mono leading-relaxed resize-y"
+              <StudyNotesWorkspace
+                module={currentModule}
+                topic={topic}
+                language={language}
+                note={currentNote}
+                onSaveNote={(text) => saveNote(currentModule.id, text)}
+                onOpenGlossary={onOpenGlossary}
               />
             </motion.div>
           )}

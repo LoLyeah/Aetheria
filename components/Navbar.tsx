@@ -16,9 +16,11 @@ import {
   X,
   Settings,
   BookOpen,
+  Download,
 } from 'lucide-react';
 import { getAllModules } from '@/lib/content';
 import { APP_VERSION_DATA } from '@/lib/version';
+import { usePWA } from '@/hooks/usePWA';
 
 export const Navbar: React.FC<{
   onOpenProgress: () => void;
@@ -42,6 +44,23 @@ export const Navbar: React.FC<{
   const t = translations[language];
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [installFeedback, setInstallFeedback] = useState<string | null>(null);
+
+  const { isInstalled, installApp } = usePWA();
+
+  const handleInstallClick = async () => {
+    const outcome = await installApp();
+    if (outcome === 'ios') {
+      setInstallFeedback(t.pwa.iosGuide);
+      setTimeout(() => setInstallFeedback(null), 6000);
+    } else if (outcome === 'accepted') {
+      setInstallFeedback(t.pwa.installedSuccess);
+      setTimeout(() => setInstallFeedback(null), 4000);
+    } else if (outcome === 'unsupported') {
+      setInstallFeedback(t.pwa.unsupportedGuide);
+      setTimeout(() => setInstallFeedback(null), 6000);
+    }
+  };
 
   // Search Results
   const allModulesList = getAllModules();
@@ -188,6 +207,18 @@ export const Navbar: React.FC<{
             <WebGPUTestBadge compact />
           </div>
 
+          {/* Install PWA Button */}
+          {!isInstalled && (
+            <button
+              onClick={handleInstallClick}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer text-xs font-semibold"
+              title={t.pwa.installTitle}
+            >
+              <Download className="w-3.5 h-3.5 text-sky-500" />
+              <span className="hidden xl:inline">{t.nav.installApp}</span>
+            </button>
+          )}
+
           {/* Settings Button */}
           {onOpenSettings && (
             <button
@@ -328,7 +359,46 @@ export const Navbar: React.FC<{
                 <span>{t.nav.myProgress}</span>
                 <span className="font-mono text-slate-900 dark:text-white font-bold">{totalCompletionPercentage}%</span>
               </button>
+
+              {!isInstalled && (
+                <button
+                  onClick={() => {
+                    handleInstallClick();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-2 px-3 text-left rounded-lg text-xs font-semibold bg-sky-50 dark:bg-sky-950/50 text-sky-800 dark:text-sky-200 flex items-center justify-between border border-sky-200/60 dark:border-sky-800/60 cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Download className="w-4 h-4 text-sky-500" />
+                    <span>{t.nav.installApp}</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase bg-sky-100 dark:bg-sky-900/70 text-sky-700 dark:text-sky-300 px-1.5 py-0.5 rounded">
+                    PWA
+                  </span>
+                </button>
+              )}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* PWA Feedback Notification */}
+      <AnimatePresence>
+        {installFeedback && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed top-20 right-4 max-w-sm p-3.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs shadow-2xl border border-slate-800 dark:border-slate-200 z-50 flex items-start gap-2.5"
+          >
+            <Download className="w-4 h-4 text-sky-400 dark:text-sky-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 leading-relaxed font-sans">{installFeedback}</div>
+            <button
+              onClick={() => setInstallFeedback(null)}
+              className="text-slate-400 hover:text-white dark:hover:text-slate-900 p-0.5 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

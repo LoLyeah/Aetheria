@@ -100,6 +100,11 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   const { language, navigateTo } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
   const [selectedTopic, setSelectedTopic] = useState<TopicId>(activeTopicId);
+  const [prevActiveTopicId, setPrevActiveTopicId] = useState<TopicId>(activeTopicId);
+  if (activeTopicId !== prevActiveTopicId) {
+    setPrevActiveTopicId(activeTopicId);
+    setSelectedTopic(activeTopicId);
+  }
   const [renderStyle, setRenderStyle] = useState<RenderStyle>('holographic');
   const [isExploded, setIsExploded] = useState<boolean>(false);
   const [isAutoRotating, setIsAutoRotating] = useState<boolean>(true);
@@ -109,13 +114,6 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   const [showTelemetry, setShowTelemetry] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Sync with activeTopicId prop
-  useEffect(() => {
-    if (activeTopicId) {
-      setSelectedTopic(activeTopicId);
-    }
-  }, [activeTopicId]);
 
   // Click outside and Escape key handler for dropdown
   useEffect(() => {

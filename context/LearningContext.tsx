@@ -104,6 +104,23 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
               setUserProgress(JSON.parse(savedProgress));
             } catch {}
           }
+          // Support PWA shortcut navigation via URL search parameters
+          try {
+            const params = new URLSearchParams(window.location.search);
+            const topicParam = params.get('topic') as TopicId | null;
+            const validTopics: TopicId[] = [
+              'quantum-mechanics',
+              'fetus-development',
+              'ev-battery',
+              'pulmonology-pneumonia',
+              'cardiac-arrest',
+              'hypertension',
+            ];
+            if (topicParam && validTopics.includes(topicParam)) {
+              setSelectedTopicId(topicParam);
+              setView('learn');
+            }
+          } catch {}
           setIsHydrated(true);
         });
       }
