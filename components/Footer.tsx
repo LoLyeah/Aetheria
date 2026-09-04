@@ -1,15 +1,46 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
-import { Atom, Cpu, ShieldCheck } from 'lucide-react';
+import { Atom, Cpu, ShieldCheck, Download, Check, X } from 'lucide-react';
 import { allTopics } from '@/lib/content';
 import { APP_VERSION_DATA } from '@/lib/version';
+import { usePWA } from '@/hooks/usePWA';
 
 export const Footer: React.FC<{ onOpenVersion?: () => void }> = ({ onOpenVersion }) => {
   const { language, navigateTo } = useLearning();
   const t = translations[language];
+  const { isInstalled, installApp } = usePWA();
+  const [installFeedback, setInstallFeedback] = useState<string | null>(null);
+  const installTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (installTimerRef.current) clearTimeout(installTimerRef.current);
+    };
+  }, []);
+
+  const showInstallFeedback = (msg: string, duration: number) => {
+    if (installTimerRef.current) clearTimeout(installTimerRef.current);
+    setInstallFeedback(msg);
+    installTimerRef.current = setTimeout(() => {
+      setInstallFeedback(null);
+      installTimerRef.current = null;
+    }, duration);
+  };
+
+  const handleInstallClick = async () => {
+    const outcome = await installApp();
+    if (outcome === 'ios') {
+      showInstallFeedback(t.pwa.iosGuide, 6000);
+    } else if (outcome === 'accepted') {
+      showInstallFeedback(t.pwa.installedSuccess, 4000);
+    } else if (outcome === 'unsupported') {
+      showInstallFeedback(t.pwa.unsupportedGuide, 6000);
+    }
+  };
 
   return (
     <footer className="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-xs transition-colors">
@@ -42,6 +73,53 @@ export const Footer: React.FC<{ onOpenVersion?: () => void }> = ({ onOpenVersion
               >
                 v{APP_VERSION_DATA.version} (SemVer)
               </button>
+            </div>
+
+            {/* PWA Installation Affordance */}
+            <div className="pt-2">
+              {!isInstalled ? (
+                <div className="space-y-2">
+                  <motion.button
+                    whileHover={{ y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleInstallClick}
+                    aria-label={t.pwa.installTitle}
+                    title={t.pwa.installTitle}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 transition-colors text-xs font-semibold cursor-pointer shadow-2xs"
+                  >
+                    <Download className="w-3.5 h-3.5 text-sky-500" />
+                    <span>{t.nav.installApp}</span>
+                  </motion.button>
+                  <AnimatePresence>
+                    {installFeedback && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 4 }}
+                        className="text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/90 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 flex items-start gap-2 max-w-sm"
+                      >
+                        <Download className="w-3.5 h-3.5 text-sky-500 flex-shrink-0 mt-0.5" />
+                        <span className="flex-1 leading-relaxed font-sans">{installFeedback}</span>
+                        <button
+                          onClick={() => {
+                            if (installTimerRef.current) clearTimeout(installTimerRef.current);
+                            setInstallFeedback(null);
+                          }}
+                          className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer p-0.5"
+                          aria-label="Dismiss feedback"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                  <Check className="w-3.5 h-3.5" />
+                  <span>{t.pwa.runningAsApp}</span>
+                </div>
+              )}
             </div>
           </div>
 

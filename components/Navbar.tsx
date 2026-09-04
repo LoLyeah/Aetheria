@@ -18,7 +18,6 @@ import {
   Download,
 } from 'lucide-react';
 import { getAllModules } from '@/lib/content';
-import { APP_VERSION_DATA } from '@/lib/version';
 import { usePWA } from '@/hooks/usePWA';
 
 export const Navbar: React.FC<{
@@ -45,8 +44,24 @@ export const Navbar: React.FC<{
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [installFeedback, setInstallFeedback] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const installTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { isInstalled, installApp } = usePWA();
+
+  useEffect(() => {
+    return () => {
+      if (installTimerRef.current) clearTimeout(installTimerRef.current);
+    };
+  }, []);
+
+  const showInstallFeedback = (msg: string, duration: number) => {
+    if (installTimerRef.current) clearTimeout(installTimerRef.current);
+    setInstallFeedback(msg);
+    installTimerRef.current = setTimeout(() => {
+      setInstallFeedback(null);
+      installTimerRef.current = null;
+    }, duration);
+  };
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
@@ -63,14 +78,11 @@ export const Navbar: React.FC<{
   const handleInstallClick = async () => {
     const outcome = await installApp();
     if (outcome === 'ios') {
-      setInstallFeedback(t.pwa.iosGuide);
-      setTimeout(() => setInstallFeedback(null), 6000);
+      showInstallFeedback(t.pwa.iosGuide, 6000);
     } else if (outcome === 'accepted') {
-      setInstallFeedback(t.pwa.installedSuccess);
-      setTimeout(() => setInstallFeedback(null), 4000);
+      showInstallFeedback(t.pwa.installedSuccess, 4000);
     } else if (outcome === 'unsupported') {
-      setInstallFeedback(t.pwa.unsupportedGuide);
-      setTimeout(() => setInstallFeedback(null), 6000);
+      showInstallFeedback(t.pwa.unsupportedGuide, 6000);
     }
   };
 
@@ -138,18 +150,6 @@ export const Navbar: React.FC<{
                 <span>{language === 'en' ? 'Glossary' : 'Glosarium'}</span>
               </button>
             )}
-            <button
-              onClick={onOpenProgress}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <Award className="w-3.5 h-3.5 text-amber-500" />
-              <span>{t.nav.myProgress}</span>
-              {isHydrated && totalCompletionPercentage > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold">
-                  {totalCompletionPercentage}%
-                </span>
-              )}
-            </button>
           </nav>
         </div>
 
@@ -220,19 +220,6 @@ export const Navbar: React.FC<{
 
         {/* Right Action Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Install PWA Button */}
-          {!isInstalled && (
-            <button
-              onClick={handleInstallClick}
-              aria-label={t.pwa.installTitle}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer text-xs font-semibold"
-              title={t.pwa.installTitle}
-            >
-              <Download className="w-3.5 h-3.5 text-sky-500" />
-              <span className="hidden xl:inline">{t.nav.installApp}</span>
-            </button>
-          )}
-
           {/* Settings Button */}
           {onOpenSettings && (
             <button
@@ -281,24 +268,29 @@ export const Navbar: React.FC<{
             {theme === 'light' ? <Moon className="w-4 h-4 text-slate-700" /> : <Sun className="w-4 h-4 text-amber-400" />}
           </button>
 
-          {/* Primary Action Button */}
-          {view === 'landing' ? (
+          {/* Progress Tracker Badge */}
+          <motion.button
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onOpenProgress}
+            aria-label={language === 'en' ? `Learning Progress: ${isHydrated ? totalCompletionPercentage : 0}%` : `Kemajuan Belajar: ${isHydrated ? totalCompletionPercentage : 0}%`}
+            title={language === 'en' ? `Learning Progress: ${isHydrated ? totalCompletionPercentage : 0}%` : `Kemajuan Belajar: ${isHydrated ? totalCompletionPercentage : 0}%`}
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700/80 transition-colors cursor-pointer"
+          >
+            <Award className="w-3.5 h-3.5 text-amber-500" />
+            <span className="font-mono">{isHydrated ? totalCompletionPercentage : 0}%</span>
+          </motion.button>
+
+          {/* Primary Action Button (Landing Only) */}
+          {view === 'landing' && (
             <motion.button
+              whileHover={{ y: -1 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigateTo('learn')}
               className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 shadow-2xs transition-all cursor-pointer"
             >
               <span>{t.nav.getStarted}</span>
               <ChevronRight className="w-3.5 h-3.5" />
-            </motion.button>
-          ) : (
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={onOpenProgress}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
-            >
-              <Award className="w-3.5 h-3.5 text-amber-500" />
-              <span className="font-mono">{isHydrated ? totalCompletionPercentage : 0}%</span>
             </motion.button>
           )}
 
@@ -370,10 +362,15 @@ export const Navbar: React.FC<{
                   onOpenProgress();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full py-2 px-3 text-left rounded-lg text-xs font-semibold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 flex items-center justify-between"
+                className="w-full py-2 px-3 text-left rounded-lg text-xs font-semibold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/80 flex items-center justify-between transition-colors cursor-pointer"
               >
-                <span>{t.nav.myProgress}</span>
-                <span className="font-mono text-slate-900 dark:text-white font-bold">{totalCompletionPercentage}%</span>
+                <div className="flex items-center gap-2">
+                  <Award className="w-3.5 h-3.5 text-amber-500" />
+                  <span>{t.nav.myProgress}</span>
+                </div>
+                <span className="font-mono text-slate-900 dark:text-white font-bold">
+                  {isHydrated ? totalCompletionPercentage : 0}%
+                </span>
               </button>
 
               {!isInstalled && (
@@ -382,13 +379,13 @@ export const Navbar: React.FC<{
                     handleInstallClick();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-2 px-3 text-left rounded-lg text-xs font-semibold bg-sky-50 dark:bg-sky-950/50 text-sky-800 dark:text-sky-200 flex items-center justify-between border border-sky-200/60 dark:border-sky-800/60 cursor-pointer"
+                  className="w-full py-2 px-3 text-left rounded-lg text-xs font-semibold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/80 flex items-center justify-between border border-slate-200/80 dark:border-slate-700/80 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <Download className="w-4 h-4 text-sky-500" />
+                    <Download className="w-3.5 h-3.5 text-sky-500" />
                     <span>{t.nav.installApp}</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold uppercase bg-sky-100 dark:bg-sky-900/70 text-sky-700 dark:text-sky-300 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-bold uppercase bg-slate-200/80 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded">
                     PWA
                   </span>
                 </button>
@@ -405,13 +402,17 @@ export const Navbar: React.FC<{
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed top-20 right-4 max-w-sm p-3.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs shadow-2xl border border-slate-800 dark:border-slate-200 z-50 flex items-start gap-2.5"
+            className="fixed top-20 right-4 left-4 sm:left-auto sm:max-w-sm p-3.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs shadow-2xl border border-slate-800 dark:border-slate-200 z-50 flex items-start gap-2.5"
           >
             <Download className="w-4 h-4 text-sky-400 dark:text-sky-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1 leading-relaxed font-sans">{installFeedback}</div>
             <button
-              onClick={() => setInstallFeedback(null)}
+              onClick={() => {
+                if (installTimerRef.current) clearTimeout(installTimerRef.current);
+                setInstallFeedback(null);
+              }}
               className="text-slate-400 hover:text-white dark:hover:text-slate-900 p-0.5 cursor-pointer"
+              aria-label="Dismiss feedback"
             >
               <X className="w-3.5 h-3.5" />
             </button>
