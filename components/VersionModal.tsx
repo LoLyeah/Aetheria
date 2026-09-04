@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { APP_VERSION_DATA, SEMVER_GUIDELINES } from '@/lib/version';
+import { useModalA11y } from '@/hooks/useModalA11y';
 import {
   X,
   Tag,
@@ -23,17 +24,25 @@ export const VersionModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
 }) => {
   const { language } = useLearning();
   const [activeTab, setActiveTab] = useState<'semver' | 'changelog' | 'cli'>('semver');
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useModalA11y({ isOpen, onClose, modalRef });
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-sm">
       <motion.div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="version-modal-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="relative w-full max-w-3xl h-[650px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-3xl h-[650px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col outline-hidden"
       >
         {/* Modal Header */}
         <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -43,7 +52,7 @@ export const VersionModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                <h2 id="version-modal-title" className="text-lg font-bold text-slate-900 dark:text-white">
                   {language === 'en' ? 'Software Versioning' : 'Versi Perangkat Lunak'}
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
@@ -60,6 +69,7 @@ export const VersionModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
 
           <button
             onClick={onClose}
+            aria-label={language === 'en' ? 'Close version modal' : 'Tutup jendela versi'}
             className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors"
           >
             <X className="w-5 h-5" />

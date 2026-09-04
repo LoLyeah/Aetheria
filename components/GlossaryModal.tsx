@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GLOSSARY_TERMS, GlossaryCategory, GlossaryTermData } from '@/lib/glossaryData';
 import { Language } from '@/types/learning';
 import { MathFormula } from './ui/MathFormula';
+import { useModalA11y } from '@/hooks/useModalA11y';
 import {
   Search,
   Atom,
@@ -35,6 +36,9 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<GlossaryCategory | 'all'>('all');
   const [selectedTerm, setSelectedTerm] = useState<GlossaryTermData | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useModalA11y({ isOpen, onClose, modalRef });
 
   if (!isOpen) return null;
 
@@ -90,11 +94,16 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
 
         {/* Modal Container */}
         <motion.div
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="glossary-modal-title"
+          tabIndex={-1}
           initial={{ opacity: 0, scale: 0.95, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 12 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative w-full max-w-4xl h-[680px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10"
+          className="relative w-full max-w-4xl h-[680px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10 outline-hidden"
         >
           {/* Header */}
           <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">
@@ -103,9 +112,9 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                <h2 id="glossary-modal-title" className="text-xl font-bold text-slate-900 dark:text-white">
                   {language === 'en' ? 'Scientific Terminology Lexicon' : 'Glosarium Terminologi Ilmiah'}
-                </h3>
+                </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   {language === 'en'
                     ? 'Authoritative non-AI definitions, mathematical formulations, and laboratory contexts'
@@ -116,6 +125,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
 
             <button
               onClick={onClose}
+              aria-label={language === 'en' ? 'Close glossary modal' : 'Tutup jendela glosarium'}
               className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />

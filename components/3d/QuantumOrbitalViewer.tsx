@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { RotateCcw, Play, Pause, Layers, Eye, Sparkles, Sliders, Maximize2 } from 'lucide-react';
 import { TelemetryHUD } from './TelemetryHUD';
+import { attachCanvasControls } from '@/lib/canvasControls';
 
 export type OrbitalKey = '1s' | '2s' | '2px' | '2pz' | '3dz2' | '3dxy' | '4fxyz';
 
@@ -299,40 +300,35 @@ export const QuantumOrbitalViewer: React.FC = () => {
     axesGroup.add(createAxisLine(new THREE.Vector3(0, 0, -6), new THREE.Vector3(0, 0, 6), axisMatZ));
     scene.add(axesGroup);
 
-    // Mouse Drag Rotation
+    // Unified Touch, Mouse, and Keyboard Controls
     let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDragging = true;
-      previousMousePosition = { x: e.clientX, y: e.clientY };
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const deltaX = e.clientX - previousMousePosition.x;
-      const deltaY = e.clientY - previousMousePosition.y;
-
-      scene.rotation.y += deltaX * 0.008;
-      scene.rotation.x += deltaY * 0.008;
-
-      previousMousePosition = { x: e.clientX, y: e.clientY };
-    };
-
-    const onMouseUp = () => {
-      isDragging = false;
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      camera.position.z = Math.max(4, Math.min(25, camera.position.z + e.deltaY * 0.015));
-    };
-
     const domElement = renderer.domElement;
-    domElement.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    domElement.addEventListener('wheel', onWheel, { passive: false });
+    domElement.setAttribute('role', 'region');
+    domElement.setAttribute(
+      'aria-label',
+      'Interactive 3D Quantum Orbital Simulation. Use arrow keys or WASD to rotate, plus and minus to zoom, Space to toggle auto-rotation, R to reset camera.'
+    );
+
+    const detachControls = attachCanvasControls(domElement, {
+      onRotate: (deltaX, deltaY) => {
+        scene.rotation.y += deltaX;
+        scene.rotation.x += deltaY;
+      },
+      onZoom: (deltaZoom) => {
+        camera.position.z = Math.max(4, Math.min(25, camera.position.z + deltaZoom));
+      },
+      onReset: () => {
+        camera.position.set(0, 5, 14);
+        camera.lookAt(0, 0, 0);
+        scene.rotation.set(0, 0, 0);
+      },
+      onToggleAutoRotate: () => {
+        setIsRotating((prev) => !prev);
+      },
+      onDragStateChange: (dragging) => {
+        isDragging = dragging;
+      },
+    });
 
     // Animation Loop
     let animationFrameId: number;
@@ -385,10 +381,7 @@ export const QuantumOrbitalViewer: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      domElement.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      domElement.removeEventListener('wheel', onWheel);
+      detachControls();
       resizeObserver.disconnect();
       renderer.dispose();
     };
@@ -658,15 +651,22 @@ export const QuantumOrbitalViewer: React.FC = () => {
             particleCount={renderMode === 'mesh' ? 0 : activeParticleCount}
           />
 
-          <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing canvas-container" />
+          <div
+            ref={mountRef}
+            tabIndex={0}
+            className="w-full h-full cursor-grab active:cursor-grabbing canvas-container select-none touch-none outline-hidden focus-visible:ring-2 focus-visible:ring-sky-500/80"
+          />
 
           {/* Floating Canvas Overlays */}
-          <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2">
+          <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2 pointer-events-none">
             <div className="px-3 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs font-mono text-cyan-400">
               {orbitalData.name}
             </div>
             <div className="px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700 text-[11px] font-mono text-slate-300">
               Energy: <span className="text-emerald-400 font-semibold">{orbitalData.energy}</span>
+            </div>
+            <div className="hidden sm:inline-flex px-2.5 py-1 rounded-lg bg-slate-900/70 backdrop-blur-md border border-slate-800 text-[10px] font-mono text-slate-400">
+              {language === 'en' ? '↺ Drag/Touch to Orbit • Pinch to Zoom • [R] Reset' : '↺ Sentuh untuk Putar • Cubit untuk Zoom • [R] Reset'}
             </div>
           </div>
 

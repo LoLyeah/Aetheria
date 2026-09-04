@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
 import { BADGES_CATALOG } from '@/lib/content/badges';
 import { allTopics, getAllModules } from '@/lib/content';
+import { useModalA11y } from '@/hooks/useModalA11y';
 import {
   X,
   Award,
@@ -34,6 +35,9 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
   const [showResetConfirm, setShowResetConfirm] = useState<boolean>(false);
   const [certificateSerial] = useState<string>('AETH-2026-849204');
   const [issuedDate] = useState<string>('September 2026');
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useModalA11y({ isOpen, onClose, modalRef });
 
   if (!isOpen) return null;
 
@@ -48,11 +52,16 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-sm">
       <motion.div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="progress-modal-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="relative w-full max-w-4xl h-[680px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-4xl h-[680px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col outline-hidden"
       >
         {/* Modal Header */}
         <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -61,7 +70,7 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+              <h2 id="progress-modal-title" className="text-lg font-bold text-slate-900 dark:text-white">
                 {language === 'en' ? 'Learning Progress & Badges' : 'Kemajuan Belajar & Lencana'}
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -74,6 +83,7 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
 
           <button
             onClick={onClose}
+            aria-label={language === 'en' ? 'Close progress tracker modal' : 'Tutup jendela kemajuan belajar'}
             className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors"
           >
             <X className="w-5 h-5" />

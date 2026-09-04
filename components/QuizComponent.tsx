@@ -24,6 +24,7 @@ import {
   Share2,
   BookmarkCheck,
   Volume2,
+  AlertTriangle,
 } from 'lucide-react';
 
 export interface QuizComponentProps {
@@ -63,6 +64,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
   const [showHint, setShowHint] = useState<boolean>(false);
   const [newlyUnlockedBadges, setNewlyUnlockedBadges] = useState<string[]>([]);
+  const [unansweredWarning, setUnansweredWarning] = useState<number | null>(null);
 
   const questions = module.quiz || [];
   const currentQ = questions[currentQuestionIdx];
@@ -83,6 +85,9 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
   const handleSelectOption = (qId: string, optIdx: number) => {
     if (isSubmitted) return;
     setSelectedAnswers((prev) => ({ ...prev, [qId]: optIdx }));
+    if (unansweredWarning !== null) {
+      setUnansweredWarning(null);
+    }
   };
 
   const calculateScore = () => {
@@ -97,6 +102,14 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
   };
 
   const handleSubmitQuiz = () => {
+    // Check if any question remains unanswered
+    const unansweredIdx = questions.findIndex((q) => selectedAnswers[q.id] === undefined);
+    if (unansweredIdx !== -1) {
+      setUnansweredWarning(unansweredIdx + 1);
+      setCurrentQuestionIdx(unansweredIdx);
+      return;
+    }
+    setUnansweredWarning(null);
     setIsTimerRunning(false);
     const { percentage } = calculateScore();
     const passed = percentage >= 75;
@@ -138,6 +151,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
     setViewMode('stepper');
     setShowHint(false);
     setNewlyUnlockedBadges([]);
+    setUnansweredWarning(null);
   };
 
   const answeredCount = questions.filter((q) => selectedAnswers[q.id] !== undefined).length;
@@ -230,7 +244,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
               </div>
 
               {/* Step dots */}
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5" role="tablist" aria-label="Questions">
                 {questions.map((q, idx) => {
                   const isDone = selectedAnswers[q.id] !== undefined;
                   const isCur = idx === currentQuestionIdx;
@@ -248,6 +262,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
                           ? 'bg-emerald-500'
                           : 'bg-slate-200 dark:bg-slate-700'
                       }`}
+                      aria-label={`Question ${idx + 1}: ${isCur ? 'Current' : isDone ? 'Answered' : 'Unanswered'}`}
                       title={`Go to Question ${idx + 1}`}
                     />
                   );
@@ -361,6 +376,16 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
               </button>
 
               <div className="flex items-center gap-2">
+                {unansweredWarning !== null && (
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 text-amber-800 dark:text-amber-200 text-xs font-semibold animate-fadeIn">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                    <span>
+                      {language === 'en'
+                        ? `Please answer question ${unansweredWarning} before submitting.`
+                        : `Harap jawab pertanyaan ${unansweredWarning} sebelum mengirim.`}
+                    </span>
+                  </div>
+                )}
                 {currentQuestionIdx < questions.length - 1 ? (
                   <motion.button
                     whileTap={{ scale: 0.98 }}
@@ -377,8 +402,11 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSubmitQuiz}
-                    disabled={!isAllAnswered}
-                    className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs shadow-md flex items-center gap-1.5 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                    className={`px-6 py-2.5 rounded-xl font-bold text-xs shadow-md flex items-center gap-1.5 cursor-pointer transition-all ${
+                      isAllAnswered
+                        ? 'bg-sky-500 hover:bg-sky-400 text-slate-950 ring-2 ring-sky-300 dark:ring-sky-700'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700'
+                    }`}
                   >
                     <span>{language === 'en' ? 'Submit Assessment' : 'Kirim Jawaban Evaluasi'}</span>
                     <CheckCircle2 className="w-4 h-4" />
@@ -452,7 +480,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-4 p-4 rounded-xl bg-amber-100/90 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700 text-amber-950 dark:text-amber-200 flex items-center justify-center gap-3"
                 >
-                  <Award className="w-6 h-6 text-amber-500 animate-bounce flex-shrink-0" />
+                  <Award className="w-6 h-6 text-amber-500 drop-shadow-xs flex-shrink-0" />
                   <div className="text-left">
                     <div className="text-xs font-bold font-mono">
                       🎉 {language === 'en' ? 'New Achievement Unlocked!' : 'Lencana Baru Terbuka!'}

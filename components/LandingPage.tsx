@@ -209,35 +209,33 @@ export const LandingPage: React.FC = () => {
                     {topic.description[language]}
                   </p>
 
-                  {/* Sequential Parts Overview List */}
-                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-mono font-semibold text-slate-400 mb-1">
-                      <span>{language === 'en' ? 'Curriculum Structure' : 'Struktur Kurikulum'}</span>
-                      <span>{topic.modules.length} {language === 'en' ? 'Parts' : 'Bagian'}</span>
+                  {/* Discipline Summary & Progressive Disclosure */}
+                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between text-[11px] font-mono font-semibold text-slate-500 dark:text-slate-400">
+                      <span>{topic.modules.length} {language === 'en' ? 'Core Modules' : 'Modul Inti'}</span>
+                      <span>{topic.modules.reduce((sum, m) => sum + m.durationMinutes, 0)} mins</span>
                     </div>
 
-                    {topic.modules.map((m) => {
-                      const isDone = userProgress.completedModules.includes(m.id);
-                      return (
-                        <div
-                          key={m.id}
-                          className="flex items-center justify-between py-1.5 px-2 rounded-lg text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
-                        >
-                          <div className="flex items-center gap-2 truncate pr-2">
-                            <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                              {language === 'en' ? `P${m.order}` : `B${m.order}`}
-                            </span>
-                            <span className="truncate font-medium">{m.title[language]}</span>
-                          </div>
-
-                          {isDone ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                          ) : (
-                            <span className="text-[10px] text-slate-400 font-mono">{m.durationMinutes}m</span>
-                          )}
+                    {/* Progress Indicator */}
+                    {progressPct > 0 ? (
+                      <div className="space-y-1">
+                        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-sky-500 rounded-full transition-all duration-500"
+                            style={{ width: `${progressPct}%` }}
+                          />
                         </div>
-                      );
-                    })}
+                        <div className="flex justify-between text-[10px] font-mono text-slate-400">
+                          <span>{completedCount} / {topic.modules.length} {language === 'en' ? 'completed' : 'selesai'}</span>
+                          <span>{progressPct}%</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                        <span>{language === 'en' ? 'Interactive 3D Lab + Theory' : 'Lab 3D Interaktif + Teori'}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 

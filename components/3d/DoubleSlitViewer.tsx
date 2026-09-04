@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { Eye, EyeOff, Play, Pause, RotateCcw, Sparkles } from 'lucide-react';
 import { TelemetryHUD } from './TelemetryHUD';
+import { attachCanvasControls } from '@/lib/canvasControls';
 
 export const DoubleSlitViewer: React.FC = () => {
   const { language, settings } = useLearning();
@@ -162,27 +163,33 @@ export const DoubleSlitViewer: React.FC = () => {
     particlesRef.current = particleHits;
     scene.add(particleHits);
 
-    // Mouse drag camera controls
-    let isDragging = false;
-    let prevMouse = { x: 0, y: 0 };
-    const onMouseDown = (e: MouseEvent) => {
-      isDragging = true;
-      prevMouse = { x: e.clientX, y: e.clientY };
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const dx = e.clientX - prevMouse.x;
-      const dy = e.clientY - prevMouse.y;
-      scene.rotation.y += dx * 0.005;
-      camera.position.y = Math.max(2, Math.min(12, camera.position.y - dy * 0.01));
-      camera.lookAt(0, 0, -1);
-      prevMouse = { x: e.clientX, y: e.clientY };
-    };
-    const onMouseUp = () => (isDragging = false);
+    // Unified Touch, Mouse, and Keyboard Controls
+    const domElement = renderer.domElement;
+    domElement.setAttribute('role', 'region');
+    domElement.setAttribute(
+      'aria-label',
+      'Interactive Double-Slit Wave-Particle Simulation. Use arrow keys or WASD to orbit, plus and minus to zoom, Space to pause or resume, R to reset camera.'
+    );
 
-    renderer.domElement.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    const detachControls = attachCanvasControls(domElement, {
+      onRotate: (dx, dy) => {
+        scene.rotation.y += dx * 0.7;
+        camera.position.y = Math.max(2, Math.min(12, camera.position.y - dy * 1.5));
+        camera.lookAt(0, 0, -1);
+      },
+      onZoom: (dZoom) => {
+        camera.position.z = Math.max(4, Math.min(16, camera.position.z + dZoom));
+        camera.lookAt(0, 0, -1);
+      },
+      onReset: () => {
+        camera.position.set(0, 6, 9);
+        camera.lookAt(0, 0, -1);
+        scene.rotation.set(0, 0, 0);
+      },
+      onToggleAutoRotate: () => {
+        setIsRunning((prev) => !prev);
+      },
+    });
 
     // Animation Loop
     let animId: number;
@@ -305,6 +312,7 @@ export const DoubleSlitViewer: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      detachControls();
       ro.disconnect();
       renderer.dispose();
     };
@@ -371,15 +379,22 @@ export const DoubleSlitViewer: React.FC = () => {
           particleCount={accumulatedHits}
         />
 
-        <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing canvas-container" />
+        <div
+          ref={mountRef}
+          tabIndex={0}
+          className="w-full h-full cursor-grab active:cursor-grabbing canvas-container select-none touch-none outline-hidden focus-visible:ring-2 focus-visible:ring-sky-500/80"
+        />
 
         {/* Overlay Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2">
+        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2 pointer-events-none">
           <div className="px-3 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs font-mono text-cyan-400">
             {detectorActive ? 'COLLAPSED: Two Classical Particle Bands' : 'SUPERPOSITION: Wave Interference Fringes'}
           </div>
           <div className="px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs font-mono text-slate-300">
             Hits: <span className="text-emerald-400 font-semibold">{accumulatedHits}</span>
+          </div>
+          <div className="hidden sm:inline-flex px-2.5 py-1 rounded-lg bg-slate-900/70 backdrop-blur-md border border-slate-800 text-[10px] font-mono text-slate-400">
+            {language === 'en' ? '↺ Drag/Touch to Orbit • Pinch to Zoom • [R] Reset' : '↺ Sentuh untuk Putar • Cubit untuk Zoom • [R] Reset'}
           </div>
         </div>
 

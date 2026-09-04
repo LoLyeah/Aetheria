@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { Zap, Thermometer, BatteryCharging, RotateCcw, Play, Pause, Flame, Sliders, Layers } from 'lucide-react';
 import { TelemetryHUD } from './TelemetryHUD';
+import { attachCanvasControls } from '@/lib/canvasControls';
 
 export type CellFormat = '4680-cylindrical' | 'prismatic-module' | 'pack-cooling';
 
@@ -102,31 +103,35 @@ export const BatteryCellViewer: React.FC = () => {
     modelGroupRef.current = modelGroup;
     scene.add(modelGroup);
 
-    // Mouse Drag Rotation
+    // Unified Touch, Mouse, and Keyboard Controls
     let isDragging = false;
-    let prevMouse = { x: 0, y: 0 };
-    const onMouseDown = (e: MouseEvent) => {
-      isDragging = true;
-      prevMouse = { x: e.clientX, y: e.clientY };
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const dx = e.clientX - prevMouse.x;
-      const dy = e.clientY - prevMouse.y;
-      modelGroup.rotation.y += dx * 0.007;
-      modelGroup.rotation.x += dy * 0.007;
-      prevMouse = { x: e.clientX, y: e.clientY };
-    };
-    const onMouseUp = () => (isDragging = false);
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      camera.position.z = Math.max(3, Math.min(20, camera.position.z + e.deltaY * 0.01));
-    };
+    const domElement = renderer.domElement;
+    domElement.setAttribute('role', 'region');
+    domElement.setAttribute(
+      'aria-label',
+      'Interactive 3D Battery Cell Simulation. Use arrow keys or WASD to orbit, plus and minus to zoom, Space to toggle auto-rotation, R to reset camera.'
+    );
 
-    renderer.domElement.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
+    const detachControls = attachCanvasControls(domElement, {
+      onRotate: (dx, dy) => {
+        modelGroup.rotation.y += dx;
+        modelGroup.rotation.x += dy;
+      },
+      onZoom: (dZoom) => {
+        camera.position.z = Math.max(3, Math.min(20, camera.position.z + dZoom));
+      },
+      onReset: () => {
+        camera.position.set(0, 2, 7.5);
+        camera.lookAt(0, 0, 0);
+        modelGroup.rotation.set(0.3, 0.5, 0);
+      },
+      onToggleAutoRotate: () => {
+        setIsRotating((prev) => !prev);
+      },
+      onDragStateChange: (dragging) => {
+        isDragging = dragging;
+      },
+    });
 
     // Animation Loop
     let animId: number;
@@ -188,6 +193,7 @@ export const BatteryCellViewer: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      detachControls();
       ro.disconnect();
       renderer.dispose();
     };
@@ -373,6 +379,14 @@ export const BatteryCellViewer: React.FC = () => {
     }
   }, [cellFormat, showThermalHeatmap, isCharging, settings.particleDensity]);
 
+  const resetCamera = () => {
+    if (cameraRef.current && modelGroupRef.current) {
+      cameraRef.current.position.set(0, 2, 7.5);
+      cameraRef.current.lookAt(0, 0, 0);
+      modelGroupRef.current.rotation.set(0.3, 0.5, 0);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm">
       {/* Header & Format Switcher */}
@@ -438,16 +452,23 @@ export const BatteryCellViewer: React.FC = () => {
             particleCount={cellFormat === '4680-cylindrical' ? activeParticleCount : 0}
           />
 
-          <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing canvas-container" />
+          <div
+            ref={mountRef}
+            tabIndex={0}
+            className="w-full h-full cursor-grab active:cursor-grabbing canvas-container select-none touch-none outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500/80"
+          />
 
           {/* Floating Badges */}
-          <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2">
+          <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2 pointer-events-none">
             <div className="px-3 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs font-mono text-emerald-400">
               {cellFormat === '4680-cylindrical' ? '4680 Jellyroll (46mm x 80mm)' : cellFormat === 'prismatic-module' ? 'Prismatic Module (Aluminum Can)' : 'Structural Pack Array'}
             </div>
             <div className="px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs font-mono text-slate-300 flex items-center gap-1.5">
               <BatteryCharging className="w-3.5 h-3.5 text-emerald-400" />
               <span>{isCharging ? 'Fast Charging (Cathode → Anode)' : 'Discharging (Anode → Cathode)'}</span>
+            </div>
+            <div className="hidden sm:inline-flex px-2.5 py-1 rounded-lg bg-slate-900/70 backdrop-blur-md border border-slate-800 text-[10px] font-mono text-slate-400">
+              {language === 'en' ? '↺ Drag/Touch to Orbit • Pinch to Zoom • [R] Reset' : '↺ Sentuh untuk Putar • Cubit untuk Zoom • [R] Reset'}
             </div>
           </div>
 
@@ -462,10 +483,17 @@ export const BatteryCellViewer: React.FC = () => {
           <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
             <button
               onClick={() => setIsRotating(!isRotating)}
-              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md"
-              title="Pause/Play Rotation"
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              title={isRotating ? 'Pause Rotation' : 'Auto Rotate'}
             >
               {isRotating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={resetCamera}
+              className="p-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 backdrop-blur-md transition-colors"
+              title="Reset Camera View"
+            >
+              <RotateCcw className="w-4 h-4" />
             </button>
           </div>
         </div>

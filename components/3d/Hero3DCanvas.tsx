@@ -27,6 +27,7 @@ import {
   X,
   Info,
 } from 'lucide-react';
+import { attachCanvasControls } from '@/lib/canvasControls';
 
 interface Hero3DCanvasProps {
   activeTopicId?: TopicId;
@@ -227,64 +228,34 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     let targetZoom = 9.0;
     let currentZoom = 9.0;
 
-    const onMouseDown = (e: MouseEvent) => {
-      isDragging = true;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
-    };
+    container.setAttribute('role', 'region');
+    container.setAttribute(
+      'aria-label',
+      'Interactive 3D Scientific Showcase. Use arrow keys or WASD to orbit, plus and minus to zoom, Space to toggle auto-rotation, R to reset camera.'
+    );
 
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const deltaX = e.clientX - prevMouseX;
-      const deltaY = e.clientY - prevMouseY;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
-
-      targetRotY += deltaX * 0.008;
-      targetRotX += deltaY * 0.008;
-      targetRotX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, targetRotX));
-    };
-
-    const onMouseUp = () => {
-      isDragging = false;
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      targetZoom += e.deltaY * 0.005;
-      targetZoom = Math.max(4.0, Math.min(14.0, targetZoom));
-    };
-
-    // Touch support for mobile
-    let touchStartX = 0;
-    let touchStartY = 0;
-    const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isDragging = true;
-      }
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isDragging || e.touches.length !== 1) return;
-      const deltaX = e.touches[0].clientX - touchStartX;
-      const deltaY = e.touches[0].clientY - touchStartY;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      targetRotY += deltaX * 0.008;
-      targetRotX += deltaY * 0.008;
-    };
-    const onTouchEnd = () => {
-      isDragging = false;
-    };
-
-    container.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    container.addEventListener('wheel', onWheel, { passive: false });
-    container.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd);
+    const detachControls = attachCanvasControls(container, {
+      onRotate: (deltaX, deltaY) => {
+        targetRotY += deltaX;
+        targetRotX += deltaY;
+        targetRotX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, targetRotX));
+      },
+      onZoom: (deltaZoom) => {
+        targetZoom += deltaZoom * 0.6;
+        targetZoom = Math.max(4.0, Math.min(14.0, targetZoom));
+      },
+      onReset: () => {
+        targetRotX = 0;
+        targetRotY = 0;
+        targetZoom = 9.0;
+      },
+      onToggleAutoRotate: () => {
+        setIsAutoRotating((prev) => !prev);
+      },
+      onDragStateChange: (dragging) => {
+        isDragging = dragging;
+      },
+    });
 
     // Render loop & FPS telemetry
     let animId: number;
@@ -370,13 +341,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
 
     return () => {
       cancelAnimationFrame(animId);
-      container.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      container.removeEventListener('wheel', onWheel);
-      container.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
+      detachControls();
       ro.disconnect();
       renderer.dispose();
     };
@@ -1115,7 +1080,8 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       {/* 3. MAIN INTERACTIVE 3D VIEWPORT */}
       <div
         ref={mountRef}
-        className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
+        tabIndex={0}
+        className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing select-none touch-none outline-hidden focus-visible:ring-2 focus-visible:ring-sky-500/80"
       />
 
       {/* 4. BOTTOM INTERACTIVE STAGE CONTROLS TOOLBAR */}

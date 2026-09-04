@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
-import { WebGPUTestBadge } from './3d/WebGPUTestBadge';
 import {
   Sun,
   Moon,
@@ -45,8 +44,21 @@ export const Navbar: React.FC<{
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [installFeedback, setInstallFeedback] = useState<string | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { isInstalled, installApp } = usePWA();
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   const handleInstallClick = async () => {
     const outcome = await installApp();
@@ -142,17 +154,23 @@ export const Navbar: React.FC<{
         </div>
 
         {/* Global Search Input & Dropdown */}
+        {/* Global Search Input with Cmd+K Shortcut */}
         <div className="hidden lg:block relative w-64 xl:w-72">
           <div className="relative flex items-center">
             <Search className="w-4 h-4 absolute left-3 text-slate-400 pointer-events-none" />
             <input
+              ref={searchInputRef}
               type="text"
-              placeholder={t.nav.searchPlaceholder}
+              aria-label={t.nav.searchPlaceholder}
+              placeholder={`${t.nav.searchPlaceholder}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchOpen(true)}
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 border border-transparent focus:border-slate-300 dark:focus:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition-all"
+              className="w-full pl-9 pr-12 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 border border-transparent focus:border-slate-300 dark:focus:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition-all"
             />
+            <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold text-slate-400 bg-slate-200/70 dark:bg-slate-700/70 border border-slate-300/80 dark:border-slate-600 pointer-events-none">
+              ⌘K
+            </kbd>
           </div>
 
           {/* Search Dropdown with AnimatePresence */}
@@ -201,16 +219,12 @@ export const Navbar: React.FC<{
         </div>
 
         {/* Right Action Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* WebGPU Status Badge */}
-          <div className="hidden sm:block">
-            <WebGPUTestBadge compact />
-          </div>
-
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Install PWA Button */}
           {!isInstalled && (
             <button
               onClick={handleInstallClick}
+              aria-label={t.pwa.installTitle}
               className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer text-xs font-semibold"
               title={t.pwa.installTitle}
             >
@@ -223,6 +237,7 @@ export const Navbar: React.FC<{
           {onOpenSettings && (
             <button
               onClick={onOpenSettings}
+              aria-label={language === 'en' ? 'System & Learning Settings' : 'Pengaturan Sistem & Belajar'}
               className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer"
               title={language === 'en' ? 'System & Learning Settings' : 'Pengaturan Sistem & Belajar'}
             >
@@ -231,7 +246,7 @@ export const Navbar: React.FC<{
           )}
 
           {/* Language Toggle (EN / ID) */}
-          <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold font-mono">
+          <div className="flex items-center p-0.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold font-mono">
             <button
               onClick={() => setLanguage('en')}
               className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
@@ -259,6 +274,7 @@ export const Navbar: React.FC<{
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
+            aria-label={theme === 'light' ? t.nav.darkMode : t.nav.lightMode}
             className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer"
             title={theme === 'light' ? t.nav.darkMode : t.nav.lightMode}
           >

@@ -904,7 +904,7 @@ export const CardiacArrestViewer: React.FC = () => {
           {shockFlash && (
             <div className="absolute inset-0 bg-sky-300/40 backdrop-blur-xs flex items-center justify-center pointer-events-none transition-opacity duration-300">
               <div className="px-6 py-3 rounded-2xl bg-white/90 dark:bg-slate-950/90 border border-sky-400 shadow-2xl flex items-center gap-3">
-                <Zap className="w-6 h-6 text-sky-500 animate-bounce" />
+                <Zap className="w-6 h-6 text-sky-500 transition-transform duration-300 scale-110" />
                 <span className="font-mono text-sm font-black text-sky-600 dark:text-sky-400 tracking-wider">
                   200J BIPHASIC SHOCK DELIVERED • CONVERTED TO SINUS RHYTHM
                 </span>

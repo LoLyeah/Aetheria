@@ -35,6 +35,7 @@ import {
 import { APP_VERSION_DATA } from '@/lib/version';
 import { usePWA } from '@/hooks/usePWA';
 import { translations } from '@/lib/translations';
+import { useModalA11y } from '@/hooks/useModalA11y';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -70,8 +71,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [pwaMessage, setPwaMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const { isInstalled, installApp } = usePWA();
+
+  useModalA11y({ isOpen, onClose, modalRef });
 
   if (!isOpen) return null;
 
@@ -135,11 +139,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
       {/* Modal Window with Fixed Height to Prevent Size Jumps */}
       <motion.div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-modal-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 16 }}
         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-3xl h-[650px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10"
+        className="relative w-full max-w-3xl h-[650px] max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10 outline-hidden"
       >
         {/* Header */}
         <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4 flex-shrink-0">
@@ -148,9 +157,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+              <h2 id="settings-modal-title" className="text-xl font-bold text-slate-900 dark:text-white">
                 {language === 'en' ? 'System & Laboratory Settings' : 'Pengaturan Sistem & Laboratorium'}
-              </h3>
+              </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                 Aetheria Platform v{APP_VERSION_DATA.version}
               </p>
@@ -159,6 +168,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           <button
             onClick={onClose}
+            aria-label={language === 'en' ? 'Close settings modal' : 'Tutup jendela pengaturan'}
             className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />

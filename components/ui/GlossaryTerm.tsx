@@ -198,7 +198,7 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       ? ''
       : settings?.glossaryHighlighting === 'subtle'
       ? 'border-b border-dotted border-slate-400 dark:border-slate-600 hover:text-sky-600 dark:hover:text-sky-400 cursor-help transition-colors'
-      : 'border-b-2 border-sky-400/60 dark:border-sky-500/60 hover:border-sky-500 dark:hover:border-sky-400 hover:text-sky-600 dark:hover:text-sky-400 font-medium cursor-help transition-all bg-sky-50/40 dark:bg-sky-950/20 px-0.5 rounded-xs';
+      : 'border-b-2 border-sky-400/60 dark:border-sky-500/60 hover:border-sky-500 dark:hover:border-sky-400 hover:text-sky-600 dark:hover:text-sky-400 font-medium cursor-help transition-all bg-sky-50/40 dark:bg-sky-950/20 px-0.5';
 
   if (settings?.glossaryHighlighting === 'disabled') {
     return <span>{displayedText}</span>;
