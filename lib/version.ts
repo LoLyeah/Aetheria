@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.2',
+  version: '1.1.3',
   major: 1,
   minor: 1,
-  patch: 2,
+  patch: 3,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.02',
+  buildNumber: 'build.20260904.03',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.3',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Hero 3D Canvas Discipline Dropdown Selector & UI De-cluttering',
+        id: 'Dropdown Pemilih Disiplin Kanvas 3D Hero & Pembersihan Tampilan',
+      },
+      highlights: {
+        en: [
+          'Replaced multi-row cluttered discipline button pills with a sleek, compact dropdown selector on the Hero 3D Canvas.',
+          'Added smooth spring motion animation (motion/react) with glassmorphism backdrop blur styling.',
+          'Integrated discipline category descriptions, scientific color badges, and active state indicators in English and Indonesian.',
+          'Implemented click-outside detection and Escape key dismiss handlers for seamless accessibility.',
+        ],
+        id: [
+          'Mengganti tombol pil disiplin multi-baris yang padat dengan pemilih dropdown ringkas dan elegan pada Kanvas 3D Hero.',
+          'Menambahkan animasi pegas yang halus (motion/react) dengan efek visual glassmorphism backdrop blur.',
+          'Mengintegrasikan deskripsi kategori disiplin, lencana warna sains autentik, dan indikator status aktif dalam Bahasa Inggris dan Bahasa Indonesia.',
+          'Mengimplementasikan deteksi klik di luar menu dan penutup tombol Escape untuk aksesibilitas yang optimal.',
+        ],
+      },
+    },
     {
       version: '1.1.2',
       date: '2026-09-04',

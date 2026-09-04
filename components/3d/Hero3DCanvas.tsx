@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
+import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { TopicId } from '@/types/learning';
 import {
@@ -18,6 +19,8 @@ import {
   Pause,
   Sliders,
   ChevronRight,
+  ChevronDown,
+  Check,
   Eye,
   Activity,
   HeartCrack,
@@ -30,6 +33,66 @@ interface Hero3DCanvasProps {
 }
 
 type RenderStyle = 'holographic' | 'pbr' | 'quantum-flux';
+
+interface TopicOption {
+  id: TopicId;
+  label: { en: string; id: string };
+  category: { en: string; id: string };
+  icon: React.ElementType;
+  accentColor: string;
+  badgeBg: string;
+}
+
+const TOPIC_OPTIONS: TopicOption[] = [
+  {
+    id: 'quantum-mechanics',
+    label: { en: 'Quantum Physics', id: 'Fisika Kuantum' },
+    category: { en: 'Atomic Orbitals & Spin', id: 'Orbital Atom & Spin' },
+    icon: Atom,
+    accentColor: 'text-sky-400',
+    badgeBg: 'bg-sky-500/20',
+  },
+  {
+    id: 'fetus-development',
+    label: { en: 'Embryonic Biology', id: 'Biologi Embrio' },
+    category: { en: 'Morphogenesis & Carnegie Stages', id: 'Morfogenesis & Carnegie Stage' },
+    icon: HeartPulse,
+    accentColor: 'text-rose-400',
+    badgeBg: 'bg-rose-500/20',
+  },
+  {
+    id: 'ev-battery',
+    label: { en: 'EV 4680 Powertrain', id: 'Powertrain EV 4680' },
+    category: { en: 'Electrochemistry & Jellyroll', id: 'Elektrokimia & Jellyroll' },
+    icon: Zap,
+    accentColor: 'text-emerald-400',
+    badgeBg: 'bg-emerald-500/20',
+  },
+  {
+    id: 'pulmonology-pneumonia',
+    label: { en: 'Pulmonary Alveoli', id: 'Alveoli Paru & Pneumonia' },
+    category: { en: 'Alveolar Gas Exchange', id: 'Pertukaran Gas Alveolar' },
+    icon: Activity,
+    accentColor: 'text-rose-400',
+    badgeBg: 'bg-rose-500/20',
+  },
+  {
+    id: 'cardiac-arrest',
+    label: { en: 'Cardiac Arrest & STEMI', id: 'Henti Jantung & STEMI' },
+    category: { en: 'Hemodynamics & Resuscitation', id: 'Hemodinamika & Resusitasi' },
+    icon: HeartCrack,
+    accentColor: 'text-red-400',
+    badgeBg: 'bg-red-500/20',
+  },
+  {
+    id: 'hypertension',
+    label: { en: 'Hypertension', id: 'Hipertensi Vaskular' },
+    category: { en: 'Vascular Hemodynamics & SVR', id: 'Hemodinamika Vaskular & SVR' },
+    icon: Gauge,
+    accentColor: 'text-amber-400',
+    badgeBg: 'bg-amber-500/20',
+  },
+];
 
 export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   activeTopicId = 'quantum-mechanics',
@@ -44,6 +107,41 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   const [particleDensity, setParticleDensity] = useState<'normal' | 'ultra'>('normal');
   const [fps, setFps] = useState<number>(60);
   const [showTelemetry, setShowTelemetry] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Sync with activeTopicId prop
+  useEffect(() => {
+    if (activeTopicId) {
+      setSelectedTopic(activeTopicId);
+    }
+  }, [activeTopicId]);
+
+  // Click outside and Escape key handler for dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const currentTopicData = useMemo(() => {
+    return TOPIC_OPTIONS.find((t) => t.id === selectedTopic) || TOPIC_OPTIONS[0];
+  }, [selectedTopic]);
 
   // References for Three.js objects
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -879,80 +977,88 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
 
   return (
     <div className="relative w-full h-[480px] sm:h-[540px] rounded-3xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl flex flex-col justify-between p-4 sm:p-5 select-none transition-all">
-      {/* 1. TOP DISCIPLINE SELECTOR PILLS */}
-      <div className="relative z-30 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
+      {/* 1. TOP DISCIPLINE SELECTOR DROPDOWN & HUD ACTIONS */}
+      <div className="relative z-30 flex items-center justify-between gap-3">
+        {/* Dropdown Selector */}
+        <div ref={dropdownRef} className="relative">
           <button
-            onClick={() => setSelectedTopic('quantum-mechanics')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              selectedTopic === 'quantum-mechanics'
-                ? 'bg-sky-500/30 text-sky-300 border border-sky-400/60 shadow-xs ring-1 ring-sky-400/40'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
+            type="button"
+            onClick={() => setIsDropdownOpen((prev) => !prev)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-slate-200 text-xs font-semibold backdrop-blur-md transition-all shadow-md cursor-pointer group"
+            aria-expanded={isDropdownOpen}
+            aria-haspopup="listbox"
           >
-            <Atom className="w-3.5 h-3.5 text-sky-400" />
-            <span>Quantum Physics</span>
+            <div className={`p-1 rounded-lg ${currentTopicData.badgeBg} ${currentTopicData.accentColor} shrink-0`}>
+              <currentTopicData.icon className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-white tracking-wide">
+              {currentTopicData.label[language]}
+            </span>
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                isDropdownOpen ? 'rotate-180 text-white' : 'group-hover:text-slate-300'
+              }`}
+            />
           </button>
 
-          <button
-            onClick={() => setSelectedTopic('fetus-development')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              selectedTopic === 'fetus-development'
-                ? 'bg-rose-500/30 text-rose-300 border border-rose-400/60 shadow-xs ring-1 ring-rose-400/40'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <HeartPulse className="w-3.5 h-3.5 text-rose-400" />
-            <span>Embryonic Biology</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedTopic('ev-battery')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              selectedTopic === 'ev-battery'
-                ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-400/60 shadow-xs ring-1 ring-emerald-400/40'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <Zap className="w-3.5 h-3.5 text-emerald-400" />
-            <span>EV 4680 Powertrain</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedTopic('pulmonology-pneumonia')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              selectedTopic === 'pulmonology-pneumonia'
-                ? 'bg-rose-500/30 text-rose-300 border border-rose-400/60 shadow-xs ring-1 ring-rose-400/40'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <Activity className="w-3.5 h-3.5 text-rose-400" />
-            <span>Pulmonary Alveoli</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedTopic('cardiac-arrest')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              selectedTopic === 'cardiac-arrest'
-                ? 'bg-red-500/30 text-red-300 border border-red-400/60 shadow-xs ring-1 ring-red-400/40'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <HeartCrack className="w-3.5 h-3.5 text-red-400" />
-            <span>Cardiac Arrest</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedTopic('hypertension')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              selectedTopic === 'hypertension'
-                ? 'bg-amber-500/30 text-amber-300 border border-amber-400/60 shadow-xs ring-1 ring-amber-400/40'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <Gauge className="w-3.5 h-3.5 text-amber-400" />
-            <span>Hypertension</span>
-          </button>
+          {/* Animated Dropdown Menu */}
+          <AnimatePresence>
+            {isDropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute left-0 top-full mt-2 w-64 sm:w-72 p-1.5 rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-slate-800 shadow-2xl z-50 divide-y divide-slate-800/70"
+                role="listbox"
+              >
+                <div className="px-2.5 py-1.5 text-[10px] uppercase font-mono font-bold tracking-wider text-slate-400 flex items-center justify-between">
+                  <span>{language === 'en' ? 'Select 3D Discipline' : 'Pilih Disiplin 3D'}</span>
+                  <span className="text-slate-500 font-normal">6 {language === 'en' ? 'Models' : 'Model'}</span>
+                </div>
+                <div className="pt-1 space-y-0.5 max-h-72 overflow-y-auto">
+                  {TOPIC_OPTIONS.map((opt) => {
+                    const isSelected = selectedTopic === opt.id;
+                    const OptIcon = opt.icon;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTopic(opt.id);
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between gap-2.5 px-2.5 py-2 rounded-xl text-left transition-colors cursor-pointer group ${
+                          isSelected
+                            ? 'bg-slate-800/90 text-white font-medium'
+                            : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                        }`}
+                        role="option"
+                        aria-selected={isSelected}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className={`p-1.5 rounded-lg shrink-0 ${opt.badgeBg} ${opt.accentColor}`}>
+                            <OptIcon className="w-4 h-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className={`text-xs font-semibold truncate ${isSelected ? 'text-white font-bold' : 'text-slate-200'}`}>
+                              {opt.label[language]}
+                            </div>
+                            <div className="text-[10px] text-slate-400 truncate">
+                              {opt.category[language]}
+                            </div>
+                          </div>
+                        </div>
+                        {isSelected && (
+                          <Check className="w-4 h-4 text-sky-400 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Right Action: Telemetry toggle & direct topic link */}
