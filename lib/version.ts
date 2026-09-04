@@ -22,14 +22,47 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.0',
+  version: '1.1.1',
   major: 1,
   minor: 1,
-  patch: 0,
+  patch: 1,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.00',
+  buildNumber: 'build.20260904.01',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.1',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Human Embryology & Fetal Development 3D Simulator Full Overhaul',
+        id: 'Perombakan Menyeluruh Simulator 3D Embriologi Manusia & Perkembangan Janin',
+      },
+      highlights: {
+        en: [
+          'Completely remade 3D Embryology Simulator with organic parametric lofting geometries, replacing primitive geometric models with authentic anatomical structures.',
+          'Added Week 1 Cleavage Continuum sub-stage switcher: 1-Cell Zygote with pronuclei, 4-Cell Blastomere cleavage, 16-Cell Morula, and Cavitated Blastocyst with polarized trophectoderm and epiblast/hypoblast bilaminar embryonic disc.',
+          'Accurately modeled Carnegie Stage 13 (Week 4 C-shaped embryo) with 30 somite pairs, pharyngeal arches 1 & 2, AER paddle buds, and looped primitive heart tube.',
+          'Sculpted Carnegie Stage 23 (Week 8) with BMP-mediated digital ray apoptosis (5 separated fingers and toes), physiological umbilical midgut hernia, and pigmented retina.',
+          'Enhanced Week 12, 20, and 36+ fetal stages with primary endochondral ossification centers, 4-chamber cardiac symmetry with the Three Fetal Circulatory Shunts (Ductus Venosus, Foramen Ovale, Ductus Arteriosus), vernix caseosa, and cephalic vertex presentation.',
+          'Introduced interactive Biometric Calipers (CRL, BPD, HC, AC, FL) with obstetric scan plane auto-alignment, live millimeter measurements, and Hadlock gestational age calculation.',
+          'Implemented universal PointerEvent touch interaction (drag rotation, two-finger pinch zoom), 3D hotspot raycasting with hover badges, and deep GPU memory disposal.',
+          'Refined authentic B-mode USG Sonogram view with sector beam overlay and Pulsed Spectral Doppler hemodynamics with dual-beat S1/S2 Doppler audio synthesis.',
+          'Ensured full bilingual standard across all UI elements, toolbars, HUD, and clinical notes in English and Indonesian.',
+        ],
+        id: [
+          'Merombak total Simulator 3D Embriologi dengan geometri lofting parametrik organik, menggantikan model geometris primitif dengan struktur anatomi autentik.',
+          'Menambahkan selektor tahap pembelahan Minggu 1: Zigot 1-Sel dengan pronukleus, pembelahan blastomer 4-sel, morula 16-sel, dan blastokista berkavitasi dengan trofoblas terpolarisasi serta lempeng bilaminar epiblas/hipoblas.',
+          'Memodelkan Carnegie Stage 13 (embrio bentuk C Minggu 4) secara akurat dengan 30 pasang somit, lengkung faring 1 & 2, tunas anggota badan AER, dan tabung jantung berdenyut.',
+          'Menyusun Carnegie Stage 23 (Minggu 8) dengan apoptosis sinar digital BMP (5 jari tangan dan kaki terpisah sempurna), hernia umbilikalis usus tengah fisiologis, dan retina berpigmen.',
+          'Menyempurnakan tahap janin Minggu 12, 20, dan 36+ dengan pusat osifikasi endokondral primer, simetri jantung 4 ruang dengan Tiga Pirau Sirkulasi Janin (Duktus Venosus, Foramen Ovale, Duktus Arteriosus), verniks kaseosa, dan presentasi kepala verteks.',
+          'Memperkenalkan alat Kaliper Biometri interaktif (CRL, BPD, HC, AC, FL) dengan perataan otomatis bidang USG obstetri, pembacaan milimeter langsung, dan formula usia kehamilan Hadlock.',
+          'Mengimplementasikan interaksi sentuh PointerEvent universal (rotasi seret, zoom cubit dua jari), raycasting titik anatomi 3D dengan lencana hover, dan pembersihan memori GPU mendalam.',
+          'Menyempurnakan tampilan Sonogram USG mode-B autentik dengan hamparan sorotan sektor dan hemodinamika Doppler Spektral Berdenyut dengan sintesis audio detak ganda S1/S2.',
+          'Memastikan kepatuhan standar dwibahasa penuh di seluruh elemen UI, bilah alat, HUD, dan catatan klinis dalam Bahasa Inggris dan Bahasa Indonesia.',
+        ],
+      },
+    },
     {
       version: '1.1.0',
       date: '2026-09-04',
