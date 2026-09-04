@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { LearningProvider, useLearning } from '@/context/LearningContext';
 import { Navbar } from '@/components/Navbar';
@@ -114,7 +114,12 @@ const AppContent: React.FC = () => {
         language={language}
       />
 
-      <Footer onOpenVersion={() => setIsVersionModalOpen(true)} />
+      <Footer
+        onOpenVersion={() => setIsVersionModalOpen(true)}
+        onOpenProgress={() => setIsProgressModalOpen(true)}
+        onOpenGlossary={() => setIsGlossaryModalOpen(true)}
+        onOpenSettings={() => setIsSettingsModalOpen(true)}
+      />
     </div>
   );
 };

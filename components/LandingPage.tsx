@@ -81,9 +81,9 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Main Headline - Clean, High Contrast, No AI Slop Rainbow Text */}
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-snug sm:leading-[1.12] break-words">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight sm:leading-[1.12] break-words">
                 {t.landing.heroTitlePrefix}{' '}
-                <span className="inline-block text-sky-600 dark:text-sky-400 underline decoration-sky-500/30 decoration-2 underline-offset-4 sm:underline-offset-8">
+                <span className="text-sky-600 dark:text-sky-400 underline decoration-sky-500/30 decoration-2 underline-offset-4 sm:underline-offset-8">
                   {t.landing.heroTitleHighlight}
                 </span>{' '}
                 {t.landing.heroTitleSuffix}
@@ -120,7 +120,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Refined Metric Bar - Flat & High Precision */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 dark:border-slate-800/80 text-left">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-6 border-t border-slate-200/80 dark:border-slate-800/80 text-center sm:text-left">
                 <div>
                   <div className="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white">
                     {allTopics.length}

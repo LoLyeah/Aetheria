@@ -195,6 +195,21 @@ export const translations = {
       exitFullscreen: "Exit Fullscreen",
       readingTime: "min read",
       keyboardHints: "⌘B Bold • ⌘I Italic • ⌘M Math • Tab Indent",
+    },
+    footer: {
+      brandDesc: "An interactive scientific laboratory and learning platform powered by WebGPU and Three.js, delivering real-time 3D physics simulations across Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, and Clinical Pathophysiology.",
+      disciplinesTitle: "Disciplines",
+      disciplinesNav: "Curriculum disciplines directory",
+      platformToolsTitle: "Platform & Tools",
+      platformToolsNav: "Laboratory tools and modal triggers",
+      scientificGlossary: "Scientific Glossary",
+      masteryCertificates: "Mastery & Certificates",
+      simulationSettings: "Simulation & Graphics Settings",
+      releaseNotes: "Release Notes & Changelog",
+      rightsReserved: "All rights reserved.",
+      runningAsApp: "Installed PWA Active",
+      dismissFeedback: "Dismiss notice",
+      openInNewTab: "Open discipline",
     }
   },
   id: {
@@ -393,6 +408,21 @@ export const translations = {
       exitFullscreen: "Keluar Layar Penuh",
       readingTime: "menit baca",
       keyboardHints: "⌘B Tebal • ⌘I Miring • ⌘M Rumus • Tab Indentasi",
+    },
+    footer: {
+      brandDesc: "Laboratorium sains dan platform pembelajaran komputasi ditenagai oleh WebGPU dan Three.js, menghadirkan simulasi fisika 3D real-time pada Mekanika Kuantum, Morfogenesis Janin, Dinamika Baterai EV, dan Patofisiologi Klinis.",
+      disciplinesTitle: "Disiplin Ilmu",
+      disciplinesNav: "Direktori kurikulum disiplin ilmu",
+      platformToolsTitle: "Platform & Alat Lab",
+      platformToolsNav: "Peralatan laboratorium dan jendela modal",
+      scientificGlossary: "Glosarium Ilmiah",
+      masteryCertificates: "Sertifikasi & Kelulusan",
+      simulationSettings: "Pengaturan Simulasi & Grafis",
+      releaseNotes: "Catatan Rilis & Versi",
+      rightsReserved: "Hak cipta dilindungi undang-undang.",
+      runningAsApp: "Aplikasi PWA Aktif",
+      dismissFeedback: "Tutup pemberitahuan",
+      openInNewTab: "Buka disiplin ilmu",
     }
   }
 };

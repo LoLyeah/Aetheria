@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.8',
+  version: '1.1.9',
   major: 1,
   minor: 1,
-  patch: 8,
+  patch: 9,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.08',
+  buildNumber: 'build.20260904.09',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.9',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Mobile Viewport Precision & Interactive Footer Navigation Directory',
+        id: 'Presisi Viewport Seluler & Direktori Navigasi Footer Interaktif',
+      },
+      highlights: {
+        en: [
+          'Streamlined Navbar logo subtitle and mobile action buttons for flawless 390px iPhone rendering.',
+          'Replaced fixed headline span blocks with fluid typography, eliminating right-margin clipping.',
+          'Enriched Footer with bilingual 2-column discipline directory and quick-access laboratory modal triggers.',
+          'Verified zero layout shifts or horizontal overflows via Chrome DevTools Protocol mobile emulation.',
+        ],
+        id: [
+          'Menyederhanakan subtitel logo Navbar dan tombol aksi seluler untuk perenderan iPhone 390px yang sempurna.',
+          'Mengganti blok span judul kaku dengan tipografi cair, menghilangkan pemotongan batas kanan.',
+          'Memperkaya Footer dengan direktori disiplin 2-kolom bilingual dan pemicu modal laboratorium akses cepat.',
+          'Memverifikasi nol pergeseran tata letak atau limpahan horizontal melalui emulasi seluler Chrome DevTools Protocol.',
+        ],
+      },
+    },
     {
       version: '1.1.8',
       date: '2026-09-04',

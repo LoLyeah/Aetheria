@@ -949,20 +949,20 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   return (
     <div className="relative w-full h-[480px] sm:h-[540px] rounded-3xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl flex flex-col justify-between p-4 sm:p-5 select-none transition-all">
       {/* 1. TOP DISCIPLINE SELECTOR DROPDOWN & HUD ACTIONS */}
-      <div className="relative z-30 flex items-center justify-between gap-3">
+      <div className="relative z-30 flex items-center justify-between gap-2 sm:gap-3">
         {/* Dropdown Selector */}
-        <div ref={dropdownRef} className="relative">
+        <div ref={dropdownRef} className="relative min-w-0">
           <button
             type="button"
             onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-slate-200 text-xs font-semibold backdrop-blur-md transition-all shadow-md cursor-pointer group"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-slate-200 text-xs font-semibold backdrop-blur-md transition-all shadow-md cursor-pointer group"
             aria-expanded={isDropdownOpen}
             aria-haspopup="listbox"
           >
             <div className={`p-1 rounded-lg ${currentTopicData.badgeBg} ${currentTopicData.accentColor} shrink-0`}>
               <currentTopicData.icon className="w-3.5 h-3.5" />
             </div>
-            <span className="font-semibold text-white tracking-wide">
+            <span className="font-semibold text-white tracking-wide truncate max-w-[120px] sm:max-w-none">
               {currentTopicData.label[language]}
             </span>
             <ChevronDown
@@ -1033,10 +1033,10 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         </div>
 
         {/* Right Action: Telemetry toggle & direct topic link */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button
             onClick={() => setShowTelemetry(!showTelemetry)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
               showTelemetry
                 ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-400/60 ring-1 ring-cyan-400/30'
                 : 'bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-slate-300'
@@ -1049,7 +1049,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
 
           <button
             onClick={() => navigateTo('learn', selectedTopic)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 text-sky-300 text-xs font-bold transition-all cursor-pointer"
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 text-sky-300 text-xs font-bold transition-all cursor-pointer"
           >
             <span>{language === 'en' ? 'Open Lab' : 'Buka Lab'}</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -1110,14 +1110,14 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       )}
 
       {/* 4. BOTTOM INTERACTIVE STAGE CONTROLS TOOLBAR */}
-      <div className="relative z-30 flex flex-wrap items-center justify-between gap-3 pt-3">
+      <div className="relative z-30 flex flex-wrap items-center justify-between gap-2 sm:gap-3 pt-2 sm:pt-3">
         {/* Left Control Group: Shader Style & Explode View */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {/* Shader Mode Switcher */}
-          <div className="flex items-center p-0.5 rounded-xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-[11px] font-medium">
+          <div className="flex items-center p-0.5 rounded-xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-[10px] sm:text-[11px] font-medium">
             <button
               onClick={() => setRenderStyle('holographic')}
-              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+              className={`px-2 sm:px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                 renderStyle === 'holographic' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -1125,7 +1125,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
             </button>
             <button
               onClick={() => setRenderStyle('pbr')}
-              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+              className={`px-2 sm:px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                 renderStyle === 'pbr' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -1133,7 +1133,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
             </button>
             <button
               onClick={() => setRenderStyle('quantum-flux')}
-              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+              className={`px-2 sm:px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                 renderStyle === 'quantum-flux' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -1144,7 +1144,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           {/* Explode / Cross-Section View Toggle */}
           <button
             onClick={() => setIsExploded(!isExploded)}
-            className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md border transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md border transition-all cursor-pointer flex items-center gap-1 sm:gap-1.5 ${
               isExploded
                 ? 'bg-amber-500/30 text-amber-300 border-amber-400/50'
                 : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white'
@@ -1156,7 +1156,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         </div>
 
         {/* Right Control Group: Rotation & Speed */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Auto-rotation pause/play */}
           <button
             onClick={() => setIsAutoRotating(!isAutoRotating)}

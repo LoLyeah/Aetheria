@@ -99,7 +99,7 @@ export const Navbar: React.FC<{
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Logo & Brand */}
         <div className="flex items-center gap-6">
           <button
@@ -113,7 +113,7 @@ export const Navbar: React.FC<{
               <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white block font-mono">
                 {t.brandName}
               </span>
-              <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 block -mt-1 tracking-wider uppercase font-mono">
+              <span className="hidden sm:block text-[9px] font-medium text-slate-500 dark:text-slate-400 -mt-1 tracking-wider uppercase font-mono">
                 3D Science Lab
               </span>
             </div>
@@ -219,7 +219,7 @@ export const Navbar: React.FC<{
         </div>
 
         {/* Right Action Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Settings Button */}
           {onOpenSettings && (
             <button
