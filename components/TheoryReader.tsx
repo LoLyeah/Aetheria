@@ -60,9 +60,9 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="w-full max-w-4xl mx-auto space-y-8 min-w-0">
       {/* 1. Chapter Editorial Header */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs">
+      <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-xs min-w-0">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold">
             <span className="px-2.5 py-1 rounded-md bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300">
@@ -118,7 +118,7 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
         </div>
 
         <div className="pt-5 space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight break-words">
             {module.title[language]}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -141,14 +141,14 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
                 <button
                   key={sec.id}
                   onClick={() => scrollToSection(sec.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-medium border text-left transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium border text-left transition-all flex items-center gap-1.5 cursor-pointer max-w-full ${
                     activeSectionId === sec.id
                       ? 'bg-sky-50 dark:bg-sky-950/50 border-sky-300 dark:border-sky-800 text-sky-700 dark:text-sky-300 font-semibold'
                       : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   <span className="font-mono text-[10px] opacity-70">§{idx + 1}</span>
-                  <span className="truncate max-w-[200px]">{sec.title[language].replace(/^\d+\.\s*/, '')}</span>
+                  <span className="truncate max-w-[180px] sm:max-w-[220px]">{sec.title[language].replace(/^\d+\.\s*/, '')}</span>
                 </button>
               ))}
             </div>
@@ -157,20 +157,20 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
       </div>
 
       {/* 2. Structured Sections Body */}
-      <div className="space-y-10">
+      <div className="space-y-10 w-full min-w-0">
         {module.sections.map((sec, secIdx) => (
           <article
             key={sec.id}
             id={sec.id}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs scroll-mt-28 space-y-6"
+            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-xs scroll-mt-28 space-y-6 min-w-0 overflow-hidden"
           >
             {/* Section Header */}
-            <div className="flex items-start gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-start gap-2.5 sm:gap-3 pb-4 border-b border-slate-100 dark:border-slate-800 min-w-0">
               <span className="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 font-mono text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5">
                 {secIdx + 1}
               </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight break-words">
                   {sec.title[language]}
                 </h2>
               </div>
@@ -315,7 +315,7 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
                 </div>
 
                 {/* KaTeX Math Formula Display */}
-                <div className="py-2 text-cyan-300 font-serif text-lg sm:text-xl">
+                <div className="py-2 text-cyan-300 font-serif text-lg sm:text-xl overflow-x-auto max-w-full">
                   <MathFormula formula={sec.formula} displayMode={true} />
                 </div>
 

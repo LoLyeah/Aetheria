@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.9',
+  version: '1.1.10',
   major: 1,
   minor: 1,
-  patch: 9,
+  patch: 10,
   releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.09',
+  buildNumber: 'build.20260904.10',
   environment: 'production',
   changelog: [
+    {
+      version: '1.1.10',
+      date: '2026-09-04',
+      type: 'patch',
+      title: {
+        en: 'Mobile Module Viewport Scaling & Inline KaTeX Prose Rendering',
+        id: 'Penskalaan Viewport Modul Seluler & Perenderan Prosa KaTeX Sejajar',
+      },
+      highlights: {
+        en: [
+          'Engineered global inline KaTeX mathematical formula parsing within GlossaryText prose segments.',
+          'Resolved mobile card overflow on 390px viewports with fluid titles, min-w-0 flexbox guards, and overflow-x-auto mathematical containers.',
+          'Enabled direct deep linking and tab hydration via URL search parameters (?view=module&topic=...&module=...&tab=...).',
+          'Verified flawless visual layout across Theory, 3D Interactive Lab, and Checkpoint Quiz tabs via headless Chrome CDP.',
+        ],
+        id: [
+          'Mengembangkan penguraian rumus matematika KaTeX sebaris global dalam segmen prosa GlossaryText.',
+          'Mengatasi limpahan kartu seluler pada viewport 390px dengan judul cair, pengaman flexbox min-w-0, dan kontainer matematika overflow-x-auto.',
+          'Mengaktifkan tautan langsung dan hidrasi tab melalui parameter pencarian URL (?view=module&topic=...&module=...&tab=...).',
+          'Memverifikasi tata letak visual tanpa cela di seluruh tab Teori, Lab Interaktif 3D, dan Kuis Evaluasi melalui CDP Chrome headless.',
+        ],
+      },
+    },
     {
       version: '1.1.9',
       date: '2026-09-04',

@@ -30,7 +30,11 @@ export const MathFormula: React.FC<MathFormulaProps> = ({
 
   return (
     <span
-      className={`katex-wrapper ${displayMode ? 'block my-2 overflow-x-auto text-center' : 'inline'} ${className}`}
+      className={`katex-wrapper ${
+        displayMode
+          ? 'block my-2 overflow-x-auto overflow-y-hidden max-w-full text-center py-1'
+          : 'inline-block max-w-full overflow-x-auto overflow-y-hidden align-middle py-0.5'
+      } ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

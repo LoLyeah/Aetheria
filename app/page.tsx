@@ -50,6 +50,7 @@ const AppContent: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.28, ease: 'easeInOut' }}
+              className="w-full min-w-0"
             >
               <LearningDashboard onOpenProgress={() => setIsProgressModalOpen(true)} />
             </motion.div>
@@ -62,6 +63,7 @@ const AppContent: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.28, ease: 'easeInOut' }}
+              className="w-full min-w-0"
             >
               <ModuleViewer key={selectedModuleId || 'default'} onOpenGlossary={() => setIsGlossaryModalOpen(true)} />
             </motion.div>
@@ -74,7 +76,7 @@ const AppContent: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.28, ease: 'easeInOut' }}
-              className="py-12"
+              className="py-12 w-full min-w-0"
             >
               <div className="max-w-3xl mx-auto px-4">
                 <SettingsModal

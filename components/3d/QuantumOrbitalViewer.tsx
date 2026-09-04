@@ -627,15 +627,15 @@ export const QuantumOrbitalViewer: React.FC = () => {
   };
 
   return (
-    <div className={`flex flex-col gap-4 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm ${isFullscreen ? 'fixed inset-0 z-50 rounded-none p-6 overflow-y-auto' : ''}`}>
+    <div className={`flex flex-col gap-4 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm min-w-0 overflow-hidden ${isFullscreen ? 'fixed inset-0 z-50 rounded-none p-6 overflow-y-auto' : ''}`}>
       {/* Top Header & Orbital Selector Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-sky-100 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 font-mono">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800 min-w-0">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-sky-100 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 font-mono flex-shrink-0">
               ψ(r, θ, φ)
             </span>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white break-words">
               {language === 'en' ? '3D Quantum Orbital Probability Cloud' : 'Awan Probabilitas Orbital Kuantum 3D'}
             </h3>
           </div>
@@ -707,7 +707,7 @@ export const QuantumOrbitalViewer: React.FC = () => {
           </div>
 
           {/* Phase Legend Overlay */}
-          <div className="absolute bottom-3 left-3 flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-800 text-[11px] text-slate-300">
+          <div className="absolute bottom-3 left-3 flex flex-wrap items-center gap-2 sm:gap-3 px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-800 text-[10px] sm:text-[11px] text-slate-300">
             <span className="flex items-center gap-1.5 font-mono">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-xs shadow-cyan-500/50" />
               +ψ ({language === 'en' ? 'Positive Phase' : 'Fase Positif'})

@@ -104,10 +104,12 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
               setUserProgress(JSON.parse(savedProgress));
             } catch {}
           }
-          // Support PWA shortcut navigation via URL search parameters
+          // Support direct navigation and PWA shortcuts via URL search parameters
           try {
             const params = new URLSearchParams(window.location.search);
             const topicParam = params.get('topic') as TopicId | null;
+            const moduleParam = params.get('module');
+            const viewParam = params.get('view') as AppView | null;
             const validTopics: TopicId[] = [
               'quantum-mechanics',
               'fetus-development',
@@ -116,9 +118,29 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
               'cardiac-arrest',
               'hypertension',
             ];
-            if (topicParam && validTopics.includes(topicParam)) {
+
+            if (moduleParam) {
+              const found = getModuleById(moduleParam);
+              if (found) {
+                setSelectedTopicId(found.topic.id);
+                setSelectedModuleId(found.module.id);
+                setView('module');
+              }
+            } else if (topicParam && validTopics.includes(topicParam)) {
               setSelectedTopicId(topicParam);
-              setView('learn');
+              if (viewParam === 'module') {
+                const topic = allTopics.find((t) => t.id === topicParam);
+                if (topic && topic.modules.length > 0) {
+                  setSelectedModuleId(topic.modules[0].id);
+                  setView('module');
+                } else {
+                  setView('learn');
+                }
+              } else {
+                setView('learn');
+              }
+            } else if (viewParam === 'learn' || viewParam === 'settings') {
+              setView(viewParam);
             }
           } catch {}
           setIsHydrated(true);

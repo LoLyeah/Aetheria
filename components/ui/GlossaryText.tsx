@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { GLOSSARY_TERMS, GlossaryTermData } from '@/lib/glossaryData';
 import { Language } from '@/types/learning';
 import { GlossaryTerm } from './GlossaryTerm';
+import { MathFormula } from './MathFormula';
 
 interface GlossaryTextProps {
   text: string;
@@ -22,7 +23,25 @@ export const GlossaryText: React.FC<GlossaryTextProps> = ({
   const parsedNodes = useMemo(() => {
     if (!text || typeof text !== 'string') return [text];
 
-    // Collect all search phrases mapped to their GlossaryTermData
+    // 1. Separate inline math expressions ($...$) from text
+    const mathSegments: Array<{ type: 'text' | 'math'; content: string }> = [];
+    const mathRegex = /\$([^\$\n]+)\$/g;
+    let mathLastIdx = 0;
+    let mathMatch: RegExpExecArray | null;
+
+    while ((mathMatch = mathRegex.exec(text)) !== null) {
+      if (mathMatch.index > mathLastIdx) {
+        mathSegments.push({ type: 'text', content: text.slice(mathLastIdx, mathMatch.index) });
+      }
+      mathSegments.push({ type: 'math', content: mathMatch[1] });
+      mathLastIdx = mathRegex.lastIndex;
+    }
+
+    if (mathLastIdx < text.length) {
+      mathSegments.push({ type: 'text', content: text.slice(mathLastIdx) });
+    }
+
+    // 2. Collect all search phrases mapped to their GlossaryTermData
     const phraseMap: Array<{ phrase: string; data: GlossaryTermData }> = [];
 
     GLOSSARY_TERMS.forEach((term) => {
@@ -47,65 +66,80 @@ export const GlossaryText: React.FC<GlossaryTextProps> = ({
       });
     });
 
-    // Sort phrases by descending length so longer compound phrases match first (e.g. "Heisenberg Uncertainty Principle" before "Heisenberg")
+    // Sort phrases by descending length so longer compound phrases match first
     phraseMap.sort((a, b) => b.phrase.length - a.phrase.length);
-
-    if (phraseMap.length === 0) return [text];
 
     // Escape special regex characters in phrases
     const escapeRegex = (s: string) => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const regexPattern = new RegExp(
-      `\\b(${phraseMap.map((p) => escapeRegex(p.phrase)).join('|')})\\b`,
-      'gi'
-    );
+    const regexPattern = phraseMap.length > 0
+      ? new RegExp(`\\b(${phraseMap.map((p) => escapeRegex(p.phrase)).join('|')})\\b`, 'gi')
+      : null;
 
-    const parts: React.ReactNode[] = [];
-    let lastIndex = 0;
-    let match: RegExpExecArray | null;
-
-    // Track matched terms per paragraph to avoid annoying users with 10 duplicate tooltips of the same word in 1 paragraph
+    // Track matched terms per paragraph to avoid duplicate tooltips in one paragraph
     const matchedTermIds = new Set<string>();
 
-    while ((match = regexPattern.exec(text)) !== null) {
-      const matchStart = match.index;
-      const matchEnd = regexPattern.lastIndex;
-      const matchedString = match[0];
+    const parseTextSegment = (segmentText: string, keyPrefix: string): React.ReactNode[] => {
+      if (!regexPattern) return [segmentText];
 
-      // Add plain text before match
-      if (matchStart > lastIndex) {
-        parts.push(text.slice(lastIndex, matchStart));
+      const parts: React.ReactNode[] = [];
+      let lastIndex = 0;
+      let match: RegExpExecArray | null;
+      regexPattern.lastIndex = 0;
+
+      while ((match = regexPattern.exec(segmentText)) !== null) {
+        const matchStart = match.index;
+        const matchEnd = regexPattern.lastIndex;
+        const matchedString = match[0];
+
+        // Add plain text before match
+        if (matchStart > lastIndex) {
+          parts.push(segmentText.slice(lastIndex, matchStart));
+        }
+
+        // Find the corresponding term data
+        const matchedLower = matchedString.toLowerCase();
+        const entry = phraseMap.find(
+          (p) => p.phrase.toLowerCase() === matchedLower
+        );
+
+        if (entry && !matchedTermIds.has(entry.data.id)) {
+          matchedTermIds.add(entry.data.id);
+          parts.push(
+            <GlossaryTerm
+              key={`${keyPrefix}-${entry.data.id}-${matchStart}`}
+              termData={entry.data}
+              displayedText={matchedString}
+              language={language}
+              onOpenFullGlossary={onOpenFullGlossary}
+            />
+          );
+        } else {
+          // Already highlighted this term in this paragraph or not found, keep as regular text
+          parts.push(matchedString);
+        }
+
+        lastIndex = matchEnd;
       }
 
-      // Find the corresponding term data
-      const matchedLower = matchedString.toLowerCase();
-      const entry = phraseMap.find(
-        (p) => p.phrase.toLowerCase() === matchedLower
-      );
+      if (lastIndex < segmentText.length) {
+        parts.push(segmentText.slice(lastIndex));
+      }
 
-      if (entry && !matchedTermIds.has(entry.data.id)) {
-        matchedTermIds.add(entry.data.id);
-        parts.push(
-          <GlossaryTerm
-            key={`${entry.data.id}-${matchStart}`}
-            termData={entry.data}
-            displayedText={matchedString}
-            language={language}
-            onOpenFullGlossary={onOpenFullGlossary}
-          />
+      return parts;
+    };
+
+    const finalNodes: React.ReactNode[] = [];
+    mathSegments.forEach((seg, idx) => {
+      if (seg.type === 'math') {
+        finalNodes.push(
+          <MathFormula key={`math-${idx}`} formula={seg.content} displayMode={false} />
         );
       } else {
-        // Already highlighted this term in this paragraph or not found, keep as regular text
-        parts.push(matchedString);
+        finalNodes.push(...parseTextSegment(seg.content, `seg-${idx}`));
       }
+    });
 
-      lastIndex = matchEnd;
-    }
-
-    if (lastIndex < text.length) {
-      parts.push(text.slice(lastIndex));
-    }
-
-    return parts;
+    return finalNodes;
   }, [text, language, onOpenFullGlossary]);
 
   return <span className={className}>{parsedNodes}</span>;

@@ -193,7 +193,9 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     } catch (err) {
       console.warn('WebGL context creation failed:', err);
-      setWebglError(true);
+      queueMicrotask(() => {
+        setWebglError(true);
+      });
       return;
     }
     renderer.setSize(width, height);
