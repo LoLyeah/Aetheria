@@ -5,6 +5,7 @@ export type GlossaryCategory =
   | 'pulmonology'
   | 'cardiology'
   | 'hypertension'
+  | 'ecology'
   | 'general';
 
 export interface GlossaryTermData {
@@ -34,7 +35,8 @@ export interface GlossaryTermData {
     | 'ev-battery'
     | 'pulmonology-pneumonia'
     | 'cardiac-arrest'
-    | 'hypertension';
+    | 'hypertension'
+    | 'biomes-ecology';
 }
 
 export const GLOSSARY_TERMS: GlossaryTermData[] = [
@@ -1031,6 +1033,477 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: 'Dicirikan oleh lesi pleksiform dan remodeling vaskular mikroskopis, diobati dengan antagonis endotelin, inhibitor PDE-5, dan analog prostasiklin.',
     },
     relatedTopicId: 'hypertension',
+  },
+
+  // ================= ECOLOGY & BIOMES =================
+  {
+    id: 'whittaker-diagram',
+    term: {
+      en: 'Whittaker Biome Diagram',
+      id: 'Diagram Bioma Whittaker',
+    },
+    aliases: {
+      en: ['whittaker model', 'whittaker classification', 'biome space'],
+      id: ['model whittaker', 'klasifikasi whittaker'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'A bivariate climatological framework developed by Robert Whittaker mapping global terrestrial biomes across coordinates of Mean Annual Temperature (MAT, -15°C to +30°C) and Mean Annual Precipitation (MAP, 0 to 450 cm/yr).',
+      id: 'Kerangka klimatologi bivariat yang dikembangkan oleh Robert Whittaker yang memetakan bioma darat global pada koordinat Suhu Rata-rata Tahunan (MAT, -15°C hingga +30°C) dan Presipitasi Rata-rata Tahunan (MAP, 0 hingga 450 cm/tahun).',
+    },
+    context: {
+      en: 'Defines triangular biome envelopes showing how thermal limits and hydrological availability jointly constrain planetary life distribution.',
+      id: 'Mendefinisikan amplop bioma segitiga yang menunjukkan bagaimana batas termal dan ketersediaan air bersama-sama membatasi distribusi kehidupan di Bumi.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'hadley-cell',
+    term: {
+      en: 'Hadley Circulation Cell',
+      id: 'Sel Sirkulasi Hadley',
+    },
+    aliases: {
+      en: ['hadley cell', 'tropical circulation'],
+      id: ['sel hadley', 'sirkulasi tropis'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'A planetary-scale tropical atmospheric circulation cell characterized by convective rising air at the Intertropical Convergence Zone (ITCZ) and dynamic subsidence at approximately 30° North and South latitudes.',
+      id: 'Sel sirkulasi atmosfer tropis skala planet yang dicirikan oleh kenaikan udara konvektif di ITCZ dan subsiden dinamis di sekitar lintang 30° Utara dan Selatan.',
+    },
+    context: {
+      en: 'Adiabatic warming of sinking air in the descending branch creates the world’s great subtropical desert belts (e.g., Sahara, Arabian, Sonoran).',
+      id: 'Pemanasan adiabatik udara yang turun di cabang subsiden melahirkan sabuk gurun subtropis dunia (seperti Sahara, Arab, Sonora).',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'itcz',
+    term: {
+      en: 'Intertropical Convergence Zone (ITCZ)',
+      id: 'Zona Konvergensi Antar-Tropis (ITCZ)',
+    },
+    aliases: {
+      en: ['ITCZ', 'thermal equator', 'doldrums'],
+      id: ['ITCZ', 'ekuator termal'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'The low-pressure equatorial trough where the Northeast and Southeast Trade Winds converge, driving deep convective updrafts and heavy tropical precipitation.',
+      id: 'Palung tekanan rendah khatulistiwa tempat bertemunya Angin Pasat Timur Laut dan Tenggara, memicu arus konveksi naik dan curah hujan tropis lebat.',
+    },
+    context: {
+      en: 'Migrates seasonally with solar declination, driving wet and dry seasons across tropical savannas and monsoon forests.',
+      id: 'Bergeser secara musiman mengikuti deklinasi matahari, mengendalikan musim hujan dan kemarau di sabana tropis dan hutan muson.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'permafrost',
+    term: {
+      en: 'Permafrost',
+      id: 'Permafrost',
+    },
+    aliases: {
+      en: ['cryolithosphere', 'permanently frozen ground'],
+      id: ['tanah beku abadi'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'Subsurface soil, sediment, or rock that remains continuously at or below 0°C (32°F) for two or more consecutive years, underlying an active layer that thaws seasonally.',
+      id: 'Lapisan tanah, sedimen, atau batuan bawah tanah yang suhunya berada secara kontinu pada atau di bawah 0°C selama dua tahun berturut-turut atau lebih.',
+    },
+    context: {
+      en: 'Stores an estimated 1400–1600 Gt of ancient organic carbon, making its thaw a major positive climate feedback mechanism.',
+      id: 'Menyimpan sekitar 1400–1600 Gt karbon organik purba, sehingga pencairannya menjadi mekanisme umpan balik iklim positif yang kritis.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'cryoturbation',
+    term: {
+      en: 'Cryoturbation (Frost Churning)',
+      id: 'Krioturbasi (Pengadukan Beku)',
+    },
+    aliases: {
+      en: ['frost churning', 'frost heaving'],
+      id: ['pengadukan es tanah'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'The mechanical mixing and sorting of soil horizons driven by repeated freeze-thaw cycles and differential volume expansion of ice wedges in permafrost terrains.',
+      id: 'Percampuran dan pemilahan mekanis horizon tanah akibat siklus beku-cair berulang dan pemuaian volume es pada lanskap permafrost.',
+    },
+    context: {
+      en: 'Forms patterned ground including stone polygons, ice-wedge nets, and pingos across Arctic tundra Gelisols.',
+      id: 'Membentuk pola tanah beraturan (patterned ground) seperti poligon batu dan irisan es pada tanah Gelisol tundra Arktik.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'stefan-equation',
+    term: {
+      en: "Stefan's Permafrost Thaw Equation",
+      id: 'Persamaan Pencairan Stefan',
+    },
+    aliases: {
+      en: ['Stefan equation', 'active layer formula'],
+      id: ['rumus stefan'],
+    },
+    category: 'ecology',
+    symbol: 'D = √[(2 k_t DDT) / (ρ L)]',
+    definition: {
+      en: 'A thermodynamic heat-transfer formulation calculating the maximum depth D of active-layer thaw as a function of thermal conductivity, Thawing Degree Days (DDT), and latent heat of fusion.',
+      id: 'Formulasi perpindahan panas termodinamika yang menghitung kedalaman maksimum D pencairan lapisan aktif sebagai fungsi konduktivitas termal, Thawing Degree Days (DDT), dan kalor laten fusi.',
+    },
+    context: {
+      en: 'Demonstrates that thaw depth scales with the square root of cumulative warm degree days due to overlying thermal resistance.',
+      id: 'Membuktikan bahwa kedalaman pencairan bertambah sebanding dengan akar kuadrat derajat-hari hangat kumulatif akibat resistansi termal lapisan atas.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'spodosol',
+    term: {
+      en: 'Spodosol (Podzol)',
+      id: 'Spodosol (Podzol)',
+    },
+    aliases: {
+      en: ['podzol', 'podzolic soil'],
+      id: ['tanah podzol'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'An acidic, strongly leached soil order characteristic of coniferous boreal taiga forests, featuring an ash-gray eluvial albic E horizon overlying an illuvial spodic Bs horizon enriched in amorphous Fe/Al-humus complexes.',
+      id: 'Ordo tanah masif masam dan tercuci kuat khas hutan taiga konifer boreal, dengan horizon eluvial albik E abu-abu keputihan di atas horizon spodis iluvial Bs kaya kompleks Fe/Al-humus.',
+    },
+    context: {
+      en: 'Driven by slow decomposition of resinous conifer needles producing chelating fulvic acids under cold climates.',
+      id: 'Dipicu oleh lambatnya dekomposisi serasah jarum konifer beresin yang menghasilkan asam fulvat pengkhelat di bawah iklim dingin.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'podzolization',
+    term: {
+      en: 'Podzolization',
+      id: 'Podzolisasi',
+    },
+    aliases: {
+      en: ['cheluviation', 'spodic pedogenesis'],
+      id: ['proses podzolisasi'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'A pedogenic process whereby organic acids leached from acidic conifer needle litter chelate iron (Fe) and aluminum (Al) ions, translocating them downward from the upper horizon.',
+      id: 'Proses pembentukan tanah di mana asam organik dari serasah jarum konifer mengkhelat ion besi (Fe) dan aluminium (Al), melarutkan dan memindahkannya ke horizon bawah.',
+    },
+    context: {
+      en: 'Creates the diagnostic bleached quartz E horizon and red-brown spodic B horizon in boreal forest biomes.',
+      id: 'Menciptakan horizon E kuarsa pucat dan horizon B spodis cokelat-kemerahan pada bioma hutan boreal.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'beer-lambert-canopy',
+    term: {
+      en: 'Canopy Beer-Lambert Extinction Law',
+      id: 'Hukum Pelemahan Kanopi Beer-Lambert',
+    },
+    aliases: {
+      en: ['canopy light attenuation', 'beer lambert law'],
+      id: ['atenuasi cahaya kanopi'],
+    },
+    category: 'ecology',
+    symbol: 'I(z) = I_0 · exp(-k · LAI)',
+    definition: {
+      en: 'Mathematical formulation describing exponential attenuation of Photosynthetically Active Radiation (PAR) through a plant canopy as a function of cumulative Leaf Area Index (LAI) and extinction coefficient k.',
+      id: 'Formulasi matematika yang menjelaskan penurunan eksponensial radiasi aktif fotosintesis (PAR) melalui kanopi tanaman sebagai fungsi Indeks Luas Daun (LAI) dan koefisien pelemahan k.',
+    },
+    context: {
+      en: 'Explains understory light limitations in temperate deciduous forests where forest floor PAR drops to <2% of full sunlight.',
+      id: 'Menjelaskan keterbatasan cahaya lantai hutan gugur sedang di mana radiasi PAR turun hingga <2% dari sinar matahari terbuka.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'mollisol',
+    term: {
+      en: 'Mollisol',
+      id: 'Mollisol',
+    },
+    aliases: {
+      en: ['prairie soil', 'chernozem'],
+      id: ['tanah prairi', 'chernozem'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'A highly fertile soil order characteristic of temperate grasslands, characterized by a deep, dark, organic-rich mollic epipedon (>25 cm thick) with granular structure and base saturation >50%.',
+      id: 'Ordo tanah sangat subur khas padang rumput beriklim sedang, dicirikan oleh epipedon molik tebal berwarna gelap kaya bahan organik (>25 cm) dengan struktur remah dan kejenuhan basa >50%.',
+    },
+    context: {
+      en: 'Formed by continuous in situ turnover of dense below-ground fibrous grass root networks (root-to-shoot ratio >4:1).',
+      id: 'Terbentuk melalui pergantian in situ berulang dari sistem akar serabut rumput yang padat di bawah tanah (rasio akar-pucuk >4:1).',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'crassulacean-acid-metabolism',
+    term: {
+      en: 'Crassulacean Acid Metabolism (CAM)',
+      id: 'Metabolisme Asam Krasulasea (CAM)',
+    },
+    aliases: {
+      en: ['CAM photosynthesis', 'nocturnal CO2 fixation'],
+      id: ['fotosintesis CAM', 'fiksasi malat CAM'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'A photosynthetic carbon fixation adaptation in xerophytic succulents where stomata open nocturnally to fix CO₂ via Phosphoenolpyruvate Carboxylase (PEPC) into vacuolar malic acid, which is decarboxylated behind closed stomata during the day.',
+      id: 'Adaptasi fiksasi karbon fotosintesis pada sukulen gurun di mana stomata membuka di malam hari untuk memfiksasi CO₂ melalui enzim PEPC menjadi asam malat vakuola, yang didekarboksilasi saat siang hari dalam kondisi stomata tertutup.',
+    },
+    context: {
+      en: 'Maximizes Water-Use Efficiency by avoiding daytime transpiration under extreme Vapor Pressure Deficits (VPD).',
+      id: 'Memaksimalkan Efisiensi Penggunaan Air dengan menghindari transpirasi siang hari pada Defisit Tekanan Uap (VPD) ekstrem.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'water-use-efficiency',
+    term: {
+      en: 'Water-Use Efficiency (WUE)',
+      id: 'Efisiensi Penggunaan Air (WUE)',
+    },
+    aliases: {
+      en: ['WUE', 'photosynthetic water efficiency'],
+      id: ['WUE'],
+    },
+    category: 'ecology',
+    symbol: 'WUE = A / E',
+    definition: {
+      en: 'The ratio of net photosynthetic carbon assimilation rate (A) to transpirational water loss (E), quantifying biomass produced per unit of water consumed.',
+      id: 'Rasio antara laju asimilasi karbon fotosintesis bersih (A) terhadap kehilangan air transpirasi (E), mengukur biomassa yang dihasilkan per satuan air yang dikonsumsi.',
+    },
+    context: {
+      en: 'CAM plants attain the highest WUE (10–20 mmol C/mol H₂O), followed by C4 grasses (4–6) and C3 plants (1–3).',
+      id: 'Tumbuhan CAM mencapai WUE tertinggi (10–20 mmol C/mol H₂O), diikuti rumput C4 (4–6) dan tumbuhan C3 (1–3).',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'biological-soil-crust',
+    term: {
+      en: 'Biological Soil Crust (Biocrust)',
+      id: 'Kerak Tanah Biologis (Biocrust)',
+    },
+    aliases: {
+      en: ['biocrust', 'cryptobiotic crust'],
+      id: ['kerak kriptobiotik'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'A complex photosynthetic and diazotrophic micro-ecosystem of cyanobacteria, lichens, and mosses inhabiting the top millimeters of arid and semi-arid soils.',
+      id: 'Mikro-ekosistem fotosintetik dan diazotrofik kompleks yang terdiri dari sianobakteri, lumut kerak, dan lumut daun yang mendiami lapisan beberapa milimeter teratas tanah arid.',
+    },
+    context: {
+      en: 'Secretes exopolysaccharides to cement soil particles against wind erosion and contributes up to 70% of nitrogen fixation in desert biomes.',
+      id: 'Menyekresikan eksopolisakarida untuk menyemen butiran tanah dari erosi angin dan menyumbang hingga 70% fiksasi nitrogen di bioma gurun.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'sclerophyll',
+    term: {
+      en: 'Sclerophyllous Vegetation',
+      id: 'Vegetasi Sklerofil',
+    },
+    aliases: {
+      en: ['sclerophyll', 'chaparral shrubs'],
+      id: ['tumbuhan sklerofil'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'Evergreen vegetation characterized by small, stiff, leathery leaves with thick waxy cuticles and highly lignified tissues adapted to Mediterranean summer droughts and recurrent crown fire regimes.',
+      id: 'Vegetasi selalu hijau yang memiliki daun kecil, kaku, dan liat dengan kutikula tebal serta jaringan terlignifikasi kuat yang teradaptasi terhadap kemarau musim panas Mediterania dan kebakaran hutan periodik.',
+    },
+    context: {
+      en: 'Dominates California chaparral, Mediterranean maquis, South African fynbos, and Australian mallee ecosystems.',
+      id: 'Mendominasi ekosistem chaparral California, maquis Mediterania, fynbos Afrika Selatan, dan mallee Australia.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'oxisol',
+    term: {
+      en: 'Oxisol (Ferralsol)',
+      id: 'Oxisol (Ferralsol)',
+    },
+    aliases: {
+      en: ['ferralsol', 'laterite soil'],
+      id: ['tanah laterit', 'feralsol'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'An intensely weathered tropical soil order composed almost exclusively of insoluble iron and aluminum sesquioxides (hematite, gibbsite) and 1:1 kaolinite clay, with extremely low cation-exchange capacity and severe phosphorus fixation.',
+      id: 'Ordo tanah tropis yang mengalami pelapukan sangat lanjut, tersusun hampir murni atas seskuioksida besi dan aluminium tidak larut serta liat kaolinit 1:1, dengan KTK sangat rendah dan fiksasi fosfor tinggi.',
+    },
+    context: {
+      en: 'Supports hyper-diverse tropical rainforests purely through tight closed-loop mycorrhizal surface litter nutrient recycling.',
+      id: 'Menopang hutan hujan tropis murni melalui siklus hara serasah mikoriza tertutup di permukaan tanah dangkal.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'buttress-roots',
+    term: {
+      en: 'Buttress Roots',
+      id: 'Akar Banir (Akar Papan)',
+    },
+    aliases: {
+      en: ['plank buttress', 'tree buttresses'],
+      id: ['akar banir', 'akar papan'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'Massive, vertically flattened, planar root outgrowths extending 5–10 meters up emergent tropical tree trunks, serving as tensile brackets that anchor trees in shallow topsoils against windthrow.',
+      id: 'Perluasan akar berbentuk papan pipih masif yang menjulang 5–10 meter ke atas batang pohon emergen tropis, berfungsi sebagai penopang tegangan tarik penahan angin pada tanah dangkal.',
+    },
+    context: {
+      en: 'Biomechanical adaptation to shallow aerobic soil conditions where deep taproot development is prevented by seasonal waterlogging.',
+      id: 'Adaptasi biomekanika terhadap kondisi tanah aerobik dangkal di mana perkembangan akar tunggang terhambat oleh genangan air.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'sverdrup-critical-depth',
+    term: {
+      en: "Sverdrup's Critical Depth",
+      id: 'Kedalaman Kritis Sverdrup',
+    },
+    aliases: {
+      en: ['critical depth hypothesis', 'sverdrup bloom'],
+      id: ['kedalaman kritis sverdrup'],
+    },
+    category: 'ecology',
+    symbol: 'z_crit',
+    definition: {
+      en: 'The threshold depth of surface vertical mixing at which integrated water-column phytoplankton gross photosynthesis exactly balances integrated community respiration.',
+      id: 'Ambang batas kedalaman pengadukan vertikal permukaan di mana fotosintesis kotor fitoplankton kolom air tepat mengimbangi respirasi seluruh komunitas.',
+    },
+    context: {
+      en: 'A spring phytoplankton bloom can initiate only when seasonal stratification shoals the mixed layer shallower than z_crit (z_mix < z_crit).',
+      id: 'Ledakan fitoplankton musim semi hanya dapat terjadi saat stratifikasi musiman mendangkalkan lapisan campuran di atas z_crit (z_mix < z_crit).',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'aragonite-saturation',
+    term: {
+      en: 'Aragonite Saturation State',
+      id: 'Derajat Kejenuhan Aragonit',
+    },
+    aliases: {
+      en: ['omega arag', 'carbonate saturation'],
+      id: ['saturasi aragonit'],
+    },
+    category: 'ecology',
+    symbol: 'Ω_arag',
+    definition: {
+      en: 'The thermodynamic ratio of the ion activity product of calcium ([Ca²⁺]) and carbonate ([CO₃²⁻]) ions in seawater to the apparent stoichiometric solubility product K\'_sp of aragonite mineral.',
+      id: 'Rasio termodinamika produk aktivitas ion kalsium ([Ca²⁺]) dan karbonat ([CO₃²⁻]) di air laut terhadap produk kelarutan stoikiometri K\'_sp mineral aragonit.',
+    },
+    context: {
+      en: 'Reef-building corals require Ω_arag > 3.5 for optimal calcification; ocean acidification lowers Ω_arag toward dissolution (<1).',
+      id: 'Karang pembangun terumbu membutuhkan Ω_arag > 3,5 untuk kalsifikasi optimal; asidifikasi samudra menurunkan Ω_arag menuju kondisi pelarutan (<1).',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'coral-bleaching',
+    term: {
+      en: 'Coral Bleaching',
+      id: 'Pemutihan Karang (Coral Bleaching)',
+    },
+    aliases: {
+      en: ['mass bleaching', 'thermal coral stress'],
+      id: ['pemutihan karang'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'The breakdown of mutualism between scleractinian coral animals and their endosymbiotic dinoflagellates (Symbiodiniaceae) triggered by elevated Sea Surface Temperatures and high irradiance.',
+      id: 'Keruntuhan simbiosis mutualisme antara hewan karang dan dinoflagellata endosimbionnya (Symbiodiniaceae) yang dipicu oleh peningkatan Suhu Permukaan Laut dan radiasi matahari tinggi.',
+    },
+    context: {
+      en: 'Photosystem II failure in symbionts generates cytotoxic Reactive Oxygen Species (ROS), prompting host polyp expulsion and exposing the stark white calcium carbonate skeleton.',
+      id: 'Kerusakan Fotosistem II pada simbion menghasilkan ROS beracun, memicu pengeluaran paksa simbion oleh inang polip dan memperlihatkan kerangka kapur putih.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'dimictic-lake',
+    term: {
+      en: 'Dimictic Lake Overturn',
+      id: 'Perputaran Danau Dimiktik',
+    },
+    aliases: {
+      en: ['dimictic circulation', 'lake overturn'],
+      id: ['sirkulasi dimiktik'],
+    },
+    category: 'ecology',
+    definition: {
+      en: 'The limnological circulation cycle of temperate freshwater lakes that undergo complete vertical water mixing twice per year (in spring and autumn) when surface waters reach the maximum water density temperature of 3.98°C.',
+      id: 'Siklus sirkulasi limnologi danau air tawar beriklim sedang yang mengalami perputaran vertikal penuh dua kali setahun (musim semi dan gugur) saat air permukaan mencapai kerapatan maksimum 3,98°C.',
+    },
+    context: {
+      en: 'Re-oxygenates deep benthic hypolimnetic sediments and replenishes depleted surface epilimnetic nutrients.',
+      id: 'Mengoksigenasi kembali sedimen dasar hipolimnion dan memasok kembali nutrisi ke permukaan epilimnion.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'lindeman-efficiency',
+    term: {
+      en: "Lindeman's Trophic Transfer Efficiency",
+      id: 'Efisiensi Transfer Trofik Lindeman',
+    },
+    aliases: {
+      en: ['10% rule', 'ecological efficiency'],
+      id: ['hukum 10% lindeman'],
+    },
+    category: 'ecology',
+    symbol: 'λ_n = P_n / P_(n-1) ≈ 10%',
+    definition: {
+      en: 'The proportion of energy transferred from one trophic level to the next, averaging approximately 10% due to non-consumed biomass, egestion, and metabolic cellular respiration heat dissipation.',
+      id: 'Proporsi energi yang ditransfer dari satu tingkat trofik ke tingkat berikutnya, rata-rata bernilai sekitar 10% akibat biomassa tak termakan, egesti, dan disipasi panas respirasi seluler.',
+    },
+    context: {
+      en: 'Explains why food chains are thermodynamically restricted to 4–5 links and drives biomagnification of persistent toxins in apex predators.',
+      id: 'Menjelaskan mengapa rantai makanan dibatasi secara termodinamika hanya 4–5 tingkat dan mendorong biomagnifikasi racun pada predator puncak.',
+    },
+    relatedTopicId: 'biomes-ecology',
+  },
+  {
+    id: 'redfield-ratio',
+    term: {
+      en: 'Marine Redfield Ratio',
+      id: 'Rasio Redfield Samudra',
+    },
+    aliases: {
+      en: ['Redfield stoichiometry', 'C:N:P ratio'],
+      id: ['rasio redfield'],
+    },
+    category: 'ecology',
+    symbol: '106 C : 16 N : 1 P',
+    definition: {
+      en: 'The remarkably constant atomic ratio of carbon, nitrogen, and phosphorus found in marine phytoplankton and deep unperturbed seawater, discovered by Alfred Redfield in 1934.',
+      id: 'Rasio atomik antara karbon, nitrogen, dan fosfor yang sangat konstan pada fitoplankton laut dan air samudra dalam, ditemukan oleh Alfred Redfield pada tahun 1934.',
+    },
+    context: {
+      en: 'Reflects fundamental biochemical stoichiometry of proteins (N), nucleic acids/ATP (P), and structural carbohydrates (C).',
+      id: 'Mencerminkan stoikiometri biokimiawi esensial dari protein (N), asam nukleat/ATP (P), dan karbohidrat struktural (C).',
+    },
+    relatedTopicId: 'biomes-ecology',
   },
 ];
 

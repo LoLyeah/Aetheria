@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.1.10',
+  version: '1.2.0',
   major: 1,
-  minor: 1,
-  patch: 10,
-  releaseDate: '2026-09-04',
-  buildNumber: 'build.20260904.10',
+  minor: 2,
+  patch: 0,
+  releaseDate: '2026-09-05',
+  buildNumber: 'build.20260905.00',
   environment: 'production',
   changelog: [
+    {
+      version: '1.2.0',
+      date: '2026-09-05',
+      type: 'minor',
+      title: {
+        en: 'Global Biomes, Climatology & Ecosystem Dynamics (7th Major Discipline)',
+        id: 'Bioma Global, Klimatologi & Dinamika Ekosistem (Disiplin Utama ke-7)',
+      },
+      highlights: {
+        en: [
+          'Engineered the 7th foundational STEM discipline: Global Biomes, Climatology & Ecosystem Dynamics with 7 comprehensive interactive modules (31 total across academy).',
+          'Built Whittaker climatological matrix, cryosphere permafrost active-layer dynamics, temperate chlorophyll breakdown, CAM desert ecophysiology, tropical multi-tiered canopy structure, and coral reef aragonite saturation kinetics.',
+          'Developed dual-scale 3D WebGL simulator: Mode A Planetary Globe (axial tilt, orbital dynamics, atmospheric Rayleigh scattering, dynamic warming envelope shifts, 6 geographic hotspots) and Mode B 6 switchable Biome Biotopes with interactive physical sliders.',
+          'Integrated 28 bilingual checkpoint assessment questions, 22 scientific glossary entries, and 7 LaTeX mathematical formula snippets.',
+        ],
+        id: [
+          'Mengembangkan disiplin STEM dasar ke-7: Bioma Global, Klimatologi & Dinamika Ekosistem dengan 7 modul interaktif komprehensif (total 31 modul di seluruh akademi).',
+          'Membangun matriks klimatologis Whittaker, dinamika lapisan aktif permafrost kriosfer, penguraian klorofil beriklim sedang, ekofisiologi CAM gurun, struktur kanopi bertingkat tropis, dan kinetika saturasi aragonit terumbu karang.',
+          'Mengembangkan simulator 3D WebGL skala ganda: Mode A Globe Planet (kemiringan sumbu, dinamika orbit, hamburan Rayleigh atmosfer, pergeseran amplop pemanasan dinamis, 6 hotspot geografis) dan Mode B 6 Bioma Biotop yang dapat beralih dengan penggeser fisik interaktif.',
+          'Mengintegrasikan 28 pertanyaan evaluasi kuis dwibahasa, 22 entri glosarium ilmiah, dan 7 cuplikan rumus matematika LaTeX.',
+        ],
+      },
+    },
     {
       version: '1.1.10',
       date: '2026-09-04',

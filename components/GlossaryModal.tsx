@@ -20,6 +20,7 @@ import {
   Sparkles,
   FlaskConical,
   Filter,
+  Globe,
 } from 'lucide-react';
 
 interface GlossaryModalProps {
@@ -50,6 +51,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
     { id: 'pulmonology', label: { en: 'Pulmonology', id: 'Pulmonologi' }, icon: Activity },
     { id: 'cardiology', label: { en: 'Cardiology & ACS', id: 'Kardiologi & SKA' }, icon: HeartCrack },
     { id: 'hypertension', label: { en: 'Hypertension', id: 'Hipertensi' }, icon: Gauge },
+    { id: 'ecology', label: { en: 'Biomes & Ecology', id: 'Bioma & Ekologi' }, icon: Globe },
   ];
 
   const filteredTerms = GLOSSARY_TERMS.filter((term) => {

@@ -24,6 +24,7 @@ import {
   Eye,
   Activity,
   HeartCrack,
+  Globe,
   X,
   Info,
 } from 'lucide-react';
@@ -92,6 +93,14 @@ const TOPIC_OPTIONS: TopicOption[] = [
     icon: Gauge,
     accentColor: 'text-amber-400',
     badgeBg: 'bg-amber-500/20',
+  },
+  {
+    id: 'biomes-ecology',
+    label: { en: 'Biomes & Climatology', id: 'Bioma & Klimatologi' },
+    category: { en: 'Whittaker Envelopes & Biosphere', id: 'Diagram Whittaker & Biosfer' },
+    icon: Globe,
+    accentColor: 'text-emerald-400',
+    badgeBg: 'bg-emerald-500/20',
   },
 ];
 
@@ -896,6 +905,62 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       });
       group.add(new THREE.Points(rbcGeo, rbcMat));
     }
+
+    // -------------------------------------------------------------
+    // TOPIC 7: GLOBAL BIOMES, CLIMATOLOGY & ECOSYSTEM DYNAMICS
+    // -------------------------------------------------------------
+    if (selectedTopic === 'biomes-ecology') {
+      // 3D Planetary Biome Sphere with axial obliquity (23.44°)
+      const globeGeo = new THREE.SphereGeometry(1.65, 48, 48);
+      const globeMat = new THREE.MeshStandardMaterial({
+        color: isFlux ? 0x059669 : 0x10b981,
+        roughness: 0.6,
+        metalness: 0.15,
+        wireframe: isWire,
+      });
+      const globe = new THREE.Mesh(globeGeo, globeMat);
+      globe.rotation.z = 0.409; // Earth's actual 23.44° axial tilt
+      group.add(globe);
+
+      // Atmosphere outer shell
+      const atmoGeo = new THREE.SphereGeometry(1.78, 36, 36);
+      const atmoMat = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: isWire ? 0.2 : 0.28,
+        wireframe: isWire,
+      });
+      const atmo = new THREE.Mesh(atmoGeo, atmoMat);
+      globe.add(atmo);
+
+      // Orbital planetary insolation ring
+      const ringGeo = new THREE.TorusGeometry(2.35, 0.025, 8, 48);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.6 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      group.add(ring);
+
+      // Biosphere continental particle cloud
+      const bioGeo = new THREE.BufferGeometry();
+      const bioPos = new Float32Array(pointCount * 3);
+      for (let i = 0; i < pointCount * 3; i += 3) {
+        const phi = Math.acos(2 * Math.random() - 1);
+        const theta = Math.random() * Math.PI * 2;
+        const rad = 1.68 + (Math.random() - 0.5) * 0.12;
+        bioPos[i] = rad * Math.sin(phi) * Math.cos(theta);
+        bioPos[i + 1] = rad * Math.cos(phi);
+        bioPos[i + 2] = rad * Math.sin(phi) * Math.sin(theta);
+      }
+      bioGeo.setAttribute('position', new THREE.BufferAttribute(bioPos, 3));
+      const bioMat = new THREE.PointsMaterial({
+        color: isFlux ? 0x34d399 : 0x6ee7b7,
+        size: 0.048,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+      });
+      globe.add(new THREE.Points(bioGeo, bioMat));
+    }
   }, [selectedTopic, renderStyle, particleDensity]);
 
   // Telemetry details based on selected topic
@@ -942,6 +1007,13 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           { label: 'Vascular Resistance', val: 'SVR = 2,450 dynes·s/cm⁵' },
           { label: 'Pulse Wave Velocity', val: 'PWV = 14.8 m/s (Arterial Stiffness)' },
           { label: 'Media/Lumen Ratio', val: 'M/L = 0.48 (Hypertrophic Remodeling)' },
+        ];
+      case 'biomes-ecology':
+        return [
+          { label: 'Solar Insolation', val: 'S_0 = 1361 W/m² (Equatorial Peak)' },
+          { label: 'Planetary Albedo', val: 'α = 0.306 (Cryospheric Feedback)' },
+          { label: 'Global NPP Flux', val: '56.4 Gt C/yr (Miami Model)' },
+          { label: 'Ocean Stoichiometry', val: 'Redfield 106C : 16N : 1P' },
         ];
       default:
         return [];

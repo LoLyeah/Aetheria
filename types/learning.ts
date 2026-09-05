@@ -7,7 +7,8 @@ export type TopicId =
   | 'ev-battery'
   | 'pulmonology-pneumonia'
   | 'cardiac-arrest'
-  | 'hypertension';
+  | 'hypertension'
+  | 'biomes-ecology';
 
 export interface QuizQuestion {
   id: string;
@@ -117,7 +118,8 @@ export type InteractiveLabType =
   | 'ev-powertrain'
   | 'pulmonary-alveoli'
   | 'cardiac-hemodynamics'
-  | 'vascular-hemodynamics';
+  | 'vascular-hemodynamics'
+  | 'biome-globe';
 
 export interface LearningModule {
   id: string;

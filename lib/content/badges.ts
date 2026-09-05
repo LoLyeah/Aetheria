@@ -92,6 +92,27 @@ export const allBadges: Badge[] = [
     requiredModuleIds: ['hyp-mod-1', 'hyp-mod-2', 'hyp-mod-3', 'hyp-mod-4'],
   },
   {
+    id: 'biosphere-master',
+    title: {
+      en: 'Biosphere Ecologist',
+      id: 'Pakar Ekologi Biosfer',
+    },
+    description: {
+      en: 'Completed all 7 modules in Global Biomes, Climatology & Ecosystem Dynamics.',
+      id: 'Menyelesaikan seluruh 7 modul dalam Bioma Global, Klimatologi & Dinamika Ekosistem.',
+    },
+    icon: 'Globe',
+    requiredModuleIds: [
+      'biome-mod-1',
+      'biome-mod-2',
+      'biome-mod-3',
+      'biome-mod-4',
+      'biome-mod-5',
+      'biome-mod-6',
+      'biome-mod-7',
+    ],
+  },
+  {
     id: 'quiz-ace',
     title: {
       en: 'Academic Excellence',
@@ -111,8 +132,8 @@ export const allBadges: Badge[] = [
       id: 'Polimat Agung Aetheria',
     },
     description: {
-      en: 'Completed all 24 modules across all 6 foundational scientific disciplines.',
-      id: 'Menyelesaikan seluruh 24 modul di keenam disiplin ilmu sains dasar.',
+      en: 'Completed all 31 modules across all 7 foundational scientific disciplines.',
+      id: 'Menyelesaikan seluruh 31 modul di ketujuh disiplin ilmu sains dasar.',
     },
     icon: 'GraduationCap',
   },

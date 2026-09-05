@@ -18,6 +18,7 @@ import {
   Volume2,
   X,
   ExternalLink,
+  Globe,
 } from 'lucide-react';
 
 interface GlossaryTermProps {
@@ -84,6 +85,12 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       badgeBg: 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
       icon: Gauge,
       accentBorder: 'border-amber-500/30',
+    },
+    ecology: {
+      label: { en: 'Biomes & Ecology', id: 'Bioma & Ekologi' },
+      badgeBg: 'bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
+      icon: Globe,
+      accentBorder: 'border-teal-500/30',
     },
     general: {
       label: { en: 'Scientific Principle', id: 'Prinsip Ilmiah' },

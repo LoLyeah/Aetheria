@@ -117,6 +117,7 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
               'pulmonology-pneumonia',
               'cardiac-arrest',
               'hypertension',
+              'biomes-ecology',
             ];
 
             if (moduleParam) {
@@ -258,7 +259,7 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
       }
     }
 
-    // Grand polymath (all 12 modules)
+    // Grand polymath (all 31 modules across all 7 disciplines)
     const allModuleIds = allTopics.flatMap((t) => t.modules.map((m) => m.id));
     if (
       allModuleIds.every((id) => currentProgress.completedModules.includes(id)) &&

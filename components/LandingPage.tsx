@@ -22,6 +22,7 @@ import {
   ArrowUpRight,
   HeartCrack,
   Gauge,
+  Globe,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -57,6 +58,7 @@ export const LandingPage: React.FC = () => {
     'pulmonology-pneumonia': <Activity className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
     'cardiac-arrest': <HeartCrack className="w-5 h-5 text-red-600 dark:text-red-400" />,
     'hypertension': <Gauge className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
+    'biomes-ecology': <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
   };
 
   return (
