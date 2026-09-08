@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { LearningProvider, useLearning } from '@/context/LearningContext';
 import { Navbar } from '@/components/Navbar';
@@ -13,11 +13,10 @@ import { ProgressTrackerModal } from '@/components/ProgressTrackerModal';
 import { VersionModal } from '@/components/VersionModal';
 import { Footer } from '@/components/Footer';
 
-const AppContent: React.FC = () => {
-  const { view, language, navigateTo, selectedModuleId } = useLearning();
+export const AppContent: React.FC = () => {
+  const { view, language, navigateTo, returnFromSettings, selectedModuleId } = useLearning();
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
   const [isVersionModalOpen, setIsVersionModalOpen] = useState(false);
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isGlossaryModalOpen, setIsGlossaryModalOpen] = useState(false);
 
   return (
@@ -25,7 +24,7 @@ const AppContent: React.FC = () => {
       <Navbar
         onOpenProgress={() => setIsProgressModalOpen(true)}
         onOpenVersion={() => setIsVersionModalOpen(true)}
-        onOpenSettings={() => setIsSettingsModalOpen(true)}
+        onOpenSettings={() => navigateTo('settings')}
         onOpenGlossary={() => setIsGlossaryModalOpen(true)}
       />
 
@@ -43,7 +42,7 @@ const AppContent: React.FC = () => {
             </motion.div>
           )}
 
-          {view === 'learn' && (
+          {(view === 'learn' || view === 'settings') && (
             <motion.div
               key="learn"
               initial={{ opacity: 0, y: 14 }}
@@ -68,27 +67,15 @@ const AppContent: React.FC = () => {
               <ModuleViewer key={selectedModuleId || 'default'} onOpenGlossary={() => setIsGlossaryModalOpen(true)} />
             </motion.div>
           )}
-
-          {view === 'settings' && (
-            <motion.div
-              key="settings"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.28, ease: 'easeInOut' }}
-              className="py-12 w-full min-w-0"
-            >
-              <div className="max-w-3xl mx-auto px-4">
-                <SettingsModal
-                  isOpen={true}
-                  onClose={() => navigateTo('learn')}
-                  onOpenGlossary={() => setIsGlossaryModalOpen(true)}
-                />
-              </div>
-            </motion.div>
-          )}
         </AnimatePresence>
       </main>
+
+      {/* Settings Modal (synchronized with /settings route) */}
+      <SettingsModal
+        isOpen={view === 'settings'}
+        onClose={returnFromSettings}
+        onOpenGlossary={() => setIsGlossaryModalOpen(true)}
+      />
 
       {/* Modals */}
       <ProgressTrackerModal
@@ -101,15 +88,6 @@ const AppContent: React.FC = () => {
         onClose={() => setIsVersionModalOpen(false)}
       />
 
-      <SettingsModal
-        isOpen={isSettingsModalOpen && view !== 'settings'}
-        onClose={() => setIsSettingsModalOpen(false)}
-        onOpenGlossary={() => {
-          setIsSettingsModalOpen(false);
-          setIsGlossaryModalOpen(true);
-        }}
-      />
-
       <GlossaryModal
         isOpen={isGlossaryModalOpen}
         onClose={() => setIsGlossaryModalOpen(false)}
@@ -120,15 +98,15 @@ const AppContent: React.FC = () => {
         onOpenVersion={() => setIsVersionModalOpen(true)}
         onOpenProgress={() => setIsProgressModalOpen(true)}
         onOpenGlossary={() => setIsGlossaryModalOpen(true)}
-        onOpenSettings={() => setIsSettingsModalOpen(true)}
+        onOpenSettings={() => navigateTo('settings')}
       />
     </div>
   );
 };
 
-export default function Home() {
+export default function ClientApp({ initialSlug }: { initialSlug?: string[] }) {
   return (
-    <LearningProvider>
+    <LearningProvider initialSlug={initialSlug}>
       <AppContent />
     </LearningProvider>
   );

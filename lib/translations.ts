@@ -90,6 +90,10 @@ export const translations = {
       interactiveControls: "Simulation Controls",
       resetView: "Reset Camera",
       fullscreen: "Toggle Fullscreen",
+      share: "Share",
+      shareLink: "Copy direct link to this module",
+      linkCopied: "Copied!",
+      shareTopic: "Share Topic",
     },
     quiz: {
       quizTitle: "Knowledge Verification Checkpoint",
@@ -303,6 +307,10 @@ export const translations = {
       interactiveControls: "Kontrol Simulasi",
       resetView: "Atur Ulang Kamera",
       fullscreen: "Mode Layar Penuh",
+      share: "Bagikan",
+      shareLink: "Salin tautan langsung ke modul ini",
+      linkCopied: "Tersalin!",
+      shareTopic: "Bagikan Topik",
     },
     quiz: {
       quizTitle: "Uji Pemahaman Konsep",

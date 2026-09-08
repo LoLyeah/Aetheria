@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
 import { allTopics, getTopicById } from '@/lib/content';
+import { getUrlForState, copyTextToClipboard } from '@/lib/routing';
 import {
   Atom,
   HeartPulse,
@@ -23,6 +24,8 @@ import {
   HeartCrack,
   Gauge,
   Globe,
+  Share2,
+  Check,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -47,6 +50,34 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
 
   const t = translations[language];
   const currentTopic = selectedTopicId ? getTopicById(selectedTopicId) : null;
+
+  const [isTopicCopied, setIsTopicCopied] = useState(false);
+  const topicCopyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (topicCopyTimeoutRef.current) clearTimeout(topicCopyTimeoutRef.current);
+    };
+  }, []);
+
+  const handleCopyTopicLink = async () => {
+    if (!currentTopic) return;
+    try {
+      const canonicalPath = getUrlForState('learn', currentTopic.id);
+      const topicUrl = typeof window !== 'undefined' ? `${window.location.origin}${canonicalPath}` : '';
+      const copied = await copyTextToClipboard(topicUrl);
+      if (copied) {
+        if (topicCopyTimeoutRef.current) clearTimeout(topicCopyTimeoutRef.current);
+        setIsTopicCopied(true);
+        topicCopyTimeoutRef.current = setTimeout(() => {
+          setIsTopicCopied(false);
+          topicCopyTimeoutRef.current = null;
+        }, 2500);
+      }
+    } catch (err) {
+      console.warn('Failed to copy topic URL:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-24">
@@ -140,9 +171,34 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
                   <span>{language === 'en' ? 'Back to All Topics' : 'Kembali ke Semua Topik'}</span>
                 </button>
 
-                <span className="text-xs font-mono font-semibold text-slate-400">
-                  {currentTopic.modules.length} {language === 'en' ? 'Modules in Sequence' : 'Modul Berurutan'}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono font-semibold text-slate-400 hidden sm:inline">
+                    {currentTopic.modules.length} {language === 'en' ? 'Modules in Sequence' : 'Modul Berurutan'}
+                  </span>
+                  <motion.button
+                    whileHover={{ y: -1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleCopyTopicLink}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                      isTopicCopied
+                        ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                    title={t.moduleViewer.shareTopic}
+                  >
+                    {isTopicCopied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-500" />
+                        <span className="font-bold text-[11px]">{t.moduleViewer.linkCopied}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                        <span className="text-[11px]">{t.moduleViewer.shareTopic}</span>
+                      </>
+                    )}
+                  </motion.button>
+                </div>
               </div>
 
               {/* Sequential Module Cards Grid */}

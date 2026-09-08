@@ -3,8 +3,10 @@
 import React, { createContext, useContext, useEffect, useState, useMemo, ReactNode } from 'react';
 import { Language, Theme, TopicId, UserProgress, AppSettings } from '@/types/learning';
 import { allTopics, allBadges, getModuleById } from '@/lib/content';
+import { ModuleTab, parseSlugToState, parseUrlToState, getUrlForState, isValidModuleTab } from '@/lib/routing';
 
 export type AppView = 'landing' | 'learn' | 'module' | 'progress' | 'settings';
+export type { ModuleTab } from '@/lib/routing';
 
 interface LearningContextType {
   isHydrated: boolean;
@@ -16,6 +18,8 @@ interface LearningContextType {
   view: AppView;
   selectedTopicId: TopicId | null;
   selectedModuleId: string | null;
+  activeTab: ModuleTab;
+  setActiveTab: (tab: ModuleTab) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   userProgress: UserProgress;
@@ -23,7 +27,13 @@ interface LearningContextType {
   updateSettings: (partial: Partial<AppSettings>) => void;
   resetSettings: () => void;
   importProgress: (jsonData: string) => boolean;
-  navigateTo: (view: AppView, topicId?: TopicId | null, moduleId?: string) => void;
+  navigateTo: (
+    view: AppView,
+    topicId?: TopicId | null,
+    moduleId?: string | null,
+    options?: { tab?: ModuleTab; replace?: boolean; skipHistory?: boolean }
+  ) => void;
+  returnFromSettings: () => void;
   markModuleComplete: (moduleId: string) => void;
   saveQuizScore: (moduleId: string, score: number) => void;
   saveNote: (moduleId: string, text: string) => void;
@@ -69,20 +79,38 @@ const defaultProgress: UserProgress = {
 
 const LearningContext = createContext<LearningContextType | undefined>(undefined);
 
-export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: string[] }> = ({
+  children,
+  initialSlug,
+}) => {
+  const initialRouteState = useMemo(() => parseSlugToState(initialSlug), [initialSlug]);
+
   const [isHydrated, setIsHydrated] = useState(false);
   const [language, setLanguageState] = useState<Language>('en');
   const [theme, setThemeState] = useState<Theme>('light');
   const [settings, setSettingsState] = useState<AppSettings>(defaultSettings);
-  const [view, setView] = useState<AppView>('landing');
-  const [selectedTopicId, setSelectedTopicId] = useState<TopicId | null>(null);
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  const [view, setView] = useState<AppView>(initialRouteState.view);
+  const [selectedTopicId, setSelectedTopicId] = useState<TopicId | null>(initialRouteState.topicId);
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(initialRouteState.moduleId);
+  const [activeTab, setActiveTabState] = useState<ModuleTab>(initialRouteState.tab);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [userProgress, setUserProgress] = useState<UserProgress>(defaultProgress);
   const [isWebGPUSupported, setIsWebGPUSupported] = useState<boolean>(false);
   const [gpuRendererInfo, setGpuRendererInfo] = useState<string>('Initializing 3D Engine...');
 
-  // Hydrate stored preferences on client mount only to eliminate SSR mismatches
+  const lastContentRouteRef = React.useRef<{
+    view: AppView;
+    topicId: TopicId | null;
+    moduleId: string | null;
+    tab: ModuleTab;
+  }>({
+    view: initialRouteState.view !== 'settings' ? initialRouteState.view : 'learn',
+    topicId: initialRouteState.topicId,
+    moduleId: initialRouteState.moduleId,
+    tab: initialRouteState.tab,
+  });
+
+  // Hydrate stored preferences and URL state on client mount
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
@@ -104,46 +132,64 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
               setUserProgress(JSON.parse(savedProgress));
             } catch {}
           }
-          // Support direct navigation and PWA shortcuts via URL search parameters
-          try {
-            const params = new URLSearchParams(window.location.search);
-            const topicParam = params.get('topic') as TopicId | null;
-            const moduleParam = params.get('module');
-            const viewParam = params.get('view') as AppView | null;
-            const validTopics: TopicId[] = [
-              'quantum-mechanics',
-              'fetus-development',
-              'ev-battery',
-              'pulmonology-pneumonia',
-              'cardiac-arrest',
-              'hypertension',
-              'biomes-ecology',
-            ];
 
-            if (moduleParam) {
-              const found = getModuleById(moduleParam);
-              if (found) {
-                setSelectedTopicId(found.topic.id);
-                setSelectedModuleId(found.module.id);
-                setView('module');
-              }
-            } else if (topicParam && validTopics.includes(topicParam)) {
-              setSelectedTopicId(topicParam);
-              if (viewParam === 'module') {
-                const topic = allTopics.find((t) => t.id === topicParam);
-                if (topic && topic.modules.length > 0) {
-                  setSelectedModuleId(topic.modules[0].id);
-                  setView('module');
-                } else {
-                  setView('learn');
-                }
-              } else {
-                setView('learn');
-              }
-            } else if (viewParam === 'learn' || viewParam === 'settings') {
-              setView(viewParam);
+          // Parse actual URL in the browser (supports clean paths, ?tab=, and legacy query params)
+          try {
+            const currentPath = window.location.pathname;
+            const currentSearch = window.location.search;
+            const parsed = parseUrlToState(currentPath, currentSearch);
+
+            setView(parsed.view);
+            setSelectedTopicId(parsed.topicId);
+            setSelectedModuleId(parsed.moduleId);
+            setActiveTabState(parsed.tab);
+
+            if (parsed.view !== 'settings') {
+              lastContentRouteRef.current = {
+                view: parsed.view,
+                topicId: parsed.topicId,
+                moduleId: parsed.moduleId,
+                tab: parsed.tab,
+              };
             }
-          } catch {}
+
+            // Canonicalize legacy or non-canonical URLs (e.g. ?topic=..., ?tab=theory, or unrecognized query parameters)
+            const canonicalUrl = getUrlForState(parsed.view, parsed.topicId, parsed.moduleId, parsed.tab);
+            const currentFullUrl = currentPath + currentSearch;
+            const searchParams = new URLSearchParams(currentSearch);
+            const hasLegacyRoutingParams =
+              currentSearch.includes('topic=') ||
+              currentSearch.includes('module=') ||
+              currentSearch.includes('view=');
+            const hasNonCanonicalTab =
+              currentSearch.includes('tab=') &&
+              (!isValidModuleTab(searchParams.get('tab')) ||
+                searchParams.get('tab')?.trim().toLowerCase() === 'theory' ||
+                parsed.view !== 'module');
+
+            if (currentFullUrl !== canonicalUrl && (hasLegacyRoutingParams || hasNonCanonicalTab)) {
+              window.history.replaceState(
+                { view: parsed.view, topicId: parsed.topicId, moduleId: parsed.moduleId, tab: parsed.tab },
+                '',
+                canonicalUrl
+              );
+            } else if (!window.history.state || typeof window.history.state.view === 'undefined') {
+              window.history.replaceState(
+                {
+                  ...(window.history.state || {}),
+                  view: parsed.view,
+                  topicId: parsed.topicId,
+                  moduleId: parsed.moduleId,
+                  tab: parsed.tab,
+                },
+                '',
+                window.location.href
+              );
+            }
+          } catch (urlErr) {
+            console.warn('URL hydration error:', urlErr);
+          }
+
           setIsHydrated(true);
         });
       }
@@ -153,6 +199,33 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
         setIsHydrated(true);
       });
     }
+  }, []);
+
+  // Synchronize browser Back & Forward button navigation
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handlePopState = () => {
+      const parsed = parseUrlToState(window.location.pathname, window.location.search);
+      setView(parsed.view);
+      setSelectedTopicId(parsed.topicId);
+      setSelectedModuleId(parsed.moduleId);
+      setActiveTabState(parsed.tab);
+
+      if (parsed.view !== 'settings') {
+        lastContentRouteRef.current = {
+          view: parsed.view,
+          topicId: parsed.topicId,
+          moduleId: parsed.moduleId,
+          tab: parsed.tab,
+        };
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   // Sync theme class to document
@@ -404,28 +477,104 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
     } catch (e) {}
   };
 
-  const navigateTo = (newView: AppView, topicId?: TopicId | null, moduleId?: string) => {
-    setView(newView);
+  const navigateTo = (
+    newView: AppView,
+    topicId?: TopicId | null,
+    moduleId?: string | null,
+    options?: { tab?: ModuleTab; replace?: boolean; skipHistory?: boolean }
+  ) => {
+    let nextTopicId: TopicId | null = null;
+    let nextModuleId: string | null = null;
+    const nextTab: ModuleTab = options?.tab || 'theory';
+
     if (newView === 'learn') {
-      if (topicId === undefined || topicId === null) {
-        setSelectedTopicId(null);
-        setSelectedModuleId(null);
-      } else {
-        setSelectedTopicId(topicId);
+      if (topicId !== undefined && topicId !== null) {
+        nextTopicId = topicId;
       }
+    } else if (newView === 'module') {
+      if (moduleId) {
+        nextModuleId = moduleId;
+        if (topicId !== undefined && topicId !== null) {
+          nextTopicId = topicId;
+        } else {
+          const found = getModuleById(moduleId);
+          if (found) nextTopicId = found.topic.id;
+        }
+      }
+    } else if (newView === 'settings') {
+      nextTopicId = null;
+      nextModuleId = null;
     } else if (newView === 'landing') {
-      setSelectedTopicId(null);
-      setSelectedModuleId(null);
-    } else if (topicId !== undefined) {
-      setSelectedTopicId(topicId);
+      nextTopicId = null;
+      nextModuleId = null;
     }
 
-    if (moduleId) {
-      setSelectedModuleId(moduleId);
-      const info = getModuleById(moduleId);
-      if (info) setSelectedTopicId(info.topic.id);
+    setView(newView);
+    setSelectedTopicId(nextTopicId);
+    setSelectedModuleId(nextModuleId);
+    setActiveTabState(nextTab);
+
+    if (newView !== 'settings') {
+      lastContentRouteRef.current = {
+        view: newView,
+        topicId: nextTopicId,
+        moduleId: nextModuleId,
+        tab: nextTab,
+      };
     }
+
+    if (typeof window !== 'undefined' && !options?.skipHistory) {
+      const targetUrl = getUrlForState(newView, nextTopicId, nextModuleId, nextTab);
+      const currentUrl = window.location.pathname + window.location.search;
+      const cleanTarget = targetUrl.replace(/\/+$/, '') || '/';
+      const cleanCurrent = (window.location.pathname.replace(/\/+$/, '') || '/') + window.location.search;
+
+      if (cleanTarget !== cleanCurrent) {
+        const historyPayload = {
+          view: newView,
+          topicId: nextTopicId,
+          moduleId: nextModuleId,
+          tab: nextTab,
+        };
+        if (options?.replace) {
+          window.history.replaceState(historyPayload, '', targetUrl);
+        } else {
+          window.history.pushState(historyPayload, '', targetUrl);
+        }
+      }
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const returnFromSettings = () => {
+    const prev = lastContentRouteRef.current;
+    if (prev && prev.view !== 'settings') {
+      navigateTo(prev.view, prev.topicId, prev.moduleId, { tab: prev.tab });
+    } else {
+      navigateTo('learn');
+    }
+  };
+
+  const setActiveTab = (tab: ModuleTab) => {
+    const normalizedTab = isValidModuleTab(tab) ? (tab.toLowerCase() as ModuleTab) : 'theory';
+    setActiveTabState(normalizedTab);
+    if (typeof window !== 'undefined' && view === 'module' && selectedModuleId) {
+      const targetUrl = getUrlForState('module', selectedTopicId, selectedModuleId, normalizedTab);
+      const currentUrl = window.location.pathname + window.location.search;
+      if (targetUrl !== currentUrl) {
+        window.history.replaceState(
+          {
+            view,
+            topicId: selectedTopicId,
+            moduleId: selectedModuleId,
+            tab: normalizedTab,
+          },
+          '',
+          targetUrl
+        );
+      }
+    }
   };
 
   const totalCompletionPercentage = useMemo(() => {
@@ -446,6 +595,8 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
         view,
         selectedTopicId,
         selectedModuleId,
+        activeTab,
+        setActiveTab,
         searchQuery,
         setSearchQuery,
         userProgress,
@@ -454,6 +605,7 @@ export const LearningProvider: React.FC<{ children: ReactNode }> = ({ children }
         resetSettings,
         importProgress,
         navigateTo,
+        returnFromSettings,
         markModuleComplete,
         saveQuizScore,
         saveNote,

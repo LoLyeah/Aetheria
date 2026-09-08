@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
 import { getTopicById, getModuleById } from '@/lib/content';
+import { getUrlForState, copyTextToClipboard } from '@/lib/routing';
 import { QuantumOrbitalViewer } from './3d/QuantumOrbitalViewer';
 import { DoubleSlitViewer } from './3d/DoubleSlitViewer';
 import { EmbryoViewer } from './3d/EmbryoViewer';
@@ -27,6 +28,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  Share2,
+  Check,
 } from 'lucide-react';
 
 interface ModuleViewerProps {
@@ -43,28 +46,42 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
     markModuleComplete,
     toggleBookmark,
     saveNote,
+    activeTab,
+    setActiveTab,
   } = useLearning();
 
   const t = translations[language];
-  const [activeTab, setActiveTab] = useState<'theory' | 'interactive' | 'quiz' | 'notes'>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const tabParam = new URLSearchParams(window.location.search).get('tab');
-        if (tabParam === 'interactive' || tabParam === 'quiz' || tabParam === 'notes' || tabParam === 'theory') {
-          return tabParam;
-        }
-      } catch {}
-    }
-    return 'theory';
-  });
-  const [prevModuleId, setPrevModuleId] = useState<string | null>(selectedModuleId);
-  if (selectedModuleId !== prevModuleId) {
-    setPrevModuleId(selectedModuleId);
-    setActiveTab('theory');
-  }
+  const [isCopied, setIsCopied] = useState(false);
+  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const topic = getTopicById(selectedTopicId || 'quantum-mechanics');
-  const currentModule = getModuleById(selectedModuleId || 'qm-mod-1')?.module || topic?.modules[0];
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
+
+  const moduleInfo = selectedModuleId ? getModuleById(selectedModuleId) : undefined;
+  const topic = moduleInfo?.topic || getTopicById(selectedTopicId || 'quantum-mechanics');
+  const currentModule = moduleInfo?.module || topic?.modules[0];
+
+  const handleCopyLink = async () => {
+    if (!currentModule || !topic) return;
+    try {
+      const canonicalPath = getUrlForState('module', topic.id, currentModule.id, activeTab);
+      const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}${canonicalPath}` : '';
+      const copied = await copyTextToClipboard(shareUrl);
+      if (copied) {
+        if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+        setIsCopied(true);
+        copyTimeoutRef.current = setTimeout(() => {
+          setIsCopied(false);
+          copyTimeoutRef.current = null;
+        }, 2500);
+      }
+    } catch (err) {
+      console.warn('Failed to copy URL:', err);
+    }
+  };
 
   // Scroll to top on module or tab change to prevent overlapping view
   useEffect(() => {
@@ -126,6 +143,30 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleCopyLink}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                isCopied
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400'
+                  : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }`}
+              title={t.moduleViewer.shareLink}
+            >
+              {isCopied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-500" />
+                  <span className="font-bold text-[11px]">{t.moduleViewer.linkCopied}</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                  <span className="hidden sm:inline text-[11px]">{t.moduleViewer.share}</span>
+                </>
+              )}
+            </motion.button>
+
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => toggleBookmark(currentModule.id)}

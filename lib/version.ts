@@ -22,14 +22,39 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.2.0',
+  version: '1.2.1',
   major: 1,
   minor: 2,
-  patch: 0,
-  releaseDate: '2026-09-05',
-  buildNumber: 'build.20260905.00',
+  patch: 1,
+  releaseDate: '2026-09-08',
+  buildNumber: 'build.20260908.01',
   environment: 'production',
   changelog: [
+    {
+      version: '1.2.1',
+      date: '2026-09-08',
+      type: 'patch',
+      title: {
+        en: 'Dynamic Address Bar Synchronization, Deep Linking & Browser History Navigation',
+        id: 'Sinkronisasi Bilah Alamat Dinamis, Tautan Dalam & Navigasi Riwayat Peramban',
+      },
+      highlights: {
+        en: [
+          'Engineered full RESTful deep linking (/learn, /learn/:topicId, /learn/:topicId/:moduleId, /settings) with optional catch-all App Router routing and static generation.',
+          'Integrated bi-directional HTML5 History API (pushState/replaceState) and popstate listener for seamless browser Back/Forward navigation.',
+          'Added automatic module workspace tab address synchronization (?tab=interactive|theory|quiz|notes) via replaceState.',
+          'Added sleek, tactile 1-click Share / Copy Link buttons in ModuleViewer and LearningDashboard with clipboard feedback.',
+          'Maintained 100% backward compatibility for legacy query parameters (?topic=...&module=...&view=...).',
+        ],
+        id: [
+          'Mengembangkan perutean tautan dalam RESTful penuh (/learn, /learn/:topicId, /learn/:topicId/:moduleId, /settings) dengan catch-all App Router dan pembuatan statis.',
+          'Mengintegrasikan HTML5 History API dua arah (pushState/replaceState) dan pendengar popstate untuk navigasi tombol Kembali/Maju peramban yang mulus.',
+          'Menambahkan sinkronisasi bilah alamat tab ruang kerja modul otomatis (?tab=interactive|theory|quiz|notes) melalui replaceState.',
+          'Menambahkan tombol Bagikan / Salin Tautan 1-klik taktil yang elegan di ModuleViewer dan LearningDashboard dengan umpan balik salin papan klip.',
+          'Mempertahankan kompatibilitas mundur 100% untuk parameter kueri warisan (?topic=...&module=...&view=...).',
+        ],
+      },
+    },
     {
       version: '1.2.0',
       date: '2026-09-05',
