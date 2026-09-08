@@ -22,14 +22,35 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.2.1',
+  version: '1.2.2',
   major: 1,
   minor: 2,
-  patch: 1,
+  patch: 2,
   releaseDate: '2026-09-08',
-  buildNumber: 'build.20260908.01',
+  buildNumber: 'build.20260908.02',
   environment: 'production',
   changelog: [
+    {
+      version: '1.2.2',
+      date: '2026-09-08',
+      type: 'patch',
+      title: {
+        en: '3D Biome Viewer Centering & Hardware-Accelerated Native Fullscreen',
+        id: 'Pemusatan Penampil Bioma 3D & Layar Penuh Native Terakselerasi Perangkat Keras',
+      },
+      highlights: {
+        en: [
+          'Corrected 3D camera lookAt vector and elevation angles in BiomesGlobeViewer, perfectly centering tundra, taiga, desert, rainforest, and coral biotopes in the viewport.',
+          'Integrated native HTML5 Fullscreen API with vendor prefixes, fullscreenchange listener, and ResizeObserver for smooth 60 FPS full-screen expansion.',
+          'Eliminated framer-motion containing block transform traps on the interactive lab tab that caused full-screen collapse.',
+        ],
+        id: [
+          'Memperbaiki vektor lookAt dan elevasi kamera 3D di BiomesGlobeViewer sehingga bioma tundra, taiga, gurun, hutan hujan, dan karang terpusat sempurna di viewport.',
+          'Mengintegrasikan Fullscreen API HTML5 native dengan prefix vendor, listener fullscreenchange, dan ResizeObserver untuk transisi layar penuh 60 FPS.',
+          'Menghilangkan jebakan transform containing block framer-motion pada tab lab interaktif yang menyebabkan kolaps saat layar penuh.',
+        ],
+      },
+    },
     {
       version: '1.2.1',
       date: '2026-09-08',

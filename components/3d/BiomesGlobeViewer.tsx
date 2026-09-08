@@ -171,6 +171,8 @@ export const BiomesGlobeViewer: React.FC = () => {
   const biotopeGroupRef = useRef<THREE.Group | null>(null);
   const animatedObjectsRef = useRef<{ update: (delta: number, elapsed: number) => void }[]>([]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Camera tracking & rotation
   const isAutoRotateRef = useRef<boolean>(true);
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
@@ -180,6 +182,68 @@ export const BiomesGlobeViewer: React.FC = () => {
   useEffect(() => {
     isAutoRotateRef.current = autoRotate;
   }, [autoRotate]);
+
+  // Fullscreen management using native Fullscreen API with vendor prefixes & events
+  const toggleFullscreen = async () => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const isFs = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+    if (!isFs) {
+      try {
+        if (container.requestFullscreen) {
+          await container.requestFullscreen();
+        } else if ((container as any).webkitRequestFullscreen) {
+          await (container as any).webkitRequestFullscreen();
+        } else {
+          setIsFullscreen(true);
+        }
+      } catch (err) {
+        console.warn('Native requestFullscreen failed, using CSS fullscreen:', err);
+        setIsFullscreen(true);
+      }
+    } else {
+      try {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        }
+      } catch (err) {
+        console.warn('exitFullscreen failed:', err);
+      }
+      setIsFullscreen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      const isFs = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+      setIsFullscreen(isFs);
+    };
+
+    document.addEventListener('fullscreenchange', handleFsChange);
+    document.addEventListener('webkitfullscreenchange', handleFsChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFsChange);
+      document.removeEventListener('webkitfullscreenchange', handleFsChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        } else {
+          setIsFullscreen(false);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
 
   // Derived Telemetry Values
   const globalMeanTemp = useMemo(() => 14.8 + warmingDeltaT, [warmingDeltaT]);
@@ -394,9 +458,10 @@ export const BiomesGlobeViewer: React.FC = () => {
     sceneRef.current = scene;
     scene.background = new THREE.Color(0x060b14);
 
-    // Camera setup
+    // Camera setup - Centered framing
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 1.8, 6.2);
+    camera.position.set(0, 0.0, 5.5);
+    camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
     // WebGL Renderer setup
@@ -507,8 +572,14 @@ export const BiomesGlobeViewer: React.FC = () => {
       },
       onZoom: (deltaZoom) => {
         if (!cameraRef.current) return;
-        const newZ = cameraRef.current.position.z + deltaZoom * 4.0;
-        cameraRef.current.position.z = Math.max(3.2, Math.min(10.5, newZ));
+        const cam = cameraRef.current;
+        const isGlobe = viewScaleRef.current === 'globe';
+        const targetY = isGlobe ? 0 : 0.3;
+        const minZ = isGlobe ? 3.4 : 2.6;
+        const maxZ = isGlobe ? 8.5 : 7.5;
+        const newZ = Math.max(minZ, Math.min(maxZ, cam.position.z + deltaZoom * 3.0));
+        cam.position.z = newZ;
+        cam.lookAt(0, targetY, 0);
       },
     });
 
@@ -554,14 +625,30 @@ export const BiomesGlobeViewer: React.FC = () => {
       if (!container || !rendererRef.current || !cameraRef.current) return;
       const nw = container.clientWidth;
       const nh = container.clientHeight;
+      if (nw === 0 || nh === 0) return;
       cameraRef.current.aspect = nw / nh;
       cameraRef.current.updateProjectionMatrix();
       rendererRef.current.setSize(nw, nh);
     };
 
+    // Use ResizeObserver to reliably detect container dimension changes (fullscreen, window resize, layout shifts)
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const nw = entry.contentRect.width || container.clientWidth;
+        const nh = entry.contentRect.height || container.clientHeight;
+        if (nw > 0 && nh > 0 && rendererRef.current && cameraRef.current) {
+          cameraRef.current.aspect = nw / nh;
+          cameraRef.current.updateProjectionMatrix();
+          rendererRef.current.setSize(nw, nh);
+        }
+      }
+    });
+    resizeObserver.observe(container);
+
     window.addEventListener('resize', handleResize);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
       cleanupControls();
       if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current);
@@ -592,17 +679,19 @@ export const BiomesGlobeViewer: React.FC = () => {
     mat.needsUpdate = true;
   }, [activeOverlay, warmingDeltaT]);
 
-  // Visibility toggle between Globe and Biotope
+  // Visibility toggle and camera realignment between Globe and Biotope
   useEffect(() => {
     if (!globeGroupRef.current || !biotopeGroupRef.current || !cameraRef.current) return;
     if (viewScale === 'globe') {
       globeGroupRef.current.visible = true;
       biotopeGroupRef.current.visible = false;
-      cameraRef.current.position.set(0, 1.8, 6.2);
+      cameraRef.current.position.set(0, 0.0, 5.5);
+      cameraRef.current.lookAt(0, 0, 0);
     } else {
       globeGroupRef.current.visible = false;
       biotopeGroupRef.current.visible = true;
-      cameraRef.current.position.set(0, 2.2, 5.8);
+      cameraRef.current.position.set(0, 1.35, 4.4);
+      cameraRef.current.lookAt(0, 0.3, 0);
     }
   }, [viewScale]);
 
@@ -1058,15 +1147,17 @@ export const BiomesGlobeViewer: React.FC = () => {
     seaTempC,
   ]);
 
-  // Reset Camera View
+  // Reset Camera View - cleanly centered for both scales
   const handleResetCamera = () => {
     if (!cameraRef.current || !globeGroupRef.current || !biotopeGroupRef.current) return;
     if (viewScale === 'globe') {
       globeGroupRef.current.rotation.set(0, 0, 0.409);
-      cameraRef.current.position.set(0, 1.8, 6.2);
+      cameraRef.current.position.set(0, 0.0, 5.5);
+      cameraRef.current.lookAt(0, 0, 0);
     } else {
       biotopeGroupRef.current.rotation.set(0, 0, 0);
-      cameraRef.current.position.set(0, 2.2, 5.8);
+      cameraRef.current.position.set(0, 1.35, 4.4);
+      cameraRef.current.lookAt(0, 0.3, 0);
     }
     setAutoRotate(true);
     isAutoRotateRef.current = true;
@@ -1074,8 +1165,11 @@ export const BiomesGlobeViewer: React.FC = () => {
 
   return (
     <div
-      className={`relative w-full overflow-hidden rounded-2xl bg-slate-950 border border-slate-800 select-none shadow-2xl ${
-        isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'h-[640px] sm:h-[720px]'
+      ref={containerRef}
+      className={`relative w-full select-none overflow-hidden bg-slate-950 transition-all ${
+        isFullscreen
+          ? 'fixed inset-0 z-[9999] w-full h-full rounded-none border-none'
+          : 'h-[640px] sm:h-[720px] rounded-2xl border border-slate-800 shadow-2xl'
       }`}
     >
       {/* 3D WebGL Canvas Mount */}
@@ -1153,9 +1247,9 @@ export const BiomesGlobeViewer: React.FC = () => {
               <Compass className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setIsFullscreen(!isFullscreen)}
+              onClick={toggleFullscreen}
               title={language === 'en' ? 'Toggle Fullscreen' : 'Layar Penuh'}
-              className="p-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
