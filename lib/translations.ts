@@ -13,7 +13,7 @@ export const translations = {
       webgpuBadge: "WebGPU / WebGL Accelerated",
       stats: {
         topicsCount: "8 Core Disciplines",
-        modulesCount: "35 Deep Interactive Modules",
+        modulesCount: "36 Deep Interactive Modules",
         simulationsCount: "Real-time 3D Physics Engine",
         languageSupport: "Full English & Indonesian",
       },
@@ -230,7 +230,7 @@ export const translations = {
       webgpuBadge: "Akselerasi WebGPU / WebGL",
       stats: {
         topicsCount: "8 Disiplin Inti",
-        modulesCount: "35 Modul Interaktif Mendalam",
+        modulesCount: "36 Modul Interaktif Mendalam",
         simulationsCount: "Mesin Fisika 3D Real-time",
         languageSupport: "Bahasa Indonesia & Inggris Penuh",
       },

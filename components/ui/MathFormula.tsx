@@ -33,7 +33,7 @@ export const MathFormula: React.FC<MathFormulaProps> = ({
       className={`katex-wrapper ${
         displayMode
           ? 'block my-2 overflow-x-auto overflow-y-hidden max-w-full text-center py-1'
-          : 'inline-block max-w-full overflow-x-auto overflow-y-hidden align-middle py-0.5'
+          : 'inline-block max-w-full align-middle'
       } ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />

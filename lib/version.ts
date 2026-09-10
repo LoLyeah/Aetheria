@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.3.0',
+  version: '1.3.1',
   major: 1,
   minor: 3,
-  patch: 0,
+  patch: 1,
   releaseDate: '2026-09-10',
   buildNumber: 'build.20260910.01',
   environment: 'production',
   changelog: [
+    {
+      version: '1.3.1',
+      date: '2026-09-10',
+      type: 'patch',
+      title: {
+        en: 'Hybrid Curriculum Architecture Expansion & KaTeX Inline Pill Artifact Fix',
+        id: 'Ekspansi Arsitektur Kurikulum Hibrida & Perbaikan Artifak Pill KaTeX Sejajar',
+      },
+      highlights: {
+        en: [
+          'Added foundational Part 1 module for Hybrid Electric Vehicles: Introduction to Hybrid Architectures, Motivation, Decarbonization & Comparative Landscape (expanding topic to 5 deep modules).',
+          'Resolved visual bug in MathFormula where inline KaTeX formulas rendered an unintended 8px scrollbar thumb pill underneath mathematical variable symbols.',
+          'Synchronized HybridPowertrainViewer initial 3D architecture state with active module navigation (MHEV, HEV, PHEV, EREV).',
+          'Updated comprehensive routing and deep-linking verification test suite to validate all 36 interactive modules across 8 disciplines.',
+        ],
+        id: [
+          'Menambahkan modul Bagian 1 fundamental untuk Kendaraan Listrik Hibrida: Pengantar Arsitektur Hibrida, Motivasi, Dekarbonisasi & Lanskap Komparatif (memperluas kurikulum menjadi 5 modul mendalam).',
+          'Memperbaiki bug visual pada MathFormula di mana rumus KaTeX sejajar menampilkan thumb scrollbar berbentuk pill abu-abu di bawah simbol variabel matematika.',
+          'Menyinkronkan status arsitektur awal 3D HybridPowertrainViewer dengan navigasi modul aktif (MHEV, HEV, PHEV, EREV).',
+          'Memperbarui suite pengujian routing dan tautan langsung untuk memvalidasi seluruh 36 modul interaktif di 8 disiplin ilmu.',
+        ],
+      },
+    },
     {
       version: '1.3.0',
       date: '2026-09-10',

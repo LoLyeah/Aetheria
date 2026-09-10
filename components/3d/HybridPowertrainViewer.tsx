@@ -26,13 +26,35 @@ import {
 export type HybridArchitecture = 'MHEV' | 'HEV' | 'PHEV' | 'EREV';
 export type DrivingState = 'ev' | 'parallel' | 'cruise' | 'regen';
 
-export const HybridPowertrainViewer: React.FC = () => {
-  const { language, settings } = useLearning();
+interface HybridPowertrainViewerProps {
+  moduleId?: string;
+}
+
+export const HybridPowertrainViewer: React.FC<HybridPowertrainViewerProps> = ({ moduleId }) => {
+  const { language, settings, selectedModuleId } = useLearning();
+  const activeModuleId = moduleId || selectedModuleId;
   const mountRef = useRef<HTMLDivElement>(null);
   const containerWrapperRef = useRef<HTMLDivElement>(null);
 
+  // Derived default architecture from current module
+  const defaultArch = useMemo<HybridArchitecture>(() => {
+    if (activeModuleId === 'hyb-mod-2') return 'MHEV';
+    if (activeModuleId === 'hyb-mod-3') return 'HEV';
+    if (activeModuleId === 'hyb-mod-4') return 'PHEV';
+    if (activeModuleId === 'hyb-mod-5') return 'EREV';
+    return 'HEV';
+  }, [activeModuleId]);
+
   // Core Interactive State
-  const [architecture, setArchitecture] = useState<HybridArchitecture>('HEV');
+  const [architecture, setArchitecture] = useState<HybridArchitecture>(defaultArch);
+  const [prevModuleId, setPrevModuleId] = useState(activeModuleId);
+
+  // Synchronize architecture when navigating between hybrid modules
+  if (activeModuleId !== prevModuleId) {
+    setPrevModuleId(activeModuleId);
+    setArchitecture(defaultArch);
+  }
+
   const [drivingState, setDrivingState] = useState<DrivingState>('parallel');
   const [speedKmh, setSpeedKmh] = useState<number>(65); // 0 - 150 km/h
   const [throttlePercent, setThrottlePercent] = useState<number>(50); // 0 - 100%
@@ -884,10 +906,10 @@ export const HybridPowertrainViewer: React.FC = () => {
         <div className="p-3 rounded-2xl bg-slate-900/85 border border-slate-800/80 backdrop-blur-md shadow-lg text-xs space-y-1">
           <div className="flex items-center justify-between">
             <span className="font-mono font-bold uppercase tracking-wider text-orange-400 text-[11px]">
-              {architecture === 'MHEV' && 'Mild Hybrid (48V BSG)'}
-              {architecture === 'HEV' && 'Series-Parallel e-CVT'}
-              {architecture === 'PHEV' && 'Parallel P2 + e-Axle'}
-              {architecture === 'EREV' && 'Series Range Extender'}
+              {architecture === 'MHEV' && (language === 'en' ? 'Mild Hybrid (48V BSG)' : 'Mild Hybrid (48V BSG)')}
+              {architecture === 'HEV' && (language === 'en' ? 'Series-Parallel e-CVT' : 'Serial-Paralel e-CVT')}
+              {architecture === 'PHEV' && (language === 'en' ? 'Parallel P2 + e-Axle' : 'Paralel P2 + e-Axle')}
+              {architecture === 'EREV' && (language === 'en' ? 'Series Range Extender' : 'Range Extender Serial')}
             </span>
             <span className="text-[10px] font-mono text-slate-500">{fps} FPS</span>
           </div>

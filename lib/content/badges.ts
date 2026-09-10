@@ -119,11 +119,11 @@ export const allBadges: Badge[] = [
       id: 'Arsitek Powertrain Hibrida',
     },
     description: {
-      en: 'Completed all 4 modules in Hybrid Electric Vehicles & Powertrain Electrification.',
-      id: 'Menyelesaikan seluruh 4 modul dalam Kendaraan Listrik Hibrida & Elektrifikasi Powertrain.',
+      en: 'Completed all 5 modules in Hybrid Electric Vehicles & Powertrain Electrification.',
+      id: 'Menyelesaikan seluruh 5 modul dalam Kendaraan Listrik Hibrida & Elektrifikasi Powertrain.',
     },
     icon: 'Car',
-    requiredModuleIds: ['hyb-mod-1', 'hyb-mod-2', 'hyb-mod-3', 'hyb-mod-4'],
+    requiredModuleIds: ['hyb-mod-1', 'hyb-mod-2', 'hyb-mod-3', 'hyb-mod-4', 'hyb-mod-5'],
   },
   {
     id: 'quiz-ace',
@@ -145,8 +145,8 @@ export const allBadges: Badge[] = [
       id: 'Polimat Agung Aetheria',
     },
     description: {
-      en: 'Completed all 35 modules across all 8 foundational scientific disciplines.',
-      id: 'Menyelesaikan seluruh 35 modul di kedelapan disiplin ilmu sains dasar.',
+      en: 'Completed all 36 modules across all 8 foundational scientific disciplines.',
+      id: 'Menyelesaikan seluruh 36 modul di kedelapan disiplin ilmu sains dasar.',
     },
     icon: 'GraduationCap',
   },

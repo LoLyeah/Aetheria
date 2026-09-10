@@ -213,7 +213,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
                     </div>
 
                     {term.symbol && (
-                      <div className="py-1 px-2.5 rounded-lg bg-slate-950 text-cyan-300 font-serif text-xs border border-slate-800 inline-block">
+                      <div className="py-1 px-2.5 rounded-lg bg-slate-950 text-cyan-300 font-serif text-xs border border-slate-800 inline-block overflow-hidden">
                         <MathFormula formula={term.symbol} displayMode={false} />
                       </div>
                     )}

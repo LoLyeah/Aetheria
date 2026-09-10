@@ -23,12 +23,355 @@ export const hybridVehiclesTopic: Topic = {
   iconName: 'Car',
   modules: [
     // -------------------------------------------------------------
-    // PART 1: MILD HYBRID ELECTRIC VEHICLES (MHEV) & 48V ARCHITECTURE
+    // PART 1: INTRODUCTION TO HYBRID ARCHITECTURES, MOTIVATION & DECARBONIZATION
     // -------------------------------------------------------------
     {
       id: 'hyb-mod-1',
       topicId: 'hybrid-vehicles',
       order: 1,
+      title: {
+        en: 'Introduction to Hybrid Architectures, Motivation & Comparative Landscape',
+        id: 'Pengantar Arsitektur Hibrida, Motivasi & Lanskap Komparatif',
+      },
+      shortDescription: {
+        en: 'Thermodynamic motivations, tank-to-wheel efficiency, decarbonization imperatives, and the comparative engineering taxonomy from MHEV to EREV.',
+        id: 'Motivasi termodinamika, efisiensi tank-to-wheel, urgensi dekarbonisasi, dan taksonomi rekayasa komparatif dari MHEV hingga EREV.',
+      },
+      durationMinutes: 18,
+      difficulty: 'Beginner',
+      difficultyId: 'Pemula',
+      interactiveType: 'hybrid-powertrain',
+      sections: [
+        {
+          id: 'hyb-1-sec-1',
+          title: {
+            en: '1. Thermodynamic Inefficiencies of Pure ICE & The Decarbonization Imperative',
+            id: '1. Inefisiensi Termodinamika ICE Murni & Urgensi Dekarbonisasi',
+          },
+          content: {
+            en: 'Transportation accounts for approximately one-fifth of global carbon dioxide (CO₂) emissions, with road passenger and commercial vehicles contributing over 75% of the sector\'s carbon footprint. For over a century, light-duty passenger vehicles have relied almost exclusively on internal combustion engines (ICE) operating on four-stroke Otto (gasoline) or Diesel cycles. Despite generations of metallurgical, fluidic, and electronic refinements, conventional ICE powertrains suffer from severe intrinsic thermodynamic and operational inefficiencies:\n\n• Low Real-World Tank-to-Wheel (TTW) Thermal Efficiency: While modern laboratory-tuned combustion engines achieve peak brake thermal efficiencies of 38–41% (gasoline) or 42–45% (diesel) at high load near wide-open throttle, everyday urban and suburban drive cycles force the engine to operate primarily at light partial loads (10–25% rated torque). Under these throttled conditions, severe intake pumping losses across the throttle valve, mechanical friction (piston skirts, crankshaft journals, valvetrain), and auxiliary loads drag real-world cycle-average efficiency down to an abysmal 18–25%.\n• Idle Fuel Consumption: In conventional vehicles, when stopped at red lights or in heavy traffic congestion, the engine must spin continuously at 700–900 RPM to sustain accessory drive belts (mechanical AC compressor, power steering, 12V alternator) and lubrication oil pressure. During idle, fuel is consumed at zero vehicle velocity, yielding instantaneous zero miles per gallon (0 km/L) and 100% waste enthalpy.\n• Total Kinetic Energy Dissipation: During braking, 100% of the vehicle\'s forward kinetic energy (½ m v²) is converted through friction into useless waste heat at the brake discs and pads, permanently dissipating thousands of kilojoules into ambient air.\n• The Electrification Continuum: Hybridization resolves every one of these three thermodynamic handicaps. By adding an electrochemical energy storage buffer (high-voltage battery) and bidirectional electric motor-generators, hybrid powertrains recover deceleration kinetic energy through regenerative braking, eliminate idle fuel burn via instantaneous engine shutdown and restart, and allow the combustion engine to operate along its optimal Brake Specific Fuel Consumption (BSFC) island.',
+            id: 'Sektor transportasi menyumbang sekitar seperlima emisi karbon dioksida (CO₂) global, di mana kendaraan jalan raya menyumbang lebih dari 75% dari jejak karbon tersebut. Selama lebih dari satu abad, kendaraan penumpang mengandalkan mesin pembakaran internal (ICE) empat langkah bersiklus Otto (bensin) atau Diesel. Terlepas dari berbagai inovasi metalurgi dan manajemen elektronik, powertrain ICE konvensional menghadapi kelemahan termodinamika dan operasional yang mendasar:\n\n• Efisiensi Termal Tank-to-Wheel (TTW) Nyata yang Rendah: Kendati mesin pembakaran modern mampu meraih efisiensi termal puncak 38–41% (bensin) atau 42–45% (diesel) pada beban tinggi di laboratorium, siklus berkendara harian di perkotaan memaksa mesin beroperasi pada beban parsial rendah (10–25% torsi nominal). Pada kondisi ini, kerugian pemompaan intake (throttling losses), gesekan mekanis (dinding piston, kruk as, katup), dan beban aksesori menurunkan efisiensi rata-rata siklus nyata hingga hanya 18–25%.\n• Pemborosan Bahan Bakar Saat Stasioner (Idling): Pada mobil konvensional yang berhenti di lampu merah atau kemacetan, mesin harus terus berputar pada 700–900 RPM hanya untuk memutar sabuk aksesori (kompresor AC, pompa oli, alternator 12V). Saat stasioner, bahan bakar terbakar tanpa perpindahan jarak (kecepatan nol km/jam), menghasilkan efisiensi nol km/L dan 100% entalpi terbuang.\n• Disipasi Total Energi Kinetik Pengereman: Saat memperlambat kendaraan, 100% energi kinetik laju (½ m v²) diubah menjadi panas gesek tak berguna pada piringan dan kampas rem, membuang ribuan kilojoule ke udara sekitar.\n• Kontinuum Elektrifikasi: Elektrifikasi hibrida secara tuntas mengatasi ketiga kelemahan termodinamika ini. Melalui penambahan baterai penyangga elektrokimia dan motor-generator listrik dua arah, sistem hibrida memulihkan energi deselerasi via pengereman regeneratif, mematikan mesin sepenuhnya saat berhenti atau meluncur bebas, serta menjaga mesin bensin beroperasi eksklusif pada kurva efisiensi termal terbaik (BSFC optimum).',
+          },
+          formula: '\\eta_{\\text{TTW}} = \\frac{E_{\\text{tractive}}}{E_{\\text{fuel}} + E_{\\text{elec}}} = \\frac{\\int_{0}^{t_{\\text{cycle}}} \\left( F_{\\text{aero}} + F_{\\text{rr}} + F_{\\text{grade}} + m a \\right) v \\, dt}{m_{\\text{fuel}} \\cdot \\text{LHV}_{\\text{fuel}} + \\Delta E_{\\text{battery}}}',
+          formulaExplanation: {
+            en: 'Tank-to-Wheel (TTW) energy efficiency equation. The numerator represents total tractive work delivered at the road wheels overcoming aerodynamic drag (F_aero), rolling resistance (F_rr), gravitational hill climb (F_grade), and inertial acceleration (m a). The denominator balances chemical energy from combusted fuel mass via its lower heating value (m_fuel · LHV_fuel) plus net electrical energy consumed from the traction battery buffer (ΔE_battery).',
+            id: 'Formulasi efisiensi energi Tank-to-Wheel (TTW). Pembilang merepresentasikan kerja traksi mekanis total di roda jalan untuk mengatasi hambatan aerodinamika (F_aero), hambatan gelinding ban (F_rr), gaya gravitasi tanjakan (F_grade), dan percepatan inersia (m a). Penyebut menggabungkan energi kimia dari massa bahan bakar terkonsumsi via nilai kalor bawah (m_fuel · LHV_fuel) ditambah energi listrik netto yang ditarik dari baterai traksi (ΔE_battery).',
+          },
+          variables: [
+            {
+              symbol: '\\eta_{\\text{TTW}}',
+              name: { en: 'Tank-to-Wheel Efficiency', id: 'Efisiensi Tank-to-Wheel' },
+              unit: 'Dimensionless (0.0 to 1.0 or %)',
+              description: {
+                en: 'Ratio of useful mechanical traction energy at wheels to total energy drawn from vehicle onboard reservoirs.',
+                id: 'Rasio energi traksi mekanis berguna di roda terhadap total energi yang diambil dari cadangan bahan bakar dan baterai kendaraan.',
+              },
+            },
+            {
+              symbol: 'E_{\\text{tractive}}',
+              name: { en: 'Delivered Tractive Energy', id: 'Energi Traksi Tersalurkan' },
+              unit: 'kJ or kWh',
+              description: {
+                en: 'Net mechanical work integrated along the vehicle trajectory overcoming road load forces.',
+                id: 'Kerja mekanis netto yang diintegralkan sepanjang rute untuk mengatasi gaya beban jalan.',
+              },
+            },
+            {
+              symbol: 'm_{\\text{fuel}}',
+              name: { en: 'Fuel Mass Consumed', id: 'Massa Bahan Bakar Terkonsumsi' },
+              unit: 'kg',
+              description: {
+                en: 'Total mass of combustible hydrocarbon liquid fuel consumed during the driving schedule.',
+                id: 'Total massa bahan bakar hidrokarbon cair yang dikonsumsi selama siklus berkendara.',
+              },
+            },
+            {
+              symbol: '\\text{LHV}_{\\text{fuel}}',
+              name: { en: 'Lower Heating Value of Fuel', id: 'Nilai Kalor Bawah Bahan Bakar' },
+              unit: 'MJ/kg (typical ~43.5 MJ/kg for gasoline)',
+              description: {
+                en: 'Specific enthalpy of combustion per unit fuel mass assuming water vapor in exhaust does not condense.',
+                id: 'Entalpi pembakaran spesifik per satuan massa bahan bakar dengan asumsi uap air hasil bakar tidak mengembun.',
+              },
+            },
+            {
+              symbol: '\\Delta E_{\\text{battery}}',
+              name: { en: 'Net Battery Energy Delta', id: 'Perubahan Energi Baterai Netto' },
+              unit: 'kWh or MJ',
+              description: {
+                en: 'Difference in battery stored electrical energy between cycle start and finish (positive if discharged, negative if charged).',
+                id: 'Selisih energi listrik tersimpan pada baterai antara awal dan akhir siklus (positif jika terkuras, negatif jika terisi).',
+              },
+            },
+          ],
+          derivationSteps: [
+            {
+              title: { en: '1. Fuel Chemical Energy Input Calculation', id: '1. Perhitungan Masukan Energi Kimia Bahan Bakar' },
+              math: 'E_{\\text{fuel}} = m_{\\text{fuel}} \\cdot \\text{LHV}_{\\text{fuel}} = \\int \\dot{m}_{\\text{fuel}}(t) \\cdot \\text{LHV} \\, dt',
+              explanation: {
+                en: 'Instantaneous fuel mass flow rate (kg/s) integrated over cycle duration multiplied by fuel lower heating value yields total chemical heat input.',
+                id: 'Laju aliran massa bahan bakar instan (kg/s) diintegrasikan terhadap durasi siklus dan dikalikan nilai kalor bawah menghasilkan total input energi kimia.',
+              },
+            },
+            {
+              title: { en: '2. Integration of Road-Load Forces to Determine Tractive Energy', id: '2. Integrasi Gaya Beban Jalan untuk Menentukan Energi Traksi' },
+              math: 'F_{\\text{total}}(t) = \\frac{1}{2} \\rho_{\\text{air}} C_d A v(t)^2 + C_{\\text{rr}} m g \\cos\\theta + m g \\sin\\theta + m \\frac{dv}{dt}',
+              explanation: {
+                en: 'Aerodynamic resistance, rolling friction, gradient gravity, and linear inertial force sum to yield instantaneous road resistance.',
+                id: 'Tahanan aerodinamika, gesekan ban, gravitasi tanjakan, dan gaya inersia percepatan dijumlahkan menghasilkan beban tahanan seketika.',
+              },
+            },
+            {
+              title: { en: '3. Braking Energy Dissipation vs. Regenerative Recovery', id: '3. Disipasi Energi Pengereman vs. Pemulihan Regeneratif' },
+              math: 'E_{\\text{brake, regen}} = \\eta_{\\text{regen}} \\cdot \\int_{a < 0} m \\left| a(t) \\right| v(t) \\, dt',
+              explanation: {
+                en: 'In conventional ICE vehicles, this integral dissipates 100% to friction heat (η_regen = 0). In hybrids, electric machines recapture 60–85% of deceleration energy back into battery chemical potential.',
+                id: 'Pada mobil ICE konvensional, integral ini 100% terbuang jadi panas (η_regen = 0). Pada hibrida, motor listrik menangkap kembali 60–85% energi deselerasi ke dalam baterai.',
+              },
+            },
+            {
+              title: { en: '4. Cycle-Averaged Tank-to-Wheel Efficiency Formulation', id: '4. Formulasi Efisiensi Tank-to-Wheel Rata-Rata Siklus' },
+              math: '\\eta_{\\text{TTW}} = \\frac{\\int F_{\\text{tractive}} v \\, dt}{E_{\\text{fuel}} + \\Delta E_{\\text{battery}}} \\implies \\eta_{\\text{hybrid}} \\approx 1.4 - 1.8 \\times \\eta_{\\text{ICE}}',
+              explanation: {
+                en: 'By eliminating idle burn and recapturing deceleration energy, hybrids increase TTW efficiency from 18–22% up to 38–48% on urban WLTP cycles.',
+                id: 'Dengan meniadakan konsumsi stasioner dan menyerap kembali energi pengereman, sistem hibrida melipatgandakan efisiensi TTW dari 18–22% menjadi 38–48% pada siklus perkotaan WLTP.',
+              },
+            },
+          ],
+          comparisonTable: {
+            headers: {
+              en: ['Powertrain Type', 'Operating Voltage', 'Battery Capacity', 'Typical TTW Efficiency', 'City Fuel Savings vs. Pure ICE', 'Pure Electric Range'],
+              id: ['Jenis Powertrain', 'Tegangan Kerja', 'Kapasitas Baterai', 'Efisiensi TTW Tipikal', 'Penghematan BBM Kota vs ICE', 'Jarak Tempuh Listrik Murni'],
+            },
+            rows: [
+              {
+                en: ['Pure ICE (Gasoline)', '12V DC', '0.05–0.08 kWh (Lead-acid)', '18%–24%', 'Baseline (0%)', '0 km (Engine must run)'],
+                id: ['ICE Murni (Bensin)', '12V DC', '0,05–0,08 kWh (Aki timbal)', '18%–24%', 'Titik Acuan (0%)', '0 km (Mesin wajib hidup)'],
+              },
+              {
+                en: ['Mild Hybrid (MHEV)', '48V DC (SELV)', '0.4–0.9 kWh (Lithium-ion)', '26%–30%', '10%–15%', '0–1 km (Sailing / coasting only)'],
+                id: ['Mild Hybrid (MHEV)', '48V DC (SELV)', '0,4–0,9 kWh (Litium-ion)', '26%–30%', '10%–15%', '0–1 km (Hanya meluncur bebas)'],
+              },
+              {
+                en: ['Full Hybrid (HEV)', '200V–650V DC', '1.2–2.1 kWh (NMC/LFP/NiMH)', '36%–42%', '35%–50%', '2–5 km (Low-speed EV crawl)'],
+                id: ['Full Hybrid (HEV)', '200V–650V DC', '1,2–2,1 kWh (NMC/LFP/NiMH)', '36%–42%', '35%–50%', '2–5 km (EV pelan dalam kota)'],
+              },
+              {
+                en: ['Plug-in Hybrid (PHEV)', '300V–400V DC', '12–25 kWh (Lithium-ion)', '45%–60% (Blended)', '60%–80% (Grid-charged)', '50–110 km (Highway EV mode)'],
+                id: ['Plug-in Hybrid (PHEV)', '300V–400V DC', '12–25 kWh (Litium-ion)', '45%–60% (Kombinasi)', '60%–80% (Dicas listrik)', '50–110 km (Mode EV jalan tol)'],
+              },
+              {
+                en: ['Extended-Range (EREV)', '350V–800V DC', '30–45 kWh (Lithium-ion)', '50%–65% (Series electric)', '70%–85% (Grid-charged)', '150–220 km (Pure series EV)'],
+                id: ['Extended-Range (EREV)', '350V–800V DC', '30–45 kWh (Litium-ion)', '50%–65% (Serial elektrik)', '70%–85% (Dicas listrik)', '150–220 km (EV serial murni)'],
+              },
+            ],
+          },
+          keyTakeaways: {
+            en: [
+              'Conventional internal combustion engines achieve dismal urban tank-to-wheel efficiency (18–24%) due to throttle pumping losses, idle fuel burn, and complete brake heat dissipation.',
+              'Electrification through hybridization directly eliminates idle fuel waste, captures deceleration kinetic energy via regenerative braking, and loads the engine at its peak thermal efficiency island.',
+              'From a raw material perspective, the "1-6-90 rule" highlights that the lithium and nickel required for one 100 kWh long-range BEV can alternatively produce 6 PHEV batteries or 90 HEV batteries, delivering vastly superior aggregate CO₂ reduction across an entire vehicle fleet.',
+            ],
+            id: [
+              'Mesin pembakaran internal konvensional menghasilkan efisiensi tank-to-wheel perkotaan yang sangat buruk (18–24%) akibat rugi pemompaan throttle, bahan bakar terbuang saat stasioner, dan pelepasan energi kinetik rem menjadi panas.',
+              'Elektrifikasi hibrida secara langsung meniadakan pemborosan stasioner, menangkap kembali energi kinetik deselerasi via pengereman regeneratif, dan memaksa mesin bekerja pada pulau efisiensi termal terbaiknya.',
+              'Dari perspektif ketersediaan bahan baku baterai, aturan "1-6-90" menunjukkan bahwa mineral litium dan nikel untuk satu mobil listrik murni 100 kWh dapat digunakan untuk memproduksi 6 baterai PHEV atau 90 baterai HEV, memotong emisi CO₂ kumulatif armada secara jauh lebih masif.',
+            ],
+          },
+        },
+        {
+          id: 'hyb-1-sec-2',
+          title: {
+            en: '2. Engineering Taxonomy: Mechanical vs. Electrical Power Coupling Across Hybrid Topologies',
+            id: '2. Taksonomi Rekayasa: Kopling Daya Mekanis vs. Elektrikal Lintas Topologi Hibrida',
+          },
+          content: {
+            en: 'To systematically evaluate hybrid electric vehicles, automotive powertrain engineers classify systems along two fundamental axes: the physical power coupling topology (Series, Parallel, Series-Parallel / Power-Split) and the quantitative Degree of Electrification (Hybridization Factor, HF):\n\n1. Energy Flow Topologies:\n• Series Hybrid: There is zero mechanical connection between the internal combustion engine and the vehicle drive wheels. The engine operates exclusively as a stationary generator set, driving an electric generator (MG1) to feed electrical current to the traction motor (MG2) and battery pack. The vehicle drives 100% on electric torque at all times. This architecture is the foundational principle of Extended-Range Electric Vehicles (EREV) and diesel-electric locomotives.\n• Parallel Hybrid: Both the combustion engine and the electric motor are mechanically coupled to the driven wheels through a common transmission or gear train. Both power sources can propel the vehicle individually or combine their torque simultaneously for maximum acceleration. Mechanical power split is typically managed via an automated disconnect clutch (K0) and step-ratio automatic or dual-clutch transmission.\n• Series-Parallel (Power-Split) Hybrid: Combines the advantages of both topologies by utilizing an epicyclic planetary gearset (e-CVT) to mechanically link the engine, generator (MG1), and drive motor (MG2). Part of the engine power is transmitted directly to the wheels through mechanical gear teeth, while the remainder is converted to electricity to either charge the battery or power MG2. This completely decouples vehicle road speed from engine rotational speed, enabling the engine to dwell continuously at its optimal BSFC operating point.\n\n2. SAE P0–P4 Electric Machine Placement Classification:\n• P0: Motor belted to the engine accessory drive (BSG/BiSG). Lowest cost, limited regeneration due to belt friction (~10–12 kW).\n• P1: Motor mounted directly on the engine crankshaft/flywheel hub. No belt slip, but cannot disconnect from engine rotating inertia.\n• P2: Motor mounted between an engine disconnect clutch (K0) and transmission input. Allows pure EV driving with engine decoupled and shut down.\n• P3: Motor mounted on transmission output shaft or differential input. Very high regenerative efficiency as it bypasses gearbox gear mesh drag.\n• P4: Motor mounted directly on the opposite non-driven axle (e-Axle), creating on-demand electronic all-wheel drive (e-AWD) without a mechanical driveshaft.',
+            id: 'Untuk mengevaluasi kendaraan hibrida secara ilmiah, para insinyur powertrain mengklasifikasikan sistem berdasarkan dua sumbu utama: topologi kopling daya fisik (Serial, Paralel, Serial-Paralel / Power-Split) serta derajat elektrifikasi kuantitatif (Faktor Hibridisasi, HF):\n\n1. Klasifikasi Topologi Aliran Energi:\n• Hibrida Serial (Series Hybrid): Sama sekali tidak ada hubungan mekanis langsung antara mesin pembakaran bensin dengan roda penggerak. Mesin beroperasi murni sebagai genset mini, memutar generator (MG1) untuk menyuplai arus listrik ke motor traksi (MG2) dan baterai. Mobil melaju 100% dengan torsi motor listrik setiap saat. Ini merupakan prinsip dasar Extended-Range Electric Vehicle (EREV) dan lokomotif diesel-elektrik.\n• Hibrida Paralel (Parallel Hybrid): Mesin bensin dan motor listrik terhubung secara mekanis ke roda melalui transmisi bersama. Keduanya dapat menggerakkan mobil secara mandiri atau memadukan torsinya secara serentak untuk akselerasi maksimal. Pembagian daya mekanis diatur melalui kopling pemutus otomatis (K0) dan transmisi otomatis bertingkat atau kopling ganda.\n• Hibrida Serial-Paralel (Power-Split): Memadukan keunggulan kedua topologi menggunakan girboks planet e-CVT yang menjembatani mesin, generator (MG1), dan motor traksi (MG2). Sebagian tenaga mesin disalurkan langsung secara mekanis ke roda, sementara sebagian lainnya diubah menjadi listrik untuk mengisi baterai atau memutar MG2. Ini memutus korelasi kaku antara kecepatan laju mobil dan RPM mesin, membiarkan mesin beroperasi stabil pada titik efisiensi puncak (BSFC minimum).\n\n2. Klasifikasi Posisi Motor Listrik SAE P0–P4:\n• P0: Motor terpasang pada sabuk aksesori mesin (BSG/BiSG). Biaya terendah, regenerasi terbatas oleh friksi sabuk (~10–12 kW).\n• P1: Motor terpasang langsung pada poros engkol / roda gila (flywheel). Bebas selip, namun tidak dapat dilepas dari inersia putar mesin.\n• P2: Motor terpasang di antara kopling pemutus mesin (K0) dan input transmisi. Mendukung pengendaraan listrik murni dengan mesin bensin mati total.\n• P3: Motor terpasang pada poros output transmisi atau diferensial. Efisiensi regenerasi sangat tinggi karena melewati gesekan girboks.\n• P4: Motor terpasang langsung pada as roda seberang (e-Axle), menghasilkan sistem penggerak semua roda elektronik (e-AWD) tanpa poros gardan tengah.',
+          },
+          formula: 'HF = \\frac{P_{\\text{EM, peak}}}{P_{\\text{EM, peak}} + P_{\\text{ICE, peak}}}, \\quad P_{\\text{wheel}}(t) = \\eta_{\\text{drivetrain}} \\cdot \\left[ \\alpha(t) \\cdot P_{\\text{ICE}} + \\beta(t) \\cdot P_{\\text{EM}} \\right]',
+          formulaExplanation: {
+            en: 'The Hybridization Factor (HF) and net instantaneous wheel power equation. HF defines the electrification fraction (from ~0.05 for 48V MHEV to ~1.0 for pure series EREV / BEV). In the wheel power equation, α(t) and β(t) represent dynamic power-split coupling coefficients dictated by the operational transmission state (pure EV, pure ICE, parallel boost, or regenerative braking).',
+            id: 'Formulasi Faktor Hibridisasi (HF) dan daya mekanis roda seketika. HF mendefinisikan proporsi elektrifikasi (mulai dari ~0,05 pada MHEV 48V hingga ~1,0 pada EREV serial murni / BEV). Pada persamaan daya roda, koefisien α(t) dan β(t) mencerminkan status kopling transmisi hibrida (EV murni, mesin bensin murni, boost paralel, atau pengereman regeneratif).',
+          },
+          variables: [
+            {
+              symbol: 'HF',
+              name: { en: 'Hybridization Factor', id: 'Faktor Hibridisasi' },
+              unit: 'Dimensionless (0.0 to 1.0)',
+              description: {
+                en: 'Ratio of maximum rated electric machine power to total combined installed powertrain power.',
+                id: 'Rasio daya puncak motor listrik terhadap total daya kombinasi seluruh sistem powertrain terpasang.',
+              },
+            },
+            {
+              symbol: 'P_{\\text{EM, peak}}',
+              name: { en: 'Peak Electric Motor Power', id: 'Daya Puncak Motor Listrik' },
+              unit: 'kW',
+              description: {
+                en: 'Combined maximum continuous or 30-second burst power output of electric traction motor(s).',
+                id: 'Daya output kontinu atau lonjakan 30 detik gabungan dari motor traksi listrik.',
+              },
+            },
+            {
+              symbol: 'P_{\\text{ICE, peak}}',
+              name: { en: 'Peak Internal Combustion Engine Power', id: 'Daya Puncak Mesin Pembakaran Internal' },
+              unit: 'kW',
+              description: {
+                en: 'Maximum rated mechanical power developed by the internal combustion engine at wide-open throttle.',
+                id: 'Daya mekanis maksimum yang dihasilkan mesin pembakaran dalam pada bukaan katup gas penuh.',
+              },
+            },
+            {
+              symbol: 'P_{\\text{wheel}}',
+              name: { en: 'Delivered Tractive Wheel Power', id: 'Daya Traksi Tersalurkan ke Roda' },
+              unit: 'kW',
+              description: {
+                en: 'Net mechanical power delivered directly at the vehicle contact patches with the road.',
+                id: 'Daya mekanis bersih yang tersalurkan langsung ke permukaan kontak ban dengan aspal.',
+              },
+            },
+            {
+              symbol: '\\alpha(t), \\beta(t)',
+              name: { en: 'Power Split State Coefficients', id: 'Koefisien Status Pembagian Daya' },
+              unit: 'Binary or Continuous scalar [0, 1]',
+              description: {
+                en: 'Engagement multipliers determined by clutch engagement states (K0) and inverter modulation vector.',
+                id: 'Pengali keterlibatan daya yang ditentukan status kopling transmisi (K0) dan modulasi inverter listrik.',
+              },
+            },
+          ],
+          derivationSteps: [
+            {
+              title: { en: '1. Definition of Installed Electrification Ratio (HF)', id: '1. Definisi Rasio Elektrifikasi Terpasang (HF)' },
+              math: 'HF = \\frac{\\sum P_{\\text{EM}}}{\\sum P_{\\text{EM}} + P_{\\text{ICE}}} \\in [0, 1]',
+              explanation: {
+                en: 'Calculates the relative electrical propulsion capability of the vehicle. Micro/Mild hybrids operate at HF < 0.15; full hybrids at 0.25–0.45; PHEVs at 0.45–0.65; pure series EREVs at HF ≈ 0.70–1.0.',
+                id: 'Menghitung kapabilitas propulsi listrik relatif kendaraan. Micro/Mild hybrid berada pada HF < 0,15; full hybrid pada 0,25–0,45; PHEV pada 0,45–0,65; dan EREV serial murni pada HF ≈ 0,70–1,0.',
+              },
+            },
+            {
+              title: { en: '2. Series Topology Tractive Power Formulation', id: '2. Formulasi Daya Traksi Topologi Serial' },
+              math: 'P_{\\text{wheel, series}} = \\eta_{\\text{motor}} \\cdot \\eta_{\\text{gear}} \\cdot P_{\\text{MG2}} = \\eta_{\\text{drive}} \\cdot \\left[ \\eta_{\\text{gen}} \\eta_{\\text{inv}} P_{\\text{ICE}} + P_{\\text{batt, dis}} \\right]',
+              explanation: {
+                en: 'In pure series architectures (EREV), all traction torque is produced by MG2. Mechanical energy from the engine suffers double-conversion losses (mechanical -> electrical -> mechanical) but enables the engine to run at fixed peak BSFC.',
+                id: 'Pada arsitektur serial murni (EREV), seluruh torsi roda berasal dari MG2. Energi mesin mengalami konversi ganda (mekanis -> listrik -> mekanis) namun membebaskan mesin beroperasi pada BSFC paling hemat.',
+              },
+            },
+            {
+              title: { en: '3. Parallel Topology Torque Summation Formulation', id: '3. Formulasi Penjumlahan Torsi Topologi Paralel' },
+              math: 'T_{\\text{wheel, parallel}} = i_{\\text{gear}} \\cdot i_{\\text{final}} \\cdot \\left[ u_{\\text{K0}} \\cdot T_{\\text{ICE}}(\\omega_{\\text{in}}) + T_{\\text{EM}}(\\omega_{\\text{in}}) \\right]',
+              explanation: {
+                en: 'Torques from the engine and electric motor add directly onto the transmission input shaft, bypassing double conversion losses during high-speed highway cruising.',
+                id: 'Torsi dari mesin bensin dan motor listrik dijumlahkan langsung pada poros transmisi, menghindari rugi konversi listrik ganda saat melaju di jalan tol.',
+              },
+            },
+            {
+              title: { en: '4. Series-Parallel Planetary Power Split Synthesis', id: '4. Sintesis Pembagian Daya Planet e-CVT Serial-Paralel' },
+              math: 'P_{\\text{wheel, split}} = \\underbrace{\\frac{\\rho}{1 + \\rho} P_{\\text{ICE}}}_{\\text{Direct Mechanical Path}} + \\underbrace{\\eta_{\\text{elec}} \\left[ \\frac{1}{1 + \\rho} P_{\\text{ICE}} + P_{\\text{batt}} \\right]}_{\\text{Electrical Variator Path}}',
+              explanation: {
+                en: 'The epicyclic sun-carrier-ring gear divides engine power into an instantaneous direct mechanical branch and an electrical branch, dynamically optimizing overall powertrain efficiency.',
+                id: 'Roda gigi planet (sun-carrier-ring) membagi daya mesin menjadi jalur mekanis langsung dan jalur variator elektrik, secara dinamis memaksimalkan efisiensi keseluruhan.',
+              },
+            },
+          ],
+          comparisonTable: {
+            headers: {
+              en: ['Topology', 'Engine-to-Wheel Link', 'Motor Function', 'Clutch / Gearbox Needs', 'Primary Thermodynamic Advantage'],
+              id: ['Topologi', 'Hubungan Mesin ke Roda', 'Fungsi Motor Listrik', 'Kebutuhan Kopling / Girboks', 'Keunggulan Termodinamika Utama'],
+            },
+            rows: [
+              {
+                en: ['Series (EREV)', 'None (100% Decoupled)', 'Sole traction source (MG2) + dedicated generator (MG1)', 'Single-speed reduction gear, zero shift clutches', 'Engine operates continuously at single optimal BSFC sweet spot'],
+                id: ['Serial (EREV)', 'Tidak Ada (Terputus 100%)', 'Penggerak utama tunggal (MG2) + generator khusus (MG1)', 'Gigi reduksi tunggal tanpa kopling transmisi bertingkat', 'Mesin beroperasi konstan pada titik efisiensi BSFC terbaik'],
+              },
+              {
+                en: ['Parallel (P2 PHEV)', 'Direct mechanical link via K0 clutch', 'Boost assist, pure EV driving, and regenerative braking', 'Multi-speed AT/DCT with automated disconnect clutch (K0)', 'Zero double-conversion electrical losses during steady highway cruise'],
+                id: ['Paralel (P2 PHEV)', 'Koneksi mekanis langsung via kopling K0', 'Asistensi boost, pengendaraan EV murni, dan rem regeneratif', 'Transmisi AT/DCT multi-rasio dengan kopling pemutus K0', 'Bebas kerugian konversi listrik ganda saat kecepatan tinggi di jalan tol'],
+              },
+              {
+                en: ['Series-Parallel (HEV e-CVT)', 'Split epicyclic planetary gearing', 'MG1 acts as reaction generator; MG2 drives wheels & regens', 'Planetary gearset (sun, carrier, ring), no friction bands/belts', 'Continuous stepless speed decoupling allows peak engine efficiency'],
+                id: ['Serial-Paralel (HEV e-CVT)', 'Terbagi via roda gigi planet episiklik', 'MG1 sebagai generator reaksi; MG2 penggerak & regenerasi', 'Satu set roda gigi planet tanpa sabuk/kopling friksi gesek', 'Pemisahan putaran rasio kontinu membiarkan mesin di efisiensi puncak'],
+              },
+            ],
+          },
+          keyTakeaways: {
+            en: [
+              'The Hybridization Factor (HF) provides a rigorous mathematical metric for classifying powertrains from mild assist (HF ~ 0.1) to pure series range extenders (HF ~ 1.0).',
+              'Series hybrids completely uncouple the internal combustion engine from road speed variations, operating the engine as a stationary generator at minimum BSFC.',
+              'Series-parallel power-split architectures leverage planetary kinematics to balance direct mechanical torque transmission with electrical speed decoupling, maximizing efficiency across diverse city and highway cycles.',
+            ],
+            id: [
+              'Faktor Hibridisasi (HF) memberikan tolok ukur matematis yang ketat untuk mengklasifikasikan powertrain mulai dari mild hybrid (HF ~ 0,1) hingga EREV serial murni (HF ~ 1,0).',
+              'Sistem hibrida serial memutus total keterkaitan antara putaran mesin bensin dan kecepatan laju mobil, mengoperasikan mesin sebagai genset stasioner pada konsumsi BBM spesifik (BSFC) terendah.',
+              'Arsitektur serial-paralel power-split memanfaatkan kinematika roda gigi planet untuk menyeimbangkan penyaluran torsi mekanis langsung dengan variasi kecepatan elektrik, meraih efisiensi puncak di segala siklus.',
+            ],
+          },
+        },
+      ],
+      quiz: [
+        {
+          id: 'hyb-q1-1',
+          question: {
+            en: 'Which dimensionless parameter quantitatively defines the degree of powertrain electrification, and what fundamentally distinguishes a series hybrid from a parallel hybrid architecture?',
+            id: 'Parameter tanpa dimensi manakah yang secara kuantitatif mendefinisikan tingkat elektrifikasi powertrain, dan apa perbedaan mendasar antara arsitektur hibrida serial dan paralel?',
+          },
+          options: {
+            en: [
+              'The Hybridization Factor (HF = P_EM / [P_EM + P_ICE]); in a series hybrid, the internal combustion engine has zero mechanical connection to the drive wheels, whereas in a parallel hybrid, both the engine and motor can deliver mechanical torque to the wheels simultaneously.',
+              'The Brake Specific Fuel Consumption (BSFC); in a series hybrid, the engine is rigidly bolted to the transmission input shaft, while in a parallel hybrid, the engine only drives an alternator.',
+              'The Volumetric Compression Ratio; in a series hybrid, the electric motor is mounted on the front accessory belt (P0), whereas in a parallel hybrid, the motor is mounted inside the battery pack.',
+              'The Pulsatility Index; in a series hybrid, the vehicle must be plugged into a high-voltage AC wallbox, whereas parallel hybrids can only charge through lead-acid alternator circuits.',
+            ],
+            id: [
+              'Faktor Hibridisasi (HF = P_EM / [P_EM + P_ICE]); pada hibrida serial, mesin bensin sama sekali tidak memiliki hubungan mekanis ke roda penggerak, sedangkan pada hibrida paralel, mesin dan motor listrik dapat menyalurkan torsi mekanis ke roda secara bersamaan.',
+              'Brake Specific Fuel Consumption (BSFC); pada hibrida serial, mesin dibaut kaku ke poros transmisi roda, sedangkan pada hibrida paralel, mesin hanya memutar alternator 12V.',
+              'Rasio Kompresi Volumetrik; pada hibrida serial, motor listrik dipasang pada sabuk aksesori (P0), sedangkan pada hibrida paralel motor diletakkan di dalam modul baterai.',
+              'Indeks Pulsatilitas; pada hibrida serial mobil wajib dicolok ke charger AC eksternal, sedangkan hibrida paralel hanya mengisi daya via aki timbal-asam.',
+            ],
+          },
+          correctAnswerIndex: 0,
+          explanation: {
+            en: 'The Hybridization Factor (HF) is defined as the ratio of peak electric motor power to total installed power (P_EM / [P_EM + P_ICE]). In a series architecture (such as an EREV), the internal combustion engine is completely mechanically decoupled from the road wheels and operates strictly as a generator feeding electrical current to the traction battery and drive motor. In contrast, parallel architectures allow direct mechanical torque contribution from both the engine and electric motor to the driven wheels.',
+            id: 'Faktor Hibridisasi (HF) didefinisikan sebagai rasio daya puncak motor listrik terhadap total daya terpasang (P_EM / [P_EM + P_ICE]). Pada arsitektur serial (seperti EREV), mesin bensin terputus secara mekanis dari roda jalan dan bekerja murni sebagai generator penyuplai arus ke baterai dan motor listrik traksi. Sebaliknya, arsitektur paralel memungkinkan penyaluran torsi mekanis langsung secara simultan dari mesin bensin dan motor listrik ke roda penggerak.',
+          },
+        },
+        {
+          id: 'hyb-q1-2',
+          question: {
+            en: 'Why does conventional stop-and-go urban driving cause severe thermal efficiency degradation in pure internal combustion engine (ICE) vehicles compared to hybrid electric vehicles?',
+            id: 'Mengapa kondisi lalu lintas stop-and-go perkotaan menyebabkan penurunan efisiensi termal yang sangat parah pada mobil mesin bensin murni (ICE) dibandingkan mobil listrik hibrida?',
+          },
+          options: {
+            en: [
+              'Because urban driving produces excessive catalytic converter backpressure that chokes the intake manifold valves.',
+              'Because pure ICE vehicles continuously burn fuel during idle at zero speed, suffer severe intake throttling pumping losses at light partial loads, and dissipate 100% of deceleration kinetic energy as friction heat instead of capturing it through regenerative braking.',
+              'Because stop-and-go driving reduces ambient air density around the radiator, causing the combustion chambers to overcool and misfire.',
+              'Because modern tires experience zero rolling resistance at speeds below 30 km/h, which confuses the engine electronic control unit.',
+            ],
+            id: [
+              'Karena kondisi perkotaan memicu tekanan balik berlebih pada konverter katalitik yang menyumbat katup intake manifold.',
+              'Karena mobil ICE murni terus membakar bensin saat berhenti (stasioner) pada kecepatan nol, mengalami rugi pemompaan intake akibat katup throttle pada beban rendah, serta membuang 100% energi kinetik pengereman menjadi panas alih-alih menyerapnya via rem regeneratif.',
+              'Karena berkendara stop-and-go menurunkan kerapatan udara di sekitar radiator sehingga ruang bakar terlalu dingin dan gagal membakar bensin.',
+              'Karena ban modern tidak memiliki hambatan gelinding di bawah 30 km/jam sehingga membingungkan unit kendali mesin (ECU).',
+            ],
+          },
+          correctAnswerIndex: 1,
+          explanation: {
+            en: 'Conventional ICE vehicles suffer from three major urban thermodynamic penalties: (1) fuel burn during vehicle standstill (idling with 0 km/L economy), (2) high throttling pumping work across the intake butterfly valve at low load (10–25% torque), which drops engine thermal efficiency from ~38% down to 18–22%, and (3) complete dissipation of vehicle kinetic energy as useless friction heat in the brake pads. Hybrids eliminate idle fuel burn, operate the engine at optimal load, and recapture kinetic energy via regenerative braking.',
+            id: 'Mobil bensin konvensional menderita tiga kerugian termodinamika besar di perkotaan: (1) pemborosan bahan bakar saat berhenti (idling dengan konsumsi 0 km/L), (2) kerugian pemompaan throttle intake yang tinggi pada beban parsial rendah (10–25% torsi) yang menjatuhkan efisiensi termal dari ~38% menjadi 18–22%, serta (3) pelepasan total energi kinetik kendaraan menjadi panas gesekan kampas rem. Sistem hibrida mengeliminasi bahan bakar stasioner, menjaga mesin pada beban optimum, dan memulihkan energi kinetik via pengereman regeneratif.',
+          },
+        },
+      ],
+    },
+
+    // -------------------------------------------------------------
+    // PART 2: MILD HYBRID ELECTRIC VEHICLES (MHEV) & 48V ARCHITECTURE
+    // -------------------------------------------------------------
+    {
+      id: 'hyb-mod-2',
+      topicId: 'hybrid-vehicles',
+      order: 2,
       title: {
         en: 'Mild Hybrid (MHEV) & 48V Starter-Generator Electrification',
         id: 'Mild Hybrid (MHEV) & Elektrifikasi Starter-Generator 48V',
@@ -43,7 +386,7 @@ export const hybridVehiclesTopic: Topic = {
       interactiveType: 'hybrid-powertrain',
       sections: [
         {
-          id: 'hyb-1-sec-1',
+          id: 'hyb-2-sec-1',
           title: {
             en: '1. The 48-Volt Dual-Voltage Electrical Bus Architecture',
             id: '1. Arsitektur Bus Listrik Tegangan Ganda 48-Volt',
@@ -147,7 +490,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-1-sec-2',
+          id: 'hyb-2-sec-2',
           title: {
             en: '2. Crankshaft Torque Assist, Turbo-Lag Compensation & Start-Stop NVH',
             id: '2. Asistensi Torsi Kruk As, Kompensasi Turbo-Lag & NVH Start-Stop',
@@ -242,7 +585,7 @@ export const hybridVehiclesTopic: Topic = {
       ],
       quiz: [
         {
-          id: 'hyb-q1-1',
+          id: 'hyb-q2-1',
           question: {
             en: 'Why do Mild Hybrid Electric Vehicles (MHEVs) utilize a 48-volt electrical bus instead of high-voltage systems (200V–800V)?',
             id: 'Mengapa kendaraan Mild Hybrid (MHEV) menggunakan jaringan kelistrikan 48-volt dan bukan sistem tegangan tinggi (200V–800V)?',
@@ -268,7 +611,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-q1-2',
+          id: 'hyb-q2-2',
           question: {
             en: 'What is the primary operational difference between a P0 and a P2 Mild Hybrid configuration?',
             id: 'Apakah perbedaan operasional utama antara konfigurasi Mild Hybrid P0 dan P2?',
@@ -297,12 +640,12 @@ export const hybridVehiclesTopic: Topic = {
     },
 
     // -------------------------------------------------------------
-    // PART 2: FULL HYBRID ELECTRIC VEHICLES (HEV) & PLANETARY POWER-SPLIT
+    // PART 3: FULL HYBRID ELECTRIC VEHICLES (HEV) & PLANETARY POWER-SPLIT
     // -------------------------------------------------------------
     {
-      id: 'hyb-mod-2',
+      id: 'hyb-mod-3',
       topicId: 'hybrid-vehicles',
-      order: 2,
+      order: 3,
       title: {
         en: 'Full Hybrid (HEV) & Planetary Power-Split e-CVT Dynamics',
         id: 'Full Hybrid (HEV) & Dinamika Power-Split Roda Gigi Planet e-CVT',
@@ -317,7 +660,7 @@ export const hybridVehiclesTopic: Topic = {
       interactiveType: 'hybrid-powertrain',
       sections: [
         {
-          id: 'hyb-2-sec-1',
+          id: 'hyb-3-sec-1',
           title: {
             en: '1. Epicyclic Planetary Gear Train Kinematics and the e-CVT Concept',
             id: '1. Kinematika Roda Gigi Planet Episiklik & Konsep e-CVT',
@@ -398,7 +741,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-2-sec-2',
+          id: 'hyb-3-sec-2',
           title: {
             en: '2. The Atkinson / Miller Combustion Cycle and Thermal Efficiency Gains',
             id: '2. Siklus Pembakaran Atkinson / Miller & Peningkatan Efisiensi Termal',
@@ -493,7 +836,7 @@ export const hybridVehiclesTopic: Topic = {
       ],
       quiz: [
         {
-          id: 'hyb-q2-1',
+          id: 'hyb-q3-1',
           question: {
             en: 'In a Series-Parallel planetary gear power-split hybrid transmission (e-CVT), which component is mechanically coupled to the Planet Carrier?',
             id: 'Pada transmisi hybrid power-split roda gigi planet (e-CVT), komponen apakah yang terhubung langsung secara mekanis ke Planet Carrier?',
@@ -519,7 +862,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-q2-2',
+          id: 'hyb-q3-2',
           question: {
             en: 'How does an Atkinson-cycle engine achieve a thermal efficiency exceeding 40% compared to a conventional Otto-cycle engine?',
             id: 'Bagaimana mesin bersiklus Atkinson mampu mencapai efisiensi termal melampaui 40% dibandingkan mesin siklus Otto konvensional?',
@@ -548,12 +891,12 @@ export const hybridVehiclesTopic: Topic = {
     },
 
     // -------------------------------------------------------------
-    // PART 3: PLUG-IN HYBRID ELECTRIC VEHICLES (PHEV) & MULTI-CLUTCH TOPOLOGIES
+    // PART 4: PLUG-IN HYBRID ELECTRIC VEHICLES (PHEV) & MULTI-CLUTCH TOPOLOGIES
     // -------------------------------------------------------------
     {
-      id: 'hyb-mod-3',
+      id: 'hyb-mod-4',
       topicId: 'hybrid-vehicles',
-      order: 3,
+      order: 4,
       title: {
         en: 'Plug-in Hybrid (PHEV) & Multi-Clutch Parallel Electrification',
         id: 'Plug-in Hybrid (PHEV) & Elektrifikasi Paralel Multi-Kopling',
@@ -568,7 +911,7 @@ export const hybridVehiclesTopic: Topic = {
       interactiveType: 'hybrid-powertrain',
       sections: [
         {
-          id: 'hyb-3-sec-1',
+          id: 'hyb-4-sec-1',
           title: {
             en: '1. High-Voltage Pack Sizing & P0–P4 Drivetrain Integration Architectures',
             id: '1. Kapasitas Baterai Tegangan Tinggi & Arsitektur Drivetrain P0–P4',
@@ -649,7 +992,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-3-sec-2',
+          id: 'hyb-4-sec-2',
           title: {
             en: '2. Energy Management: Charge-Depleting (CD) vs Charge-Sustaining (CS) & ECMS',
             id: '2. Manajemen Energi: Charge-Depleting (CD) vs Charge-Sustaining (CS) & ECMS',
@@ -753,7 +1096,7 @@ export const hybridVehiclesTopic: Topic = {
       ],
       quiz: [
         {
-          id: 'hyb-q3-1',
+          id: 'hyb-q4-1',
           question: {
             en: 'What is the role of the K0 disconnect clutch in a P2 Plug-in Hybrid (PHEV) architecture?',
             id: 'Apakah peran utama kopling pemutus K0 pada arsitektur Plug-in Hybrid (PHEV) posisi P2?',
@@ -779,7 +1122,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-q3-2',
+          id: 'hyb-q4-2',
           question: {
             en: 'In PHEV energy management, what defines the transition from Charge-Depleting (CD) to Charge-Sustaining (CS) mode?',
             id: 'Pada manajemen energi PHEV, hal apakah yang menandai transisi dari mode Charge-Depleting (CD) ke Charge-Sustaining (CS)?',
@@ -808,12 +1151,12 @@ export const hybridVehiclesTopic: Topic = {
     },
 
     // -------------------------------------------------------------
-    // PART 4: EXTENDED-RANGE ELECTRIC VEHICLES (EREV) & SERIES POWERTRAINS
+    // PART 5: EXTENDED-RANGE ELECTRIC VEHICLES (EREV) & SERIES POWERTRAINS
     // -------------------------------------------------------------
     {
-      id: 'hyb-mod-4',
+      id: 'hyb-mod-5',
       topicId: 'hybrid-vehicles',
-      order: 4,
+      order: 5,
       title: {
         en: 'Extended-Range EV (EREV) & Pure Series Powertrain Systems',
         id: 'Extended-Range EV (EREV) & Sistem Powertrain Seri Murni',
@@ -828,7 +1171,7 @@ export const hybridVehiclesTopic: Topic = {
       interactiveType: 'hybrid-powertrain',
       sections: [
         {
-          id: 'hyb-4-sec-1',
+          id: 'hyb-5-sec-1',
           title: {
             en: '1. The Decoupled Pure Series Architecture and Stationary Engine Operation',
             id: '1. Arsitektur Seri Murni Terisolasi & Pengoperasian Mesin Stasioner',
@@ -917,10 +1260,10 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-4-sec-2',
+          id: 'hyb-5-sec-2',
           title: {
-            en: '2. Comparative Thermodynamic Efficiency Analysis Across All Hybrid Taxonomies',
-            id: '2. Analisis Efisiensi Termodinamika Komparatif Seluruh Taksonomi Hibrida',
+            en: '2. Cascading Electrical Conversion Losses & Highway Cruising Energetics',
+            id: '2. Kerugian Konversi Listrik Beruntun & Energetika Jelajah Jalan Tol',
           },
           content: {
             en: 'To understand when each hybrid architecture excels, engineers analyze the "well-to-wheel" and "tank-to-wheel" energy conversion efficiency chains:\n\n1. Conversion Penalty in Series Topologies: In an EREV, energy undergoes multiple conversion steps: Chemical Fuel → Mechanical Crankshaft Work ($\\eta_{\\text{ICE}} \\approx 41\\%$) → Electric Generator ($\\eta_{\\text{gen}} \\approx 95\\%$) → Inverter Rectification ($\\eta_{\\text{inv}} \\approx 98\\%$) → Battery Charge/Discharge ($\\eta_{\\text{batt}} \\approx 95\\%$) → Traction Inverter ($\\eta_{\\text{inv}} \\approx 98\\%$) → Electric Traction Motor ($\\eta_{\\text{motor}} \\approx 96\\%$) → Final Reduction Gear ($\\eta_{\\text{gear}} \\approx 98\\%$). Multiplying these yields a net tank-to-wheel efficiency of ~32%. At steady 130 km/h highway cruising, a direct-mechanical-drive parallel HEV or PHEV can actually be 5–10% more fuel-efficient than an EREV because mechanical gears have a 97–98% direct transmission efficiency without cascading electrical conversion losses!\n2. The City Driving Paradigm: In congested urban environments, the EREV and PHEV overwhelmingly outperform conventional cars and MHEVs. Constant deceleration recaptures up to 70% of vehicle kinetic energy through regenerative braking, zero fuel is burned while stopped, and the engine rarely needs to fire.\n3. The Decarbonization Continuum: Automotive powertrains form an evolutionary continuum toward zero carbon: ICE (100% fossil, ~25% efficiency) → MHEV (~12% CO2 reduction) → HEV (~35% CO2 reduction) → PHEV/EREV (>70% fossil displacement via grid charging) → BEV (100% electrified, >85% tank-to-wheel efficiency, zero tailpipe emissions).',
@@ -1021,7 +1364,7 @@ export const hybridVehiclesTopic: Topic = {
       ],
       quiz: [
         {
-          id: 'hyb-q4-1',
+          id: 'hyb-q5-1',
           question: {
             en: 'In an Extended-Range Electric Vehicle (EREV), how is mechanical torque from the internal combustion engine delivered to the road wheels?',
             id: 'Pada Extended-Range Electric Vehicle (EREV), bagaimanakah torsi mekanis dari mesin pembakaran internal disalurkan ke roda kendaraan?',
@@ -1047,7 +1390,7 @@ export const hybridVehiclesTopic: Topic = {
           },
         },
         {
-          id: 'hyb-q4-2',
+          id: 'hyb-q5-2',
           question: {
             en: 'Why is an internal combustion engine inside an EREV capable of achieving lower emissions and higher fuel efficiency than the same engine in a conventional non-hybrid vehicle?',
             id: 'Mengapa mesin pembakaran internal pada EREV mampu menghasilkan emisi lebih rendah dan efisiensi bahan bakar lebih tinggi daripada mesin serupa di mobil konvensional?',

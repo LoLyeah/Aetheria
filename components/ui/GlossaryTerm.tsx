@@ -325,7 +325,7 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
                   </div>
 
                   {termData.symbol && (
-                    <div className="py-1 px-2 rounded-lg bg-slate-950 text-cyan-300 text-xs font-serif inline-block border border-slate-800">
+                    <div className="py-1 px-2 rounded-lg bg-slate-950 text-cyan-300 text-xs font-serif inline-block border border-slate-800 overflow-hidden">
                       <MathFormula formula={termData.symbol} displayMode={false} />
                     </div>
                   )}

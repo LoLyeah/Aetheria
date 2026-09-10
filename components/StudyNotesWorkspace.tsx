@@ -103,6 +103,8 @@ const FORMULA_SNIPPETS: FormulaSnippet[] = [
   { label: 'Lotka-Volterra', latex: '\\frac{dN}{dt} = rN - aNP', display: 'dN/dt = rN - aNP', discipline: 'ecology' },
   { label: 'Redfield Ratio', latex: '106\\text{C} : 16\\text{N} : 1\\text{P}', display: '106C : 16N : 1P', discipline: 'ecology' },
   // Hybrid Vehicles & Powertrains
+  { label: 'Hybridization Factor', latex: 'HF = \\frac{P_{\\text{EM}}}{P_{\\text{EM}} + P_{\\text{ICE}}}', display: 'HF', discipline: 'hybrid' },
+  { label: 'Tank-to-Wheel Eff', latex: '\\eta_{\\text{TTW}} = \\frac{E_{\\text{tractive}}}{E_{\\text{fuel}} + E_{\\text{elec}}}', display: '\\eta_{TTW}', discipline: 'hybrid' },
   { label: 'Willis Epicyclic Eq', latex: '\\omega_c(1 + \\rho) = \\omega_s + \\rho \\omega_r', display: '\\omega_{eCVT}', discipline: 'hybrid' },
   { label: 'Planetary Torque Split', latex: 'T_r = \\frac{\\rho}{1 + \\rho} T_{\\text{ICE}}', display: 'T_{split}', discipline: 'hybrid' },
   { label: 'ECMS Hamiltonian', latex: 'H = \\dot{m}_{\\text{fuel}} + s(t) \\cdot \\frac{P_{\\text{batt}}}{\\text{LHV}}', display: 'H_{ECMS}', discipline: 'hybrid' },

@@ -1154,7 +1154,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['rumus stefan'],
     },
     category: 'ecology',
-    symbol: 'D = √[(2 k_t DDT) / (ρ L)]',
+    symbol: 'D = \\sqrt{\\frac{2 k_t \\cdot \\text{DDT}}{\\rho L}}',
     definition: {
       en: 'A thermodynamic heat-transfer formulation calculating the maximum depth D of active-layer thaw as a function of thermal conductivity, Thawing Degree Days (DDT), and latent heat of fusion.',
       id: 'Formulasi perpindahan panas termodinamika yang menghitung kedalaman maksimum D pencairan lapisan aktif sebagai fungsi konduktivitas termal, Thawing Degree Days (DDT), dan kalor laten fusi.',
@@ -1474,7 +1474,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['hukum 10% lindeman'],
     },
     category: 'ecology',
-    symbol: 'λ_n = P_n / P_(n-1) ≈ 10%',
+    symbol: '\\lambda_n = \\frac{P_n}{P_{n-1}} \\approx 10\\%',
     definition: {
       en: 'The proportion of energy transferred from one trophic level to the next, averaging approximately 10% due to non-consumed biomass, egestion, and metabolic cellular respiration heat dissipation.',
       id: 'Proporsi energi yang ditransfer dari satu tingkat trofik ke tingkat berikutnya, rata-rata bernilai sekitar 10% akibat biomassa tak termakan, egesti, dan disipasi panas respirasi seluler.',
@@ -1542,7 +1542,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['full hybrid', 'hibrida penuh', 'HEV'],
     },
     category: 'hybrid',
-    symbol: 'HEV (200V–300V)',
+    symbol: '\\text{HEV } (200\\text{V}-300\\text{V})',
     pronunciation: '/fʊl ˈhaɪ.brɪd/',
     definition: {
       en: 'A high-voltage hybrid vehicle that integrates an internal combustion engine (often Atkinson cycle), two electric motor-generators, and a 1.3–2.0 kWh battery via a planetary power-split transmission (e-CVT). It can propel the vehicle in pure EV stealth mode at low speeds and captures substantial regenerative braking energy without external plug-in charging.',
@@ -1565,7 +1565,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['plug-in hybrid', 'hibrida colok', 'PHEV'],
     },
     category: 'hybrid',
-    symbol: 'PHEV (350V–400V)',
+    symbol: '\\text{PHEV } (350\\text{V}-400\\text{V})',
     pronunciation: '/plʌɡ ɪn ˈhaɪ.brɪd/',
     definition: {
       en: 'A hybrid vehicle equipped with a high-capacity traction battery (12–25 kWh) that can be recharged from an external electrical grid outlet. It operates in pure electric Charge-Depleting (CD) mode for 50–100 km before switching to hybrid Charge-Sustaining (CS) mode.',
@@ -1726,7 +1726,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['mode CD', 'charge depleting'],
     },
     category: 'hybrid',
-    symbol: 'CD Mode (SoC 100% → 20%)',
+    symbol: '\\text{CD Mode (SoC } 100\\% \\to 20\\%\\text{)}',
     pronunciation: '/tʃɑːrdʒ dɪˈpliː.tɪŋ/',
     definition: {
       en: 'The operational state of a Plug-in Hybrid or EREV wherein vehicle propulsion is supplied primarily or exclusively by grid-charged electricity from the high-voltage battery, allowing the battery State of Charge to systematically decline.',
@@ -1749,7 +1749,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['mode CS', 'charge sustaining'],
     },
     category: 'hybrid',
-    symbol: 'CS Mode (SoC ≈ const)',
+    symbol: '\\text{CS Mode (SoC } \\approx \\text{const)}',
     pronunciation: '/tʃɑːrdʒ səˈsteɪ.nɪŋ/',
     definition: {
       en: 'The operational state of a PHEV or EREV entered once the high-voltage battery has been depleted to its reserve buffer. The powertrain operates as a conventional full hybrid, dynamically balancing engine power and regenerative braking to maintain battery SoC within a stable equilibrium band.',
@@ -1772,7 +1772,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['ECMS', 'strategi konsumsi ekuivalen'],
     },
     category: 'hybrid',
-    symbol: 'H = ṁ_fuel + s(t) · P_batt / LHV',
+    symbol: 'H = \\dot{m}_{\\text{fuel}} + s(t) \\cdot \\frac{P_{\\text{batt}}}{\\text{LHV}}',
     pronunciation: '/iː siː ɛm ɛs/',
     definition: {
       en: 'A real-time energy management optimization algorithm that converts battery electrical power consumption into an equivalent instantaneous fuel mass flow rate via an equivalence factor s(t). By minimizing the resulting Hamiltonian at each control timestep, it calculates the optimal power split between engine and battery.',
@@ -1795,7 +1795,7 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: ['BSFC', 'konsumsi bahan bakar spesifik'],
     },
     category: 'hybrid',
-    symbol: 'BSFC = ṁ_fuel / P_mech [g/kWh]',
+    symbol: '\\text{BSFC} = \\frac{\\dot{m}_{\\text{fuel}}}{P_{\\text{mech}}} \\quad [\\text{g/kWh}]',
     pronunciation: '/biː ɛs ɛf siː/',
     definition: {
       en: 'A measure of the fuel efficiency of any combustion engine, calculated as the fuel mass flow rate consumed per unit of mechanical shaft power output (measured in grams of fuel per kilowatt-hour, g/kWh). Lower values denote higher thermodynamic efficiency.',
@@ -1850,6 +1850,98 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
     context: {
       en: 'Dramatically improves vehicle traction on wet or icy roads while reducing vehicle curb weight by eliminating mechanical AWD hardware.',
       id: 'Meningkatkan traksi kendaraan secara signifikan di jalan licin atau bersalju sekaligus memangkas bobot kendaraan dengan meniadakan perangkat mekanis 4WD konvensional.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'hybridization-factor',
+    term: {
+      en: 'Hybridization Factor (HF)',
+      id: 'Faktor Hibridisasi (HF)',
+    },
+    aliases: {
+      en: ['hybridization factor', 'degree of electrification', 'electrification factor'],
+      id: ['faktor hibridisasi', 'tingkat elektrifikasi'],
+    },
+    category: 'hybrid',
+    symbol: 'HF = P_{\\text{EM}} / (P_{\\text{EM}} + P_{\\text{ICE}})',
+    pronunciation: '/ˌhaɪ.brɪ.daɪˈzeɪ.ʃən ˈfæk.tər/',
+    definition: {
+      en: 'The mathematical ratio of peak electric motor power to total installed powertrain power (internal combustion engine plus electric motors). Quantifies the degree of vehicular electrification from micro hybrids (~0.05) to pure series range extenders (~1.0).',
+      id: 'Rasio matematis antara tenaga puncak motor listrik terhadap total tenaga terpasang powertrain (mesin pembakaran dalam ditambah motor listrik). Mengukur tingkat elektrifikasi kendaraan dari mikro hibrida (~0,05) hingga perpanjangan jarak serial murni (~1,0).',
+    },
+    context: {
+      en: 'A foundational benchmark metric used by automotive powertrain engineers to categorize hybrid system capabilities, regenerative brake limits, and battery sizing requirements.',
+      id: 'Metrik acuan fundamental yang digunakan insinyur otomotif untuk mengklasifikasikan kapabilitas sistem hibrida, batas pengereman regeneratif, dan kapasitas baterai.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'tank-to-wheel',
+    term: {
+      en: 'Tank-to-Wheel (TTW) Efficiency',
+      id: 'Efisiensi Tank-to-Wheel (TTW)',
+    },
+    aliases: {
+      en: ['tank-to-wheel', 'TTW efficiency', 'tank to wheel'],
+      id: ['tank-to-wheel', 'efisiensi tank-to-wheel'],
+    },
+    category: 'hybrid',
+    symbol: '\\eta_{\\text{TTW}} = E_{\\text{tractive}} / E_{\\text{in}}',
+    pronunciation: '/tæŋk tuː wiːl/',
+    definition: {
+      en: 'The ratio of net mechanical tractive energy delivered at the vehicle road wheels to the total chemical and electrical energy drawn from the fuel tank and battery pack during a drive cycle.',
+      id: 'Rasio antara energi traksi mekanis netto yang tersalurkan ke roda kendaraan terhadap total energi kimia dan listrik yang dikonsumsi dari tangki bahan bakar dan baterai selama siklus berkendara.',
+    },
+    context: {
+      en: 'Pure ICE vehicles achieve only 20–30% TTW efficiency in city driving due to idling and brake losses, whereas full hybrids and PHEVs exceed 40–50% TTW efficiency.',
+      id: 'Mobil bensin konvensional hanya mencapai efisiensi TTW 20–30% di perkotaan akibat stasioner dan rugi pengereman, sedangkan mobil hybrid penuh dan PHEV melampaui efisiensi 40–50% TTW.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'series-hybrid',
+    term: {
+      en: 'Series Hybrid Architecture',
+      id: 'Arsitektur Hibrida Serial',
+    },
+    aliases: {
+      en: ['series hybrid', 'series powertrain', 'series architecture'],
+      id: ['hibrida serial', 'arsitektur serial'],
+    },
+    category: 'hybrid',
+    symbol: 'P_{\\text{ICE}} \\to \\text{Gen} \\to \\text{Motor}',
+    pronunciation: '/ˈsɪə.riːz ˈhaɪ.brɪd/',
+    definition: {
+      en: 'A hybrid powertrain topology where the internal combustion engine is completely mechanically decoupled from the drive wheels, driving solely an electric generator that feeds the traction battery and electric drive motor.',
+      id: 'Topologi powertrain hibrida di mana mesin bensin terputus secara mekanis dari roda penggerak, hanya memutar generator listrik untuk menyuplai baterai traksi dan motor penggerak.',
+    },
+    context: {
+      en: 'Found in Extended-Range Electric Vehicles (EREV), allowing the combustion engine to operate continuously at its single most efficient BSFC plateau regardless of vehicle road speed.',
+      id: 'Ditemukan pada Extended-Range Electric Vehicles (EREV), memungkinkan mesin beroperasi stabil pada titik efisiensi BSFC tertingginya tanpa terpengaruh kecepatan mobil.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'parallel-hybrid',
+    term: {
+      en: 'Parallel Hybrid Architecture',
+      id: 'Arsitektur Hibrida Paralel',
+    },
+    aliases: {
+      en: ['parallel hybrid', 'parallel powertrain', 'parallel architecture'],
+      id: ['hibrida paralel', 'arsitektur paralel'],
+    },
+    category: 'hybrid',
+    symbol: '(P_{\\text{ICE}} + P_{\\text{EM}}) \\to \\text{Wheel}',
+    pronunciation: '/ˈpær.ə.lel ˈhaɪ.brɪd/',
+    definition: {
+      en: 'A hybrid powertrain topology where both the internal combustion engine and the electric motor are mechanically linked to the drive wheels, allowing either or both to deliver tractive torque simultaneously.',
+      id: 'Topologi powertrain hibrida di mana mesin pembakaran internal dan motor listrik terhubung secara mekanis ke roda penggerak, memungkinkan salah satu atau keduanya menyalurkan torsi traksi secara bersamaan.',
+    },
+    context: {
+      en: 'Commonly realized through P2 configurations with an engine disconnect clutch (K0), providing high acceleration boost and highway cruising efficiency.',
+      id: 'Umumnya diwujudkan melalui konfigurasi P2 dengan kopling pemutus mesin (K0), memberikan dorongan akselerasi tinggi dan efisiensi jelajah jalan bebas hambatan.',
     },
     relatedTopicId: 'hybrid-vehicles',
   },

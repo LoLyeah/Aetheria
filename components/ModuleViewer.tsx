@@ -298,7 +298,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               {currentModule.interactiveType === 'cardiac-hemodynamics' && <CardiacArrestViewer />}
               {currentModule.interactiveType === 'vascular-hemodynamics' && <HypertensionVascularViewer />}
               {currentModule.interactiveType === 'biome-globe' && <BiomesGlobeViewer />}
-              {currentModule.interactiveType === 'hybrid-powertrain' && <HybridPowertrainViewer />}
+              {currentModule.interactiveType === 'hybrid-powertrain' && <HybridPowertrainViewer key={currentModule.id} moduleId={currentModule.id} />}
 
               {/* Lab Completion & Action Bar */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
