@@ -66,9 +66,9 @@ for (const topic of allTopics) {
   assert.equal(getUrlForState('learn', topic.id), `/learn/${topic.id}`);
 }
 
-// 5. Specific Modules (test ALL 31 modules across all 7 disciplines)
+// 5. Specific Modules (test ALL 35 modules across all 8 disciplines)
 const allMods = getAllModules();
-assert.equal(allMods.length, 31, 'Expected 31 total modules across disciplines');
+assert.equal(allMods.length, 35, 'Expected 35 total modules across disciplines');
 
 for (const { topic, module: mod } of allMods) {
   // Test canonical path: /learn/:topicId/:moduleId
@@ -110,6 +110,8 @@ assert.equal(getUrlForState('module', null, 'qm-mod-1'), '/learn/quantum-mechani
 assert.equal(getUrlForState('module', 'ev-battery' as any, 'qm-mod-1'), '/learn/quantum-mechanics/qm-mod-1');
 assert.equal(getUrlForState('module', null, 'bat-mod-2', 'interactive'), '/learn/ev-battery/bat-mod-2?tab=interactive');
 assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'bat-mod-2', 'interactive'), '/learn/ev-battery/bat-mod-2?tab=interactive');
+assert.equal(getUrlForState('module', null, 'hyb-mod-2', 'interactive'), '/learn/hybrid-vehicles/hyb-mod-2?tab=interactive');
+assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'hyb-mod-2', 'interactive'), '/learn/hybrid-vehicles/hyb-mod-2?tab=interactive');
 
 // 8. Settings Route
 assert.deepEqual(parseUrlToState('/settings', ''), {
@@ -183,4 +185,4 @@ assert.deepEqual(parseUrlToState('/learn/alien-science-discipline', ''), {
 // Clipboard utility export sanity
 assert.equal(typeof copyTextToClipboard, 'function');
 
-console.log('✅ ALL PRODUCTION ROUTING & DEEP-LINK TESTS PASSED (31 modules, 7 topics, edge cases)!');
+console.log('✅ ALL PRODUCTION ROUTING & DEEP-LINK TESTS PASSED (35 modules, 8 topics, edge cases)!');

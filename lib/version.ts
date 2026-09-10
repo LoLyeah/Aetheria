@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.2.2',
+  version: '1.3.0',
   major: 1,
-  minor: 2,
-  patch: 2,
-  releaseDate: '2026-09-08',
-  buildNumber: 'build.20260908.02',
+  minor: 3,
+  patch: 0,
+  releaseDate: '2026-09-10',
+  buildNumber: 'build.20260910.01',
   environment: 'production',
   changelog: [
+    {
+      version: '1.3.0',
+      date: '2026-09-10',
+      type: 'minor',
+      title: {
+        en: 'Hybrid Electric Vehicles Discipline: MHEV, HEV, PHEV & EREV Powertrain Dynamics',
+        id: 'Disiplin Kendaraan Listrik Hibrida: Dinamika Powertrain MHEV, HEV, PHEV & EREV',
+      },
+      highlights: {
+        en: [
+          'Introduced full 8th STEM curriculum discipline: Hybrid Electric Vehicles & Powertrain Electrification with 4 comprehensive bilingual modules.',
+          'Explored 48V Belt/Integrated Starter Generators (MHEV), epicyclic planetary power-split e-CVT and Atkinson cycle thermodynamics (HEV), parallel K0 multi-clutch topologies (PHEV), and decoupled series range extenders (EREV).',
+          'Engineered interactive 3D WebGL HybridPowertrainViewer simulating real-time planetary gear kinematics, dual motor-generators (MG1/MG2), battery buffer SoC, and color-coded energy particle streams at 60 FPS.',
+          'Integrated comprehensive hybrid powertrain glossary terms, custom formula templates in StudyNotesWorkspace, and dedicated Hybrid Powertrain Architect master accreditation badge.',
+        ],
+        id: [
+          'Menghadirkan disiplin kurikulum STEM ke-8 secara lengkap: Kendaraan Listrik Hibrida & Elektrifikasi Powertrain dengan 4 modul bilingual mendalam.',
+          'Mengupas Starter-Generator 48V (MHEV), transmisi power-split roda gigi planet e-CVT dan termodinamika siklus Atkinson (HEV), topologi paralel kopling K0 (PHEV), serta range extender seri terisolasi (EREV).',
+          'Merancang laboratorium 3D WebGL HybridPowertrainViewer yang mensimulasikan kinematika roda gigi planet, motor-generator ganda (MG1/MG2), SoC baterai, dan aliran partikel energi berkode warna pada 60 FPS.',
+          'Mengintegrasikan glosarium lengkap powertrain hibrida, template rumus pada StudyNotesWorkspace, dan lencana akreditasi master Arsitek Powertrain Hibrida.',
+        ],
+      },
+    },
     {
       version: '1.2.2',
       date: '2026-09-08',

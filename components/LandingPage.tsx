@@ -23,6 +23,7 @@ import {
   HeartCrack,
   Gauge,
   Globe,
+  Car,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -59,6 +60,7 @@ export const LandingPage: React.FC = () => {
     'cardiac-arrest': <HeartCrack className="w-5 h-5 text-red-600 dark:text-red-400" />,
     'hypertension': <Gauge className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
     'biomes-ecology': <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+    'hybrid-vehicles': <Car className="w-5 h-5 text-orange-600 dark:text-orange-400" />,
   };
 
   return (

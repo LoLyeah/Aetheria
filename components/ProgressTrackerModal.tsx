@@ -23,6 +23,7 @@ import {
   HeartCrack,
   Gauge,
   Globe,
+  Car,
 } from 'lucide-react';
 
 export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
@@ -206,6 +207,7 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                             {topic.id === 'cardiac-arrest' && <HeartCrack className="w-4 h-4 text-red-500" />}
                             {topic.id === 'hypertension' && <Gauge className="w-4 h-4 text-amber-500" />}
                             {topic.id === 'biomes-ecology' && <Globe className="w-4 h-4 text-emerald-500" />}
+                            {topic.id === 'hybrid-vehicles' && <Car className="w-4 h-4 text-orange-500" />}
                           </div>
                           <div>
                             <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -386,10 +388,17 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                   </div>
 
                   <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-                    For mastering the core theoretical foundations and interactive hardware-accelerated 3D simulations across{' '}
-                    <strong>Quantum Mechanics & Wavefunctions</strong>,{' '}
-                    <strong>Embryonic & Fetal Morphogenesis</strong>, and{' '}
-                    <strong>EV Electrochemical Battery & Powertrain Dynamics</strong>.
+                    {language === 'en' ? (
+                      <>
+                        For mastering the core theoretical foundations and interactive hardware-accelerated 3D simulations across{' '}
+                        <strong>Quantum Mechanics</strong>, <strong>Embryonic Biology</strong>, <strong>EV & Hybrid Powertrains</strong>, and foundational STEM disciplines.
+                      </>
+                    ) : (
+                      <>
+                        Atas penguasaan fondasi teoretis mendalam dan simulasi 3D real-time terakselerasi perangkat keras pada{' '}
+                        <strong>Mekanika Kuantum</strong>, <strong>Biologi Embrio</strong>, <strong>Powertrain EV & Hibrida</strong>, serta disiplin ilmu STEM dasar.
+                      </>
+                    )}
                   </p>
 
                   {/* Seal & Verification Serial */}

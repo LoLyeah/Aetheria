@@ -102,6 +102,12 @@ const FORMULA_SNIPPETS: FormulaSnippet[] = [
   { label: 'Aragonite Saturation', latex: '\\Omega_{\\text{arag}} = \\frac{[\\text{Ca}^{2+}][\\text{CO}_3^{2-}]}{K\'_{\\text{sp}}}', display: '\\Omega_{arag}', discipline: 'ecology' },
   { label: 'Lotka-Volterra', latex: '\\frac{dN}{dt} = rN - aNP', display: 'dN/dt = rN - aNP', discipline: 'ecology' },
   { label: 'Redfield Ratio', latex: '106\\text{C} : 16\\text{N} : 1\\text{P}', display: '106C : 16N : 1P', discipline: 'ecology' },
+  // Hybrid Vehicles & Powertrains
+  { label: 'Willis Epicyclic Eq', latex: '\\omega_c(1 + \\rho) = \\omega_s + \\rho \\omega_r', display: '\\omega_{eCVT}', discipline: 'hybrid' },
+  { label: 'Planetary Torque Split', latex: 'T_r = \\frac{\\rho}{1 + \\rho} T_{\\text{ICE}}', display: 'T_{split}', discipline: 'hybrid' },
+  { label: 'ECMS Hamiltonian', latex: 'H = \\dot{m}_{\\text{fuel}} + s(t) \\cdot \\frac{P_{\\text{batt}}}{\\text{LHV}}', display: 'H_{ECMS}', discipline: 'hybrid' },
+  { label: 'P2 Torque Sum', latex: 'T_{\\text{wheel}} = i_{\\text{gear}} [T_{\\text{EM}} + u_{\\text{K0}} T_{\\text{ICE}}]', display: 'T_{\\Sigma}', discipline: 'hybrid' },
+  { label: 'BSFC Formula', latex: '\\text{BSFC} = \\frac{\\dot{m}_{\\text{fuel}}}{P_{\\text{mech}}}', display: 'BSFC', discipline: 'hybrid' },
 ];
 
 /**
@@ -633,6 +639,8 @@ export const StudyNotesWorkspace: React.FC<StudyNotesWorkspaceProps> = ({
     const defaultTopicFormula =
       topic.id === 'ev-battery'
         ? 'E = E^0 - \\frac{RT}{zF} \\ln Q'
+        : topic.id === 'hybrid-vehicles'
+        ? '\\omega_c(1 + \\rho) = \\omega_s + \\rho \\omega_r'
         : topic.id === 'biomes-ecology'
         ? '\\Phi = \\frac{R_n}{\\lambda \\cdot P}'
         : topic.id === 'fetus-development' || topic.id === 'cardiac-arrest' || topic.id === 'hypertension' || topic.id === 'pulmonology-pneumonia'
@@ -728,6 +736,7 @@ $$
   // Filter formula snippets by active module topic
   const relevantFormulaSnippets = useMemo(() => {
     const isBattery = topic.id === 'ev-battery';
+    const isHybrid = topic.id === 'hybrid-vehicles';
     const isEcology = topic.id === 'biomes-ecology';
     const isBio =
       topic.id === 'fetus-development' ||
@@ -738,9 +747,10 @@ $$
     return FORMULA_SNIPPETS.filter((snippet) => {
       if (snippet.discipline === 'math') return true;
       if (isBattery && snippet.discipline === 'battery') return true;
+      if (isHybrid && snippet.discipline === 'hybrid') return true;
       if (isEcology && snippet.discipline === 'ecology') return true;
       if (isBio && snippet.discipline === 'bio') return true;
-      if (!isBattery && !isBio && !isEcology && snippet.discipline === 'qm') return true;
+      if (!isBattery && !isHybrid && !isBio && !isEcology && snippet.discipline === 'qm') return true;
       return false;
     });
   }, [topic.id]);

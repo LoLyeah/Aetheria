@@ -19,6 +19,7 @@ import {
   X,
   ExternalLink,
   Globe,
+  Car,
 } from 'lucide-react';
 
 interface GlossaryTermProps {
@@ -67,6 +68,12 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       badgeBg: 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
       icon: Zap,
       accentBorder: 'border-amber-500/30',
+    },
+    hybrid: {
+      label: { en: 'Hybrid Powertrain', id: 'Powertrain Hibrida' },
+      badgeBg: 'bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800',
+      icon: Car,
+      accentBorder: 'border-orange-500/30',
     },
     pulmonology: {
       label: { en: 'Pulmonology & Medicine', id: 'Pulmonologi & Kedokteran' },

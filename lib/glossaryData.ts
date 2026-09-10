@@ -6,6 +6,7 @@ export type GlossaryCategory =
   | 'cardiology'
   | 'hypertension'
   | 'ecology'
+  | 'hybrid'
   | 'general';
 
 export interface GlossaryTermData {
@@ -36,7 +37,8 @@ export interface GlossaryTermData {
     | 'pulmonology-pneumonia'
     | 'cardiac-arrest'
     | 'hypertension'
-    | 'biomes-ecology';
+    | 'biomes-ecology'
+    | 'hybrid-vehicles';
 }
 
 export const GLOSSARY_TERMS: GlossaryTermData[] = [
@@ -1504,6 +1506,352 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: 'Mencerminkan stoikiometri biokimiawi esensial dari protein (N), asam nukleat/ATP (P), dan karbohidrat struktural (C).',
     },
     relatedTopicId: 'biomes-ecology',
+  },
+  // ================= HYBRID ELECTRIC VEHICLES =================
+  {
+    id: 'mhev',
+    term: {
+      en: 'Mild Hybrid Electric Vehicle (MHEV)',
+      id: 'Kendaraan Mild Hybrid (MHEV)',
+    },
+    aliases: {
+      en: ['mild hybrid', '48V hybrid', 'MHEV', '48-volt hybrid'],
+      id: ['mild hybrid', 'hibrida ringan', 'MHEV'],
+    },
+    category: 'hybrid',
+    symbol: 'MHEV (48V)',
+    pronunciation: '/maɪld ˈhaɪ.brɪd/',
+    definition: {
+      en: 'An electrified vehicle that pairs an internal combustion engine with a low-voltage (typically 48V) starter-generator and a small lithium buffer battery (0.4–1.0 kWh). It supports smooth start-stop, crankshaft torque assist, and regenerative coasting, but cannot propel the vehicle on electricity alone.',
+      id: 'Kendaraan elektrifikasi yang memadukan mesin pembakaran internal dengan starter-generator tegangan rendah (umumnya 48V) dan baterai litium penyangga kecil (0,4–1,0 kWh). Sistem ini mendukung start-stop halus, bantuan torsi kruk as, dan peluncuran regeneratif, namun tidak dapat melaju murni bertenaga listrik.',
+    },
+    context: {
+      en: 'Operates within the Safety Extra-Low Voltage (SELV ≤ 60V) limit to deliver 10–15% fuel economy gains without requiring high-voltage interlocks.',
+      id: 'Bekerja dalam batas aman Safety Extra-Low Voltage (SELV ≤ 60V) untuk menghemat 10–15% BBM tanpa membutuhkan interlock tegangan tinggi yang mahal.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'hev',
+    term: {
+      en: 'Full Hybrid Electric Vehicle (HEV)',
+      id: 'Kendaraan Full Hybrid (HEV)',
+    },
+    aliases: {
+      en: ['full hybrid', 'strong hybrid', 'HEV', 'series-parallel hybrid'],
+      id: ['full hybrid', 'hibrida penuh', 'HEV'],
+    },
+    category: 'hybrid',
+    symbol: 'HEV (200V–300V)',
+    pronunciation: '/fʊl ˈhaɪ.brɪd/',
+    definition: {
+      en: 'A high-voltage hybrid vehicle that integrates an internal combustion engine (often Atkinson cycle), two electric motor-generators, and a 1.3–2.0 kWh battery via a planetary power-split transmission (e-CVT). It can propel the vehicle in pure EV stealth mode at low speeds and captures substantial regenerative braking energy without external plug-in charging.',
+      id: 'Kendaraan hibrida tegangan tinggi yang memadukan mesin bensin (sering kali siklus Atkinson), dua motor-generator listrik, dan baterai 1,3–2,0 kWh melalui transmisi pembagi daya roda gigi planet (e-CVT). Mampu melaju murni bertenaga listrik pada kecepatan rendah dan memulihkan energi pengereman masif tanpa colokan listrik luar.',
+    },
+    context: {
+      en: 'Exemplified by Toyota Hybrid Synergy Drive, continuously optimizing engine RPM to achieve thermal efficiencies exceeding 40%.',
+      id: 'Dipelopori oleh Toyota Hybrid Synergy Drive, secara kontinu mengoptimalkan RPM mesin untuk meraih efisiensi termal di atas 40%.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'phev',
+    term: {
+      en: 'Plug-in Hybrid Electric Vehicle (PHEV)',
+      id: 'Kendaraan Plug-in Hybrid (PHEV)',
+    },
+    aliases: {
+      en: ['plug-in hybrid', 'PHEV', 'plug in hybrid'],
+      id: ['plug-in hybrid', 'hibrida colok', 'PHEV'],
+    },
+    category: 'hybrid',
+    symbol: 'PHEV (350V–400V)',
+    pronunciation: '/plʌɡ ɪn ˈhaɪ.brɪd/',
+    definition: {
+      en: 'A hybrid vehicle equipped with a high-capacity traction battery (12–25 kWh) that can be recharged from an external electrical grid outlet. It operates in pure electric Charge-Depleting (CD) mode for 50–100 km before switching to hybrid Charge-Sustaining (CS) mode.',
+      id: 'Kendaraan hibrida yang dibekali baterai traksi berkapasitas besar (12–25 kWh) yang dapat diisi ulang dari stopkontak jaringan listrik eksternal. Beroperasi dalam mode listrik murni (Charge-Depleting) sejauh 50–100 km sebelum beralih ke mode hibrida (Charge-Sustaining).',
+    },
+    context: {
+      en: 'Features an onboard AC charger (3.3–11 kW) and a disconnect clutch (K0) that allows high-speed electric cruising without engine friction drag.',
+      id: 'Memiliki pengisi daya AC onboard (3,3–11 kW) dan kopling pemutus (K0) yang memungkinkan laju kencang bertenaga listrik tanpa gesekan mesin bensin.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'erev',
+    term: {
+      en: 'Extended-Range Electric Vehicle (EREV)',
+      id: 'Kendaraan Listrik Jangkauan Diperluas (EREV)',
+    },
+    aliases: {
+      en: ['extended-range EV', 'range extender', 'EREV', 'series hybrid', 'REx'],
+      id: ['extended-range EV', 'range extender', 'EREV', 'hibrida seri'],
+    },
+    category: 'hybrid',
+    symbol: 'EREV / REx',
+    pronunciation: '/ɪkˈstɛn.dɪd reɪndʒ iː viː/',
+    definition: {
+      en: 'A pure series hybrid vehicle where the drive wheels are propelled 100% by electric traction motors at all times. An onboard internal combustion engine is mechanically decoupled from the wheels, acting solely as a steady-state electric generator to recharge the 30–45 kWh battery buffer when depleted.',
+      id: 'Kendaraan hibrida seri murni di mana roda penggerak digerakkan 100% oleh motor traksi listrik setiap saat. Mesin pembakaran internal sama sekali tidak memiliki hubungan mekanis ke roda, melainkan murni bekerja sebagai generator listrik stasioner untuk mengisi baterai penyangga 30–45 kWh saat menipis.',
+    },
+    context: {
+      en: 'Eliminates range anxiety while running the generator engine exclusively at its optimal Brake Specific Fuel Consumption (BSFC) sweet spot (~41% thermal efficiency).',
+      id: 'Meniadakan kecemasan jarak tempuh (range anxiety) sekaligus mengoperasikan mesin generator tepat di titik efisiensi konsumsi bahan bakar (BSFC) terbaiknya (~41% efisiensi termal).',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'planetary-power-split',
+    term: {
+      en: 'Epicyclic Planetary Power-Split Device (PSD)',
+      id: 'Pembagi Daya Roda Gigi Planet Episiklik (PSD)',
+    },
+    aliases: {
+      en: ['power split device', 'PSD', 'planetary gear set', 'epicyclic gear train'],
+      id: ['power split device', 'roda gigi planet', 'PSD'],
+    },
+    category: 'hybrid',
+    symbol: 'ω_c(1 + ρ) = ω_s + ρ ω_r',
+    pronunciation: '/ˌɛp.ɪˈsaɪ.klɪk plæn.ɪˌtɛr.i/',
+    definition: {
+      en: 'A compact epicyclic gear mechanism consisting of a central Sun gear (coupled to MG1), Planet Carrier (coupled to the engine), and outer Ring gear (coupled to MG2 and wheels). It splits engine mechanical torque between direct wheel drive and electrical generation.',
+      id: 'Mekanisme roda gigi episiklik kompak yang terdiri dari roda gigi Matahari (Sun gear terhubung ke MG1), Pembawa Planet (Planet Carrier terhubung ke mesin), dan roda gigi Cincin luar (Ring gear terhubung ke MG2 dan roda). Mekanisme ini membagi torsi mesin antara penggerak roda langsung dan pembangkitan listrik.',
+    },
+    context: {
+      en: 'Governed by the Willis kinematic equation, allowing continuous electro-mechanical variable transmission without belts, cones, or friction clutches.',
+      id: 'Diatur oleh persamaan kinematika Willis, memungkinkan transmisi variabel kontinu elektro-mekanis tanpa sabuk atau kopling gesek.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'atkinson-cycle',
+    term: {
+      en: 'Atkinson Combustion Cycle',
+      id: 'Siklus Pembakaran Atkinson',
+    },
+    aliases: {
+      en: ['atkinson cycle', 'late intake valve closing', 'LIVC', 'miller cycle'],
+      id: ['siklus atkinson', 'atkinson cycle'],
+    },
+    category: 'hybrid',
+    symbol: 'r_e > r_c (expansion > compression)',
+    pronunciation: '/ˈæt.kɪn.sən ˈsaɪ.kəl/',
+    definition: {
+      en: 'A thermodynamic four-stroke internal combustion cycle in which late intake valve closing (LIVC) makes the expansion ratio substantially larger than the effective compression ratio. This extracts more mechanical work from expanding combustion gases, boosting thermal efficiency above 40%.',
+      id: 'Siklus termodinamika empat langkah pada mesin pembakaran internal di mana penutupan katup hisap terlambat (LIVC) membuat rasio ekspansi jauh lebih panjang daripada rasio kompresi efektif. Hal ini memeras lebih banyak kerja mekanis dari pemuaian gas, mendongkrak efisiensi termal melampaui 40%.',
+    },
+    context: {
+      en: 'Inherently compromises low-RPM torque, which is compensated by the instantaneous low-end torque delivery of the hybrid electric motor.',
+      id: 'Mengakibatkan torsi RPM rendah yang lebih lemah, yang kemudian disempurnakan secara instan oleh limpahan torsi motor listrik hibrida.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'bsg-isg',
+    term: {
+      en: 'Belt-driven / Integrated Starter Generator (BSG/ISG)',
+      id: 'Starter Generator Sabuk / Terintegrasi (BSG/ISG)',
+    },
+    aliases: {
+      en: ['BSG', 'ISG', 'BiSG', 'integrated starter generator', 'belt starter generator'],
+      id: ['BSG', 'ISG', 'starter generator'],
+    },
+    category: 'hybrid',
+    symbol: 'BSG / ISG (48V)',
+    pronunciation: '/stɑːr.tər ˈdʒɛn.ə.reɪ.tər/',
+    definition: {
+      en: 'An electric motor-generator integrated into an internal combustion engine either via the accessory serpentine belt (P0 BSG) or directly mounted on the crankshaft flywheel (P1 ISG). It replaces both the alternator and the traditional starter motor.',
+      id: 'Motor-generator listrik yang diintegrasikan ke mesin pembakaran internal melalui sabuk aksesori (P0 BSG) atau dibaut langsung pada poros engkol flywheel (P1 ISG). Komponen ini menggantikan alternator konvensional sekaligus motor dinamo starter.',
+    },
+    context: {
+      en: 'Spins the engine from 0 to 800+ RPM in under 300 ms, eliminating start-stop vibration and providing immediate torque fill during turbocharger spool-up.',
+      id: 'Memutar mesin dari 0 hingga 800+ RPM dalam waktu di bawah 300 ms, meniadakan getaran start-stop dan memberi dorongan torsi instan saat turbo mengisi tekanan.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'ecvt',
+    term: {
+      en: 'Electronic Continuously Variable Transmission (e-CVT)',
+      id: 'Transmisi Variabel Kontinu Elektronik (e-CVT)',
+    },
+    aliases: {
+      en: ['e-CVT', 'eCVT', 'hybrid e-CVT'],
+      id: ['e-CVT', 'eCVT'],
+    },
+    category: 'hybrid',
+    symbol: 'e-CVT',
+    pronunciation: '/iː siː viː tiː/',
+    definition: {
+      en: 'A transmission topology that achieves stepless continuously variable gear ratios by electronically controlling the rotational speeds of motor-generators interacting with a planetary gear set, completely dispensing with hydraulic torque converters and friction belts.',
+      id: 'Topologi transmisi yang menghasilkan rasio gigi tanpa jeda (stepless continuously variable) dengan mengendalikan kecepatan putar motor-generator yang berinteraksi dengan set roda gigi planet secara elektronik, tanpa konverter torsi atau sabuk gesek.',
+    },
+    context: {
+      en: 'Eliminates mechanical shifting shock, gear hunting, and hydraulic pumping losses inherent to conventional automatic gearboxes.',
+      id: 'Menghilangkan hentakan pergantian gigi, keraguan perpindahan rasio, dan kerugian pemompaan hidrolik pada girboks otomatis konvensional.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'k0-clutch',
+    term: {
+      en: 'K0 Engine Disconnect Clutch',
+      id: 'Kopling Pemutus Mesin K0',
+    },
+    aliases: {
+      en: ['K0 clutch', 'engine disconnect clutch', 'separator clutch'],
+      id: ['kopling K0', 'kopling pemutus mesin'],
+    },
+    category: 'hybrid',
+    symbol: 'K0 Clutch',
+    pronunciation: '/keɪ zɪə.roʊ klʌtʃ/',
+    definition: {
+      en: 'An automated electro-hydraulic or electromechanical clutch positioned between the internal combustion engine crankshaft and the P2 electric motor in parallel and plug-in hybrids. Disengaging K0 decouples the engine so the electric motor propels the car with zero engine drag.',
+      id: 'Kopling elektro-hidrolik atau elektro-mekanis otomatis yang ditempatkan di antara poros engkol mesin bensin dan motor listrik P2 pada sistem hibrida paralel dan plug-in. Membuka kopling K0 memutuskan hubungan mesin sehingga motor listrik dapat melajukan mobil tanpa hambatan gesek mesin.',
+    },
+    context: {
+      en: 'Enables pure zero-emission electric driving up to highway speeds (135–140 km/h) in modern PHEVs.',
+      id: 'Memungkinkan pengendaraan listrik murni bebas emisi hingga kecepatan jalan tol (135–140 km/jam) pada mobil PHEV modern.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'charge-depleting',
+    term: {
+      en: 'Charge-Depleting (CD) Mode',
+      id: 'Mode Pengosongan Muatan (CD)',
+    },
+    aliases: {
+      en: ['CD mode', 'charge depleting', 'EV mode in PHEV'],
+      id: ['mode CD', 'charge depleting'],
+    },
+    category: 'hybrid',
+    symbol: 'CD Mode (SoC 100% → 20%)',
+    pronunciation: '/tʃɑːrdʒ dɪˈpliː.tɪŋ/',
+    definition: {
+      en: 'The operational state of a Plug-in Hybrid or EREV wherein vehicle propulsion is supplied primarily or exclusively by grid-charged electricity from the high-voltage battery, allowing the battery State of Charge to systematically decline.',
+      id: 'Status operasional pada mobil Plug-in Hybrid atau EREV di mana propulsi kendaraan disuplai secara utama atau eksklusif oleh listrik jaringan dari baterai tegangan tinggi, membiarkan persentase State of Charge baterai berkurang secara bertahap.',
+    },
+    context: {
+      en: 'Persists until the battery SoC reaches the lower reserve floor (typically ~15–20%), triggering automatic transition to Charge-Sustaining mode.',
+      id: 'Berlangsung hingga SoC baterai menyentuh batas cadangan bawah (umumnya ~15–20%), yang memicu peralihan otomatis ke mode Charge-Sustaining.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'charge-sustaining',
+    term: {
+      en: 'Charge-Sustaining (CS) Mode',
+      id: 'Mode Penjagaan Muatan (CS)',
+    },
+    aliases: {
+      en: ['CS mode', 'charge sustaining', 'hybrid mode in PHEV'],
+      id: ['mode CS', 'charge sustaining'],
+    },
+    category: 'hybrid',
+    symbol: 'CS Mode (SoC ≈ const)',
+    pronunciation: '/tʃɑːrdʒ səˈsteɪ.nɪŋ/',
+    definition: {
+      en: 'The operational state of a PHEV or EREV entered once the high-voltage battery has been depleted to its reserve buffer. The powertrain operates as a conventional full hybrid, dynamically balancing engine power and regenerative braking to maintain battery SoC within a stable equilibrium band.',
+      id: 'Status operasional pada PHEV atau EREV yang diaktifkan setelah daya baterai tegangan tinggi terkuras hingga batas penyangga cadangan. Powertrain bekerja layaknya full hybrid konvensional, menyeimbangkan tenaga mesin dan rem regeneratif untuk menjaga SoC baterai dalam pita keseimbangan yang stabil.',
+    },
+    context: {
+      en: 'Guarantees continuous peak driving performance and hill-climbing reserves even after grid-charged energy is exhausted.',
+      id: 'Menjamin performa akselerasi puncak dan kemampuan menanjak tetap terjaga meskipun daya listrik colokan sudah habis terpakai.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'ecms',
+    term: {
+      en: 'Equivalent Consumption Minimization Strategy (ECMS)',
+      id: 'Strategi Minimasi Konsumsi Ekuivalen (ECMS)',
+    },
+    aliases: {
+      en: ['ECMS', 'equivalent fuel consumption', 'Hamiltonian energy management'],
+      id: ['ECMS', 'strategi konsumsi ekuivalen'],
+    },
+    category: 'hybrid',
+    symbol: 'H = ṁ_fuel + s(t) · P_batt / LHV',
+    pronunciation: '/iː siː ɛm ɛs/',
+    definition: {
+      en: 'A real-time energy management optimization algorithm that converts battery electrical power consumption into an equivalent instantaneous fuel mass flow rate via an equivalence factor s(t). By minimizing the resulting Hamiltonian at each control timestep, it calculates the optimal power split between engine and battery.',
+      id: 'Algoritma optimasi manajemen energi real-time yang mengonversi konsumsi daya listrik baterai menjadi laju aliran massa bahan bakar ekuivalen melalui faktor s(t). Dengan meminimalkan fungsi Hamiltonian pada setiap langkah waktu kendali, algoritma ini menetapkan pembagian daya paling optimal antara mesin dan baterai.',
+    },
+    context: {
+      en: 'Derived from Pontryagin\'s Minimum Principle, dynamically adapting s(t) based on current battery SoC and predicted navigation elevation profiles.',
+      id: 'Diturunkan dari Prinsip Minimum Pontryagin, secara dinamis menyesuaikan nilai s(t) berdasarkan SoC baterai dan kontur elevasi jalan dari sistem navigasi.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'bsfc',
+    term: {
+      en: 'Brake Specific Fuel Consumption (BSFC)',
+      id: 'Konsumsi Bahan Bakar Spesifik Efektif (BSFC)',
+    },
+    aliases: {
+      en: ['BSFC', 'brake specific fuel consumption', 'specific fuel consumption'],
+      id: ['BSFC', 'konsumsi bahan bakar spesifik'],
+    },
+    category: 'hybrid',
+    symbol: 'BSFC = ṁ_fuel / P_mech [g/kWh]',
+    pronunciation: '/biː ɛs ɛf siː/',
+    definition: {
+      en: 'A measure of the fuel efficiency of any combustion engine, calculated as the fuel mass flow rate consumed per unit of mechanical shaft power output (measured in grams of fuel per kilowatt-hour, g/kWh). Lower values denote higher thermodynamic efficiency.',
+      id: 'Ukuran efisiensi bahan bakar mesin pembakaran internal, dihitung sebagai laju massa bahan bakar yang dihabiskan per unit daya mekanis poros yang dihasilkan (dinyatakan dalam gram bahan bakar per kilowatt-jam, g/kWh). Semakin rendah nilainya, semakin tinggi efisiensi termodinamika mesin.',
+    },
+    context: {
+      en: 'Modern Atkinson and EREV range-extender engines achieve minimum BSFC values around 205–215 g/kWh, corresponding to >41% brake thermal efficiency.',
+      id: 'Mesin Atkinson dan generator range extender modern mampu meraih nilai BSFC serendah 205–215 g/kWh, setara dengan efisiensi termal efektif di atas 41%.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'p2-hybrid',
+    term: {
+      en: 'P2 Hybrid Powertrain Architecture',
+      id: 'Arsitektur Powertrain Hibrida P2',
+    },
+    aliases: {
+      en: ['P2 hybrid', 'P2 topology', 'transmission input hybrid'],
+      id: ['hibrida P2', 'arsitektur P2'],
+    },
+    category: 'hybrid',
+    symbol: 'P2 Architecture',
+    pronunciation: '/piː tuː ˈhaɪ.brɪd/',
+    definition: {
+      en: 'A hybrid powertrain topology where the electric traction motor is located on the transmission input shaft, between the engine disconnect clutch (K0) and the multi-speed gearbox (such as an 8-speed automatic or dual-clutch transmission).',
+      id: 'Topologi powertrain hibrida di mana motor traksi listrik ditempatkan pada poros input transmisi, persis di antara kopling pemutus mesin (K0) dan girboks multi-percepatan (seperti transmisi otomatis 8-kecepatan atau kopling ganda DCT).',
+    },
+    context: {
+      en: 'Allows the electric motor to leverage all transmission gear ratios for high torque at low speeds and high efficiency at cruising speeds, while enabling complete engine-off electric propulsion.',
+      id: 'Memungkinkan motor listrik memanfaatkan seluruh rasio gigi transmisi untuk menghasilkan torsi tinggi saat pelan dan efisiensi tinggi saat melaju cepat, sembari mendukung pengendaraan listrik saat mesin mati total.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
+  },
+  {
+    id: 'p4-eaxle',
+    term: {
+      en: 'P4 Electric Axle (e-Axle)',
+      id: 'Gardan Listrik Belakang P4 (e-Axle)',
+    },
+    aliases: {
+      en: ['P4 hybrid', 'e-Axle', 'electric all wheel drive', 'e-AWD'],
+      id: ['gardan listrik P4', 'e-Axle', 'e-AWD'],
+    },
+    category: 'hybrid',
+    symbol: 'P4 e-Axle',
+    pronunciation: '/piː fɔːr iː ˈæks.əl/',
+    definition: {
+      en: 'An electric propulsion unit integrated directly onto the opposite axle of the primary engine drivetrain (typically the rear axle). It delivers on-demand electronic all-wheel drive (e-AWD) and maximizes regenerative braking energy recovery without requiring mechanical prop shafts or center transfer cases.',
+      id: 'Unit propulsi motor listrik yang dipasang langsung pada as roda seberang dari penggerak mesin utama (biasanya di as roda belakang). Unit ini menghasilkan penggerak semua roda elektronik (e-AWD) instan dan memaksimalkan pemulihan energi rem tanpa poros transmisi tengah mekanis.',
+    },
+    context: {
+      en: 'Dramatically improves vehicle traction on wet or icy roads while reducing vehicle curb weight by eliminating mechanical AWD hardware.',
+      id: 'Meningkatkan traksi kendaraan secara signifikan di jalan licin atau bersalju sekaligus memangkas bobot kendaraan dengan meniadakan perangkat mekanis 4WD konvensional.',
+    },
+    relatedTopicId: 'hybrid-vehicles',
   },
 ];
 

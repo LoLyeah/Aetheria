@@ -25,6 +25,7 @@ import {
   Activity,
   HeartCrack,
   Globe,
+  Car,
   X,
   Info,
 } from 'lucide-react';
@@ -102,6 +103,14 @@ const TOPIC_OPTIONS: TopicOption[] = [
     accentColor: 'text-emerald-400',
     badgeBg: 'bg-emerald-500/20',
   },
+  {
+    id: 'hybrid-vehicles',
+    label: { en: 'Hybrid Powertrains', id: 'Powertrain Hibrida' },
+    category: { en: 'MHEV, HEV, PHEV & EREV', id: 'MHEV, HEV, PHEV & EREV' },
+    icon: Car,
+    accentColor: 'text-orange-400',
+    badgeBg: 'bg-orange-500/20',
+  },
 ];
 
 export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
@@ -162,7 +171,8 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     pulsers: { mesh: THREE.Mesh | THREE.Points; baseScale: number; speed: number }[];
     particles?: THREE.Points;
     explodedMeshes?: { mesh: THREE.Object3D; originalPos: THREE.Vector3; explodedPos: THREE.Vector3 }[];
-  }>({ rotators: [], pulsers: [], explodedMeshes: [] });
+    customAnimators?: ((dt: number, time: number) => void)[];
+  }>({ rotators: [], pulsers: [], explodedMeshes: [], customAnimators: [] });
 
   // State refs for animation loop
   const speedRef = useRef(simSpeed);
@@ -325,6 +335,11 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         p.mesh.scale.set(scale, scale, scale);
       });
 
+      // Custom specialized animators (e.g. planetary gear kinematics)
+      if (anims.customAnimators && anims.customAnimators.length > 0) {
+        anims.customAnimators.forEach((fn) => fn(rawDelta, time));
+      }
+
       // Explode interpolation
       if (anims.explodedMeshes && anims.explodedMeshes.length > 0) {
         anims.explodedMeshes.forEach((item) => {
@@ -372,7 +387,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     if (!group) return;
 
     // Reset animation list
-    animatedObjectsRef.current = { rotators: [], pulsers: [], explodedMeshes: [] };
+    animatedObjectsRef.current = { rotators: [], pulsers: [], explodedMeshes: [], customAnimators: [] };
 
     // Clean previous children
     while (group.children.length > 0) {
@@ -961,6 +976,135 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       });
       globe.add(new THREE.Points(bioGeo, bioMat));
     }
+
+    // -------------------------------------------------------------
+    // TOPIC 8: HYBRID VEHICLES & PLANETARY POWER-SPLIT (e-CVT)
+    // -------------------------------------------------------------
+    else if (selectedTopic === 'hybrid-vehicles') {
+      const pCount = particleDensity === 'ultra' ? 1400 : 700;
+
+      // 1. Central Sun Gear (coupled to MG1)
+      const sunGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.4, 24);
+      const sunMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        metalness: 0.85,
+        roughness: 0.25,
+        wireframe: isWire,
+      });
+      const sunGear = new THREE.Mesh(sunGeo, sunMat);
+      group.add(sunGear);
+
+      // Sun gear teeth perimeter
+      const teethCount = 12;
+      for (let t = 0; t < teethCount; t++) {
+        const ang = (t / teethCount) * Math.PI * 2;
+        const toothGeo = new THREE.BoxGeometry(0.12, 0.38, 0.16);
+        const tooth = new THREE.Mesh(toothGeo, sunMat);
+        tooth.position.set(Math.cos(ang) * 0.6, 0, Math.sin(ang) * 0.6);
+        tooth.rotation.y = -ang;
+        sunGear.add(tooth);
+      }
+
+      // 2. Planet Pinion Gears (4 gears on Carrier spider)
+      const carrierGroup = new THREE.Group();
+      group.add(carrierGroup);
+
+      const planetRadius = 0.38;
+      const carrierRadius = 1.15;
+      const planetMat = new THREE.MeshStandardMaterial({
+        color: 0xf97316,
+        metalness: 0.8,
+        roughness: 0.3,
+        wireframe: isWire,
+      });
+
+      const planetMeshes: THREE.Mesh[] = [];
+      for (let p = 0; p < 4; p++) {
+        const pAng = (p / 4) * Math.PI * 2;
+        const pGeo = new THREE.CylinderGeometry(planetRadius, planetRadius, 0.38, 16);
+        const planetMesh = new THREE.Mesh(pGeo, planetMat);
+        planetMesh.position.set(Math.cos(pAng) * carrierRadius, 0, Math.sin(pAng) * carrierRadius);
+        carrierGroup.add(planetMesh);
+        planetMeshes.push(planetMesh);
+
+        // Planet teeth
+        for (let pt = 0; pt < 8; pt++) {
+          const ptAng = (pt / 8) * Math.PI * 2;
+          const ptMesh = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.36, 0.1), planetMat);
+          ptMesh.position.set(Math.cos(ptAng) * (planetRadius + 0.05), 0, Math.sin(ptAng) * (planetRadius + 0.05));
+          planetMesh.add(ptMesh);
+        }
+
+        animatedObjectsRef.current.explodedMeshes?.push({
+          mesh: planetMesh,
+          originalPos: planetMesh.position.clone(),
+          explodedPos: new THREE.Vector3(Math.cos(pAng) * (carrierRadius + 0.9), 0, Math.sin(pAng) * (carrierRadius + 0.9)),
+        });
+      }
+
+      // 3. Outer Ring Gear (Annulus - connected to MG2 & wheels)
+      const ringGeo = new THREE.TorusGeometry(1.68, 0.18, 16, 48);
+      const ringMat = new THREE.MeshPhysicalMaterial({
+        color: 0x10b981,
+        metalness: 0.9,
+        roughness: 0.2,
+        clearcoat: 0.8,
+        wireframe: isWire,
+      });
+      const outerRing = new THREE.Mesh(ringGeo, ringMat);
+      outerRing.rotation.x = Math.PI / 2;
+      group.add(outerRing);
+
+      // 4. Atkinson ICE Input Flange & Shaft
+      const iceFlangeGeo = new THREE.CylinderGeometry(0.35, 0.45, 0.6, 16);
+      const iceMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, metalness: 0.85, roughness: 0.2 });
+      const iceShaft = new THREE.Mesh(iceFlangeGeo, iceMat);
+      iceShaft.position.set(0, -0.6, 0);
+      group.add(iceShaft);
+
+      // 5. Dynamic Power-Split Energy Particle Torus
+      const energyGeo = new THREE.BufferGeometry();
+      const energyPos = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount * 3; i += 3) {
+        const u = Math.random() * Math.PI * 2;
+        const rDist = 0.5 + Math.random() * 1.25;
+        const yOff = (Math.random() - 0.5) * 0.35;
+        energyPos[i] = Math.cos(u) * rDist;
+        energyPos[i + 1] = yOff;
+        energyPos[i + 2] = Math.sin(u) * rDist;
+      }
+      energyGeo.setAttribute('position', new THREE.BufferAttribute(energyPos, 3));
+      const energyMat = new THREE.PointsMaterial({
+        color: 0xf59e0b,
+        size: 0.045,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+      });
+      const energyParticles = new THREE.Points(energyGeo, energyMat);
+      group.add(energyParticles);
+
+      // 6. Willis Epicyclic Kinematics Animator
+      animatedObjectsRef.current.customAnimators = [
+        (dt: number) => {
+          const speed = speedRef.current;
+          // Sun gear rotation (MG1 speed controller)
+          sunGear.rotation.y += 0.035 * speed;
+          // Planet carrier rotation (ICE Atkinson engine crankshaft)
+          carrierGroup.rotation.y += 0.015 * speed;
+          // Planet pinions rotating around their individual shafts
+          planetMeshes.forEach((pl) => {
+            pl.rotation.y -= 0.042 * speed;
+          });
+          // Outer ring gear rotation (MG2 / driven wheels)
+          outerRing.rotation.z += 0.012 * speed;
+          // Atkinson crankshaft input
+          iceShaft.rotation.y += 0.015 * speed;
+          // Swirl energy flow particle torus
+          energyParticles.rotation.y += 0.02 * speed;
+        },
+      ];
+    }
   }, [selectedTopic, renderStyle, particleDensity]);
 
   // Telemetry details based on selected topic
@@ -1014,6 +1158,13 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           { label: 'Planetary Albedo', val: 'α = 0.306 (Cryospheric Feedback)' },
           { label: 'Global NPP Flux', val: '56.4 Gt C/yr (Miami Model)' },
           { label: 'Ocean Stoichiometry', val: 'Redfield 106C : 16N : 1P' },
+        ];
+      case 'hybrid-vehicles':
+        return [
+          { label: 'Transmission', val: 'Planetary e-CVT Power-Split' },
+          { label: 'Atkinson Thermal Eff.', val: 'η_max = 41.2% (BSFC 214 g/kWh)' },
+          { label: 'Dual Motors', val: 'MG1: 45 kW Gen | MG2: 135 kW Drive' },
+          { label: 'Energy Management', val: 'ECMS Real-Time Hamiltonian' },
         ];
       default:
         return [];

@@ -21,6 +21,7 @@ import {
   FlaskConical,
   Filter,
   Globe,
+  Car,
 } from 'lucide-react';
 
 interface GlossaryModalProps {
@@ -48,6 +49,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
     { id: 'quantum', label: { en: 'Quantum Physics', id: 'Fisika Kuantum' }, icon: Atom },
     { id: 'biology', label: { en: 'Embryology', id: 'Embriologi' }, icon: Dna },
     { id: 'ev-battery', label: { en: 'EV Battery Tech', id: 'Baterai EV' }, icon: Zap },
+    { id: 'hybrid', label: { en: 'Hybrid Powertrain', id: 'Powertrain Hibrida' }, icon: Car },
     { id: 'pulmonology', label: { en: 'Pulmonology', id: 'Pulmonologi' }, icon: Activity },
     { id: 'cardiology', label: { en: 'Cardiology & ACS', id: 'Kardiologi & SKA' }, icon: HeartCrack },
     { id: 'hypertension', label: { en: 'Hypertension', id: 'Hipertensi' }, icon: Gauge },

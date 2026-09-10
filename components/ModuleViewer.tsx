@@ -14,6 +14,7 @@ import { PulmonaryAlveoliViewer } from './3d/PulmonaryAlveoliViewer';
 import { CardiacArrestViewer } from './3d/CardiacArrestViewer';
 import { HypertensionVascularViewer } from './3d/HypertensionVascularViewer';
 import { BiomesGlobeViewer } from './3d/BiomesGlobeViewer';
+import { HybridPowertrainViewer } from './3d/HybridPowertrainViewer';
 import { EVPowertrainSimulator } from './simulators/EVPowertrainSimulator';
 import { TheoryReader } from './TheoryReader';
 import { QuizComponent } from './QuizComponent';
@@ -297,6 +298,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
               {currentModule.interactiveType === 'cardiac-hemodynamics' && <CardiacArrestViewer />}
               {currentModule.interactiveType === 'vascular-hemodynamics' && <HypertensionVascularViewer />}
               {currentModule.interactiveType === 'biome-globe' && <BiomesGlobeViewer />}
+              {currentModule.interactiveType === 'hybrid-powertrain' && <HybridPowertrainViewer />}
 
               {/* Lab Completion & Action Bar */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">

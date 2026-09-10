@@ -332,7 +332,7 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
       }
     }
 
-    // Grand polymath (all 31 modules across all 7 disciplines)
+    // Grand polymath (all 35 modules across all 8 disciplines)
     const allModuleIds = allTopics.flatMap((t) => t.modules.map((m) => m.id));
     if (
       allModuleIds.every((id) => currentProgress.completedModules.includes(id)) &&
