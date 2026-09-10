@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.3.1',
+  version: '1.3.2',
   major: 1,
   minor: 3,
-  patch: 1,
+  patch: 2,
   releaseDate: '2026-09-10',
-  buildNumber: 'build.20260910.01',
+  buildNumber: 'build.20260910.02',
   environment: 'production',
   changelog: [
+    {
+      version: '1.3.2',
+      date: '2026-09-10',
+      type: 'patch',
+      title: {
+        en: 'Seamless Viewport Scroll Timing & Decoupled Module Transition Polish',
+        id: 'Penyempurnaan Waktu Gulir Layar Mulus & Transisi Modul yang Terisolasi',
+      },
+      highlights: {
+        en: [
+          'Resolved screen teleportation and mid-transition scroll jumping when clicking Next Module or navigating between modules.',
+          'Synchronized viewport scroll reset to <AnimatePresence mode="wait"> onExitComplete so the page cleanly resets to top only after the exiting module has fully faded out.',
+          'Decoupled ModuleViewer and LearningDashboard props from live context churn during exit animations, preventing premature module and tab content flashing.',
+          'Aligned multi-view navigation cubic-bezier easing to [0.22, 1, 0.36, 1] with smooth spring transitions per platform motion guidelines.',
+        ],
+        id: [
+          'Memperbaiki masalah teleportasi layar dan lompatan gulir di tengah transisi saat mengklik Modul Berikutnya atau berpindah antar modul.',
+          'Menyinkronkan reset posisi gulir layar ke onExitComplete pada <AnimatePresence mode="wait"> sehingga posisi kembali ke atas secara mulus hanya setelah modul sebelumnya selesai memudar.',
+          'Mendekopel prop ModuleViewer dan LearningDashboard dari perubahan langsung konteks selama animasi keluar, mencegah kedipan konten modul dan tab prematur.',
+          'Menyelaraskan easing cubic-bezier navigasi multi-tampilan ke [0.22, 1, 0.36, 1] dengan transisi pegas yang mulus sesuai panduan animasi platform.',
+        ],
+      },
+    },
     {
       version: '1.3.1',
       date: '2026-09-10',

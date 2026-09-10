@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
 import { getTopicById, getModuleById } from '@/lib/content';
-import { getUrlForState, copyTextToClipboard } from '@/lib/routing';
+import { getUrlForState, copyTextToClipboard, ModuleTab } from '@/lib/routing';
 import { QuantumOrbitalViewer } from './3d/QuantumOrbitalViewer';
 import { DoubleSlitViewer } from './3d/DoubleSlitViewer';
 import { EmbryoViewer } from './3d/EmbryoViewer';
@@ -32,24 +32,48 @@ import {
   Share2,
   Check,
 } from 'lucide-react';
+import { TopicId } from '@/types/learning';
 
 interface ModuleViewerProps {
+  moduleId?: string | null;
+  topicId?: TopicId | null;
+  initialTab?: ModuleTab;
   onOpenGlossary?: () => void;
 }
 
-export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) => {
+export const ModuleViewer: React.FC<ModuleViewerProps> = ({
+  moduleId: propModuleId,
+  topicId: propTopicId,
+  initialTab = 'theory',
+  onOpenGlossary,
+}) => {
   const {
     language,
-    selectedTopicId,
-    selectedModuleId,
+    selectedTopicId: contextTopicId,
+    selectedModuleId: contextModuleId,
     navigateTo,
     userProgress,
     markModuleComplete,
     toggleBookmark,
     saveNote,
-    activeTab,
-    setActiveTab,
+    setActiveTab: setGlobalActiveTab,
   } = useLearning();
+
+  const effectiveModuleId = propModuleId !== undefined ? propModuleId : contextModuleId;
+  const effectiveTopicId = propTopicId !== undefined ? propTopicId : contextTopicId;
+
+  const [localTab, setLocalTab] = useState<ModuleTab>(initialTab);
+
+  useEffect(() => {
+    if (initialTab) {
+      setLocalTab(initialTab);
+    }
+  }, [initialTab]);
+
+  const handleTabChange = (tab: ModuleTab) => {
+    setLocalTab(tab);
+    setGlobalActiveTab(tab);
+  };
 
   const t = translations[language];
   const [isCopied, setIsCopied] = useState(false);
@@ -61,14 +85,14 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
     };
   }, []);
 
-  const moduleInfo = selectedModuleId ? getModuleById(selectedModuleId) : undefined;
-  const topic = moduleInfo?.topic || getTopicById(selectedTopicId || 'quantum-mechanics');
+  const moduleInfo = effectiveModuleId ? getModuleById(effectiveModuleId) : undefined;
+  const topic = moduleInfo?.topic || getTopicById(effectiveTopicId || 'quantum-mechanics');
   const currentModule = moduleInfo?.module || topic?.modules[0];
 
   const handleCopyLink = async () => {
     if (!currentModule || !topic) return;
     try {
-      const canonicalPath = getUrlForState('module', topic.id, currentModule.id, activeTab);
+      const canonicalPath = getUrlForState('module', topic.id, currentModule.id, localTab);
       const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}${canonicalPath}` : '';
       const copied = await copyTextToClipboard(shareUrl);
       if (copied) {
@@ -83,11 +107,6 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
       console.warn('Failed to copy URL:', err);
     }
   };
-
-  // Scroll to top on module or tab change to prevent overlapping view
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [selectedModuleId, activeTab]);
 
   if (!topic || !currentModule) {
     return (
@@ -200,9 +219,9 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
         {/* 2. Workspace Tabs with Smooth Indicator */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto border-t border-slate-100 dark:border-slate-800 text-xs font-bold">
           <button
-            onClick={() => setActiveTab('theory')}
+            onClick={() => handleTabChange('theory')}
             className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
-              activeTab === 'theory'
+              localTab === 'theory'
                 ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                 : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
@@ -212,9 +231,9 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           </button>
 
           <button
-            onClick={() => setActiveTab('interactive')}
+            onClick={() => handleTabChange('interactive')}
             className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
-              activeTab === 'interactive'
+              localTab === 'interactive'
                 ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                 : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
@@ -224,9 +243,9 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           </button>
 
           <button
-            onClick={() => setActiveTab('quiz')}
+            onClick={() => handleTabChange('quiz')}
             className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
-              activeTab === 'quiz'
+              localTab === 'quiz'
                 ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                 : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
@@ -241,9 +260,9 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           </button>
 
           <button
-            onClick={() => setActiveTab('notes')}
+            onClick={() => handleTabChange('notes')}
             className={`py-3 px-3.5 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer ${
-              activeTab === 'notes'
+              localTab === 'notes'
                 ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                 : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
@@ -256,9 +275,16 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
 
       {/* 3. Main Dynamic Content Container with AnimatePresence */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 min-w-0">
-        <AnimatePresence mode="wait">
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={() => {
+            if (typeof window !== 'undefined') {
+              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }
+          }}
+        >
           {/* TAB 1: THEORY & PRINCIPLES */}
-          {activeTab === 'theory' && (
+          {localTab === 'theory' && (
             <motion.div
               key="theory"
               initial={{ opacity: 0, y: 10 }}
@@ -272,15 +298,15 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
                 module={currentModule}
                 topic={topic}
                 language={language}
-                onNavigateToQuiz={() => setActiveTab('quiz')}
-                onNavigateTo3D={() => setActiveTab('interactive')}
+                onNavigateToQuiz={() => handleTabChange('quiz')}
+                onNavigateTo3D={() => handleTabChange('interactive')}
                 onOpenGlossary={onOpenGlossary}
               />
             </motion.div>
           )}
 
           {/* TAB 2: 3D INTERACTIVE LAB */}
-          {activeTab === 'interactive' && (
+          {localTab === 'interactive' && (
             <motion.div
               key="interactive"
               initial={{ opacity: 0 }}
@@ -314,14 +340,14 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
                 </div>
                 <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
                   <button
-                    onClick={() => setActiveTab('theory')}
+                    onClick={() => handleTabChange('theory')}
                     className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
                     <span>{t.moduleViewer.tabOverview}</span>
                   </button>
                   <button
-                    onClick={() => setActiveTab('quiz')}
+                    onClick={() => handleTabChange('quiz')}
                     className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
                   >
                     <HelpCircle className="w-3.5 h-3.5 text-slate-950" />
@@ -334,7 +360,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           )}
 
           {/* TAB 3: CHECKPOINT QUIZ */}
-          {activeTab === 'quiz' && (
+          {localTab === 'quiz' && (
             <motion.div
               key="quiz"
               initial={{ opacity: 0, y: 10 }}
@@ -349,13 +375,10 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
                 topic={topic}
                 language={language}
                 onOpenGlossary={onOpenGlossary}
-                onNavigateToTheory={() => setActiveTab('theory')}
+                onNavigateToTheory={() => handleTabChange('theory')}
                 onNavigateToNextModule={
                   nextModule
-                    ? () => {
-                        setActiveTab('theory');
-                        navigateTo('module', topic.id, nextModule.id);
-                      }
+                    ? () => navigateTo('module', topic.id, nextModule.id, { tab: 'theory' })
                     : () => navigateTo('learn', null)
                 }
               />
@@ -363,7 +386,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
           )}
 
           {/* TAB 4: STUDY NOTES */}
-          {activeTab === 'notes' && (
+          {localTab === 'notes' && (
             <motion.div
               key="notes"
               initial={{ opacity: 0, y: 10 }}
@@ -390,8 +413,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => {
-                setActiveTab('theory');
-                navigateTo('module', topic.id, prevModule.id);
+                navigateTo('module', topic.id, prevModule.id, { tab: 'theory' });
               }}
               className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-3 transition-all shadow-xs cursor-pointer group"
             >
@@ -413,8 +435,7 @@ export const ModuleViewer: React.FC<ModuleViewerProps> = ({ onOpenGlossary }) =>
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => {
-                setActiveTab('theory');
-                navigateTo('module', topic.id, nextModule.id);
+                navigateTo('module', topic.id, nextModule.id, { tab: 'theory' });
               }}
               className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white text-xs font-bold flex items-center justify-between sm:justify-start gap-3 transition-all shadow-sm hover:shadow-md cursor-pointer group"
             >

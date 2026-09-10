@@ -41,17 +41,26 @@ const topicIcons: Record<TopicId, React.ReactNode> = {
   'hybrid-vehicles': <Car className="w-5 h-5 text-orange-600 dark:text-orange-400" />,
 };
 
-export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ onOpenProgress }) => {
+interface LearningDashboardProps {
+  topicId?: TopicId | null;
+  onOpenProgress: () => void;
+}
+
+export const LearningDashboard: React.FC<LearningDashboardProps> = ({
+  topicId: propTopicId,
+  onOpenProgress,
+}) => {
   const {
     language,
-    selectedTopicId,
+    selectedTopicId: contextTopicId,
     navigateTo,
     userProgress,
     totalCompletionPercentage,
   } = useLearning();
 
+  const effectiveTopicId = propTopicId !== undefined ? propTopicId : contextTopicId;
   const t = translations[language];
-  const currentTopic = selectedTopicId ? getTopicById(selectedTopicId) : null;
+  const currentTopic = effectiveTopicId ? getTopicById(effectiveTopicId) : null;
 
   const [isTopicCopied, setIsTopicCopied] = useState(false);
   const topicCopyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -98,7 +107,7 @@ export const LearningDashboard: React.FC<{ onOpenProgress: () => void }> = ({ on
               <button
                 onClick={() => navigateTo('learn', null)}
                 className={`transition-colors ${
-                  !selectedTopicId ? 'text-sky-600 dark:text-sky-400 font-bold' : 'hover:text-slate-600 dark:hover:text-slate-200'
+                  !effectiveTopicId ? 'text-sky-600 dark:text-sky-400 font-bold' : 'hover:text-slate-600 dark:hover:text-slate-200'
                 }`}
               >
                 {t.nav.topics}

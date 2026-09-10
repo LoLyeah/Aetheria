@@ -14,7 +14,7 @@ import { VersionModal } from '@/components/VersionModal';
 import { Footer } from '@/components/Footer';
 
 export const AppContent: React.FC = () => {
-  const { view, language, navigateTo, returnFromSettings, selectedModuleId } = useLearning();
+  const { view, language, navigateTo, returnFromSettings, selectedModuleId, selectedTopicId, activeTab } = useLearning();
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
   const [isVersionModalOpen, setIsVersionModalOpen] = useState(false);
   const [isGlossaryModalOpen, setIsGlossaryModalOpen] = useState(false);
@@ -29,14 +29,22 @@ export const AppContent: React.FC = () => {
       />
 
       <main className="flex-grow relative overflow-hidden">
-        <AnimatePresence mode="wait">
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={() => {
+            if (typeof window !== 'undefined') {
+              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }
+          }}
+        >
           {view === 'landing' && (
             <motion.div
               key="landing"
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.28, ease: 'easeInOut' }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full min-w-0"
             >
               <LandingPage />
             </motion.div>
@@ -44,27 +52,35 @@ export const AppContent: React.FC = () => {
 
           {(view === 'learn' || view === 'settings') && (
             <motion.div
-              key="learn"
-              initial={{ opacity: 0, y: 14 }}
+              key={`learn-${selectedTopicId || 'root'}`}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.28, ease: 'easeInOut' }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="w-full min-w-0"
             >
-              <LearningDashboard onOpenProgress={() => setIsProgressModalOpen(true)} />
+              <LearningDashboard
+                topicId={selectedTopicId}
+                onOpenProgress={() => setIsProgressModalOpen(true)}
+              />
             </motion.div>
           )}
 
           {view === 'module' && (
             <motion.div
               key={`module-${selectedModuleId || 'default'}`}
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.28, ease: 'easeInOut' }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="w-full min-w-0"
             >
-              <ModuleViewer key={selectedModuleId || 'default'} onOpenGlossary={() => setIsGlossaryModalOpen(true)} />
+              <ModuleViewer
+                moduleId={selectedModuleId}
+                topicId={selectedTopicId}
+                initialTab={activeTab}
+                onOpenGlossary={() => setIsGlossaryModalOpen(true)}
+              />
             </motion.div>
           )}
         </AnimatePresence>

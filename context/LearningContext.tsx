@@ -523,6 +523,11 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
       };
     }
 
+    const isSameRoute =
+      newView === view &&
+      nextTopicId === selectedTopicId &&
+      nextModuleId === selectedModuleId;
+
     if (typeof window !== 'undefined' && !options?.skipHistory) {
       const targetUrl = getUrlForState(newView, nextTopicId, nextModuleId, nextTab);
       const currentUrl = window.location.pathname + window.location.search;
@@ -544,7 +549,11 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
       }
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Only scroll smoothly if remaining on the exact same view and module (e.g. clicking navbar logo to scroll up).
+    // For view or module transitions, scroll reset is handled seamlessly by AnimatePresence onExitComplete.
+    if (isSameRoute && typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const returnFromSettings = () => {
