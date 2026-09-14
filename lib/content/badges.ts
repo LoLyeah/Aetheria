@@ -126,6 +126,19 @@ export const allBadges: Badge[] = [
     requiredModuleIds: ['hyb-mod-1', 'hyb-mod-2', 'hyb-mod-3', 'hyb-mod-4', 'hyb-mod-5'],
   },
   {
+    id: 'bess-master',
+    title: {
+      en: 'Grid Storage Architect',
+      id: 'Arsitek Penyimpanan Jaringan & BESS',
+    },
+    description: {
+      en: 'Completed all 5 modules in Battery Storage Technologies & Next-Generation Chemistries.',
+      id: 'Menyelesaikan seluruh 5 modul dalam Teknologi Penyimpanan Baterai & Kimia Generasi Masa Depan.',
+    },
+    icon: 'BatteryCharging',
+    requiredModuleIds: ['bess-mod-1', 'bess-mod-2', 'bess-mod-3', 'bess-mod-4', 'bess-mod-5'],
+  },
+  {
     id: 'quiz-ace',
     title: {
       en: 'Academic Excellence',
@@ -145,8 +158,8 @@ export const allBadges: Badge[] = [
       id: 'Polimat Agung Aetheria',
     },
     description: {
-      en: 'Completed all 36 modules across all 8 foundational scientific disciplines.',
-      id: 'Menyelesaikan seluruh 36 modul di kedelapan disiplin ilmu sains dasar.',
+      en: 'Completed all 41 modules across all 9 foundational scientific disciplines.',
+      id: 'Menyelesaikan seluruh 41 modul di kesembilan disiplin ilmu sains dasar.',
     },
     icon: 'GraduationCap',
   },

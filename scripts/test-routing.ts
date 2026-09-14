@@ -66,9 +66,9 @@ for (const topic of allTopics) {
   assert.equal(getUrlForState('learn', topic.id), `/learn/${topic.id}`);
 }
 
-// 5. Specific Modules (test ALL 36 modules across all 8 disciplines)
+// 5. Specific Modules (test ALL 41 modules across all 9 disciplines)
 const allMods = getAllModules();
-assert.equal(allMods.length, 36, 'Expected 36 total modules across disciplines');
+assert.equal(allMods.length, 41, 'Expected 41 total modules across disciplines');
 
 for (const { topic, module: mod } of allMods) {
   // Test canonical path: /learn/:topicId/:moduleId
@@ -112,6 +112,8 @@ assert.equal(getUrlForState('module', null, 'bat-mod-2', 'interactive'), '/learn
 assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'bat-mod-2', 'interactive'), '/learn/ev-battery/bat-mod-2?tab=interactive');
 assert.equal(getUrlForState('module', null, 'hyb-mod-2', 'interactive'), '/learn/hybrid-vehicles/hyb-mod-2?tab=interactive');
 assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'hyb-mod-2', 'interactive'), '/learn/hybrid-vehicles/hyb-mod-2?tab=interactive');
+assert.equal(getUrlForState('module', null, 'bess-mod-2', 'interactive'), '/learn/battery-storage/bess-mod-2?tab=interactive');
+assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'bess-mod-2', 'interactive'), '/learn/battery-storage/bess-mod-2?tab=interactive');
 
 // 8. Settings Route
 assert.deepEqual(parseUrlToState('/settings', ''), {
@@ -190,7 +192,7 @@ import katex from 'katex';
 import { allBadges } from '../lib/content/badges';
 import { GLOSSARY_TERMS } from '../lib/glossaryData';
 
-console.log('📐 Verifying KaTeX formulas, bilingual content, and badge integrity across all 36 modules...');
+console.log('📐 Verifying KaTeX formulas, bilingual content, and badge integrity across all 41 modules...');
 
 // Check badge configurations
 const hybridBadge = allBadges.find((b) => b.id === 'hybrid-master');
@@ -201,10 +203,18 @@ assert.deepEqual(
   'hybrid-master badge must require all 5 hybrid modules'
 );
 
+const bessBadge = allBadges.find((b) => b.id === 'bess-master');
+assert.ok(bessBadge, 'bess-master badge must exist');
+assert.deepEqual(
+  bessBadge.requiredModuleIds,
+  ['bess-mod-1', 'bess-mod-2', 'bess-mod-3', 'bess-mod-4', 'bess-mod-5'],
+  'bess-master badge must require all 5 battery storage modules'
+);
+
 const grandPolymath = allBadges.find((b) => b.id === 'polymath');
 assert.ok(grandPolymath, 'polymath badge must exist');
-assert.match(grandPolymath.description.en, /36 modules/, 'grand-polymath must mention 36 modules in English');
-assert.match(grandPolymath.description.id, /36 modul/, 'grand-polymath must mention 36 modul in Indonesian');
+assert.match(grandPolymath.description.en, /41 modules/, 'grand-polymath must mention 41 modules in English');
+assert.match(grandPolymath.description.id, /41 modul/, 'grand-polymath must mention 41 modul in Indonesian');
 
 // Verify every module's bilingual integrity, order, quizzes, and KaTeX formulas
 let testedFormulasCount = 0;
@@ -216,8 +226,8 @@ for (const { topic, module: mod } of allMods) {
   assert.ok(mod.shortDescription.id && mod.shortDescription.id.trim().length > 0, `Module ${mod.id} missing id description`);
   assert.ok(mod.sections.length > 0, `Module ${mod.id} must have at least one section`);
   assert.ok(mod.quiz.length >= 1, `Module ${mod.id} must have at least 1 quiz question`);
-  if (mod.topicId === 'hybrid-vehicles') {
-    assert.ok(mod.quiz.length >= 2, `Hybrid module ${mod.id} must have at least 2 quiz questions`);
+  if (mod.topicId === 'hybrid-vehicles' || mod.topicId === 'battery-storage') {
+    assert.ok(mod.quiz.length >= 2, `${mod.topicId} module ${mod.id} must have at least 2 quiz questions`);
   }
 
   // Sections
@@ -314,4 +324,4 @@ for (const term of GLOSSARY_TERMS) {
 }
 
 console.log(`✅ Successfully validated ${testedFormulasCount} KaTeX mathematical formulas & variables without error!`);
-console.log('✅ ALL PRODUCTION ROUTING & DEEP-LINK TESTS PASSED (36 modules, 8 topics, edge cases)!');
+console.log('✅ ALL PRODUCTION ROUTING & DEEP-LINK TESTS PASSED (41 modules, 9 topics, edge cases)!');

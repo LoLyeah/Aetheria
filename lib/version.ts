@@ -22,14 +22,37 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.3.2',
+  version: '1.4.0',
   major: 1,
-  minor: 3,
-  patch: 2,
-  releaseDate: '2026-09-10',
-  buildNumber: 'build.20260910.02',
+  minor: 4,
+  patch: 0,
+  releaseDate: '2026-09-14',
+  buildNumber: 'build.20260914.00',
   environment: 'production',
   changelog: [
+    {
+      version: '1.4.0',
+      date: '2026-09-14',
+      type: 'minor',
+      title: {
+        en: 'Battery Storage Topic, Horizontal Disciplines Carousel & Dynamic Curriculum Progress',
+        id: 'Topik Penyimpanan Baterai, Karosel Disiplin Horizontal & Progres Kurikulum Dinamis',
+      },
+      highlights: {
+        en: [
+          'Added foundational discipline: Battery Storage Technologies & Next-Generation Chemistries with 5 sequential modules and interactive 3D laboratory apparatus.',
+          'Transformed Landing Page Core Disciplines into a smooth single-row horizontal scroll carousel with desktop arrow navigation and "Show All Topics" action.',
+          'Replaced legacy hardcoded module counter in LearningDashboard with dynamic count referencing all active curriculum modules.',
+          'Added comprehensive technical glossary terms and verified KaTeX mathematical formulations across all 41 modules.',
+        ],
+        id: [
+          'Menambahkan disiplin sains dasar: Teknologi Penyimpanan Baterai & Kimia Generasi Masa Depan dengan 5 modul berurutan dan aparatus lab interaktif 3D.',
+          'Mengubah Disiplin Utama di Beranda menjadi karosel gulir horizontal satu baris yang mulus dengan kontrol panah desktop dan tombol aksi "Lihat Semua Topik".',
+          'Mengganti penghitung modul lawas berkode tetap pada LearningDashboard dengan jumlah modul dinamis yang menghitung seluruh modul kurikulum aktif.',
+          'Menambahkan glosarium teknis komprehensif dan memverifikasi seluruh formula matematika KaTeX di 41 modul kurikulum.',
+        ],
+      },
+    },
     {
       version: '1.3.2',
       date: '2026-09-10',

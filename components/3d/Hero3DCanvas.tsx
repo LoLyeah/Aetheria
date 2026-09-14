@@ -26,6 +26,7 @@ import {
   HeartCrack,
   Globe,
   Car,
+  BatteryCharging,
   X,
   Info,
 } from 'lucide-react';
@@ -110,6 +111,14 @@ const TOPIC_OPTIONS: TopicOption[] = [
     icon: Car,
     accentColor: 'text-orange-400',
     badgeBg: 'bg-orange-500/20',
+  },
+  {
+    id: 'battery-storage',
+    label: { en: 'Battery Storage & BESS', id: 'Penyimpanan Baterai & BESS' },
+    category: { en: 'Grid BESS, Flow & Solid-State', id: 'BESS Jaringan, Alir & Solid-State' },
+    icon: BatteryCharging,
+    accentColor: 'text-teal-400',
+    badgeBg: 'bg-teal-500/20',
   },
 ];
 
@@ -1105,6 +1114,106 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         },
       ];
     }
+
+    // -------------------------------------------------------------
+    // TOPIC 9: BATTERY STORAGE TECHNOLOGIES & BESS ARCHITECTURE
+    // -------------------------------------------------------------
+    else if (selectedTopic === 'battery-storage') {
+      const pCount = particleDensity === 'ultra' ? 1200 : 600;
+
+      // 1. Containerized BESS Sub-Frame & Battery Module Racks
+      const bessGroup = new THREE.Group();
+      group.add(bessGroup);
+
+      const rackMat = new THREE.MeshStandardMaterial({
+        color: 0x1e293b,
+        metalness: 0.85,
+        roughness: 0.3,
+        wireframe: isWire,
+      });
+
+      const moduleMat = new THREE.MeshPhysicalMaterial({
+        color: 0x0d9488, // Deep teal
+        metalness: 0.7,
+        roughness: 0.2,
+        clearcoat: 0.6,
+        wireframe: isWire,
+      });
+
+      for (let r = -2; r <= 2; r++) {
+        const rackMesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 2.6, 1.2), rackMat);
+        rackMesh.position.set(r * 1.1, 0, 0);
+        bessGroup.add(rackMesh);
+
+        // Modules inside each rack
+        for (let m = -1; m <= 1; m++) {
+          const modMesh = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.65, 1.1), moduleMat);
+          modMesh.position.set(r * 1.1, m * 0.8, 0);
+          bessGroup.add(modMesh);
+
+          // LED indicator
+          const led = new THREE.Mesh(
+            new THREE.SphereGeometry(0.035, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x2dd4bf })
+          );
+          led.position.set(r * 1.1 + 0.37, m * 0.8, 0.56);
+          bessGroup.add(led);
+        }
+
+        animatedObjectsRef.current.explodedMeshes?.push({
+          mesh: rackMesh,
+          originalPos: rackMesh.position.clone(),
+          explodedPos: new THREE.Vector3(r * 1.7, 0, r % 2 === 0 ? 0.8 : -0.8),
+        });
+      }
+
+      // 2. Power Conversion System (PCS) Bidirectional Inverter Block
+      const pcsMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        metalness: 0.9,
+        roughness: 0.2,
+        wireframe: isWire,
+      });
+      const pcsCabinet = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.8, 1.4), pcsMat);
+      pcsCabinet.position.set(3.4, 0, 0);
+      group.add(pcsCabinet);
+
+      // 3. High-Voltage Copper Busways
+      const buswayGeo = new THREE.CylinderGeometry(0.05, 0.05, 6.2, 12);
+      const buswayMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.95, roughness: 0.1 });
+      const buswayTop = new THREE.Mesh(buswayGeo, buswayMat);
+      buswayTop.rotation.z = Math.PI / 2;
+      buswayTop.position.set(0.6, 1.4, 0);
+      group.add(buswayTop);
+
+      // 4. Coolant & Power Flow Swirling Particle Cloud
+      const gridParticleGeo = new THREE.BufferGeometry();
+      const gridPos = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount * 3; i += 3) {
+        gridPos[i] = -2.5 + Math.random() * 6.0;
+        gridPos[i + 1] = (Math.random() - 0.5) * 2.5;
+        gridPos[i + 2] = (Math.random() - 0.5) * 1.8;
+      }
+      gridParticleGeo.setAttribute('position', new THREE.BufferAttribute(gridPos, 3));
+      const gridParticleMat = new THREE.PointsMaterial({
+        color: 0x2dd4bf,
+        size: 0.05,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+      });
+      const gridParticles = new THREE.Points(gridParticleGeo, gridParticleMat);
+      group.add(gridParticles);
+
+      // 5. Dynamic Dispatch & Coolant Circulation Animator
+      animatedObjectsRef.current.customAnimators = [
+        (dt: number) => {
+          const speed = speedRef.current;
+          gridParticles.rotation.y += 0.015 * speed;
+          gridParticles.rotation.x += 0.008 * speed;
+        },
+      ];
+    }
   }, [selectedTopic, renderStyle, particleDensity]);
 
   // Telemetry details based on selected topic
@@ -1165,6 +1274,13 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           { label: 'Atkinson Thermal Eff.', val: 'η_max = 41.2% (BSFC 214 g/kWh)' },
           { label: 'Dual Motors', val: 'MG1: 45 kW Gen | MG2: 135 kW Drive' },
           { label: 'Energy Management', val: 'ECMS Real-Time Hamiltonian' },
+        ];
+      case 'battery-storage':
+        return [
+          { label: 'System Capacity', val: '2.5 MW / 10.0 MWh (4h LDES)' },
+          { label: 'Round-Trip Eff.', val: 'RTE = 89.2% (AC-to-AC LFP)' },
+          { label: 'Levelized Cost', val: 'LCOS = $118 / MWh (15-yr life)' },
+          { label: 'Degradation Rate', val: 'ΔSoH = -1.6% / yr (Liquid Cooled)' },
         ];
       default:
         return [];

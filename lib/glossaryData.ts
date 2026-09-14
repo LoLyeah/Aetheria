@@ -7,6 +7,7 @@ export type GlossaryCategory =
   | 'hypertension'
   | 'ecology'
   | 'hybrid'
+  | 'battery-storage'
   | 'general';
 
 export interface GlossaryTermData {
@@ -38,7 +39,8 @@ export interface GlossaryTermData {
     | 'cardiac-arrest'
     | 'hypertension'
     | 'biomes-ecology'
-    | 'hybrid-vehicles';
+    | 'hybrid-vehicles'
+    | 'battery-storage';
 }
 
 export const GLOSSARY_TERMS: GlossaryTermData[] = [
@@ -1944,6 +1946,260 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: 'Umumnya diwujudkan melalui konfigurasi P2 dengan kopling pemutus mesin (K0), memberikan dorongan akselerasi tinggi dan efisiensi jelajah jalan bebas hambatan.',
     },
     relatedTopicId: 'hybrid-vehicles',
+  },
+  // ================= BATTERY STORAGE & UPCOMING CHEMISTRIES =================
+  {
+    id: 'bess',
+    term: {
+      en: 'Battery Energy Storage System (BESS)',
+      id: 'Sistem Penyimpanan Energi Baterai (BESS)',
+    },
+    aliases: {
+      en: ['BESS', 'grid storage', 'utility storage', 'containerized BESS'],
+      id: ['BESS', 'penyimpanan jaringan', 'baterai skala jaringan'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{BESS}',
+    pronunciation: '/bɛs/',
+    definition: {
+      en: 'An electrochemical facility integrating battery cell modules, power conversion inverters, thermal HVAC cooling, and control systems to deliver utility-scale power dispatch, frequency regulation, and renewable buffering.',
+      id: 'Fasilitas elektrokimia terpadu yang memadukan modul sel baterai, inverter konversi daya, pendingin termal HVAC, dan sistem kendali untuk menyalurkan daya skala utilitas, regulasi frekuensi, dan penyerapan energi terbarukan.',
+    },
+    context: {
+      en: 'Critical infrastructure for stabilizing decarbonized power grids experiencing high penetration of intermittent solar and wind generation.',
+      id: 'Infrastruktur kritis untuk menstabilkan jaringan listrik terdekarbonisasi yang memiliki penetrasi pembangkit surya dan angin intermiten tinggi.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'lcos',
+    term: {
+      en: 'Levelized Cost of Storage (LCOS)',
+      id: 'Biaya Penyimpanan Tersamaratakan (LCOS)',
+    },
+    aliases: {
+      en: ['LCOS', 'storage levelized cost', 'storage cost per MWh'],
+      id: ['LCOS', 'biaya listrik tersamaratakan penyimpanan'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{LCOS} = \\frac{\\text{Lifecycle Costs}}{\\text{Delivered Energy}}',
+    pronunciation: '/ˈlɛv.əl.aɪzd kɒst əv ˈstɔː.rɪdʒ/',
+    definition: {
+      en: 'The discounted lifetime capital and operating cost of an energy storage system divided by the cumulative discounted electrical energy delivered over its operational life.',
+      id: 'Total biaya modal dan operasional siklus hidup terdiskon dari sistem penyimpanan energi dibagi dengan energi listrik kumulatif terdiskon yang berhasil disalurkan sepanjang umur operasionalnya.',
+    },
+    context: {
+      en: 'The standard economic benchmark used by utilities and investors to evaluate the economic feasibility of competing storage technologies.',
+      id: 'Tolok ukur ekonomi standar yang digunakan utilitas dan investor untuk mengevaluasi kelayakan ekonomi berbagai teknologi penyimpanan energi.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'vrfb',
+    term: {
+      en: 'Vanadium Redox Flow Battery (VRFB)',
+      id: 'Baterai Alir Redoks Vanadium (VRFB)',
+    },
+    aliases: {
+      en: ['VRFB', 'vanadium flow battery', 'redox flow battery', 'RFB'],
+      id: ['VRFB', 'baterai alir vanadium', 'baterai redoks alir'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{V}^{2+}/\\text{V}^{3+} \\parallel \\text{VO}^{2+}/\\text{VO}_2^+',
+    pronunciation: '/vəˈneɪ.di.əm ˈriː.dɒks fləʊ ˈbæt.ər.i/',
+    definition: {
+      en: 'A rechargeable flow battery that utilizes the four contiguous oxidation states of vanadium dissolved in aqueous acid solutions, storing chemical energy in external electrolyte tanks.',
+      id: 'Baterai alir sekunder yang memanfaatkan empat tingkat oksidasi berurutan dari unsur vanadium yang dilarutkan dalam asam, menyimpan energi kimiawi di dalam tangki elektrolit eksternal.',
+    },
+    context: {
+      en: 'Offers decoupled power and energy scaling with over 20,000 cycles and zero fire hazard, making it ideal for 6-to-24 hour stationary grid storage.',
+      id: 'Menghadirkan pemisahan independen daya dan kapasitas energi dengan usia siklus melampaui 20.000 kali dan tanpa bahaya kebakaran, ideal untuk penyimpanan stasioner 6 hingga 24 jam.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'sodium-ion',
+    term: {
+      en: 'Sodium-Ion Battery (Na-ion)',
+      id: 'Baterai Natrium-Ion (Na-ion)',
+    },
+    aliases: {
+      en: ['Na-ion', 'sodium battery', 'sodium ion cell'],
+      id: ['Na-ion', 'baterai natrium-ion', 'baterai garam'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{Na}^+',
+    pronunciation: '/ˈsəʊ.di.əm ˈaɪ.ən ˈbæt.ər.i/',
+    definition: {
+      en: 'An electrochemical secondary battery using sodium cations as charge carriers, paired with hard carbon anodes and earth-abundant layered oxide or Prussian blue cathodes.',
+      id: 'Baterai sekunder elektrokimia yang menggunakan kation natrium sebagai pembawa muatan, dipadukan dengan anoda karbon keras serta katoda oksida berlapis atau Prussian blue yang melimpah di alam.',
+    },
+    context: {
+      en: 'Provides low raw material costs, superior cold-temperature operation (-40°C), and zero-volt deep discharge transport safety using aluminum foil current collectors.',
+      id: 'Menghadirkan biaya bahan baku rendah, kinerja suhu beku superior (-40°C), dan keamanan pengiriman pada 0 volt berkat penggunaan foil kolektor aluminium di kedua kutub.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'solid-state-battery',
+    term: {
+      en: 'All-Solid-State Battery (ASSB)',
+      id: 'Baterai All-Solid-State (ASSB)',
+    },
+    aliases: {
+      en: ['ASSB', 'solid state battery', 'solid electrolyte battery'],
+      id: ['ASSB', 'baterai elektrolit padat', 'baterai solid state'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{Li}_{\\text{metal}} \\parallel \\text{Solid Electrolyte}',
+    pronunciation: '/ˈsɒl.ɪd steɪt ˈbæt.ər.i/',
+    definition: {
+      en: 'A battery architecture where flammable organic liquid electrolytes are replaced by solid ceramic, sulfide, or polymer ion conductors, enabling metallic lithium anodes.',
+      id: 'Arsitektur baterai di mana cairan elektrolit organik yang mudah terbakar digantikan oleh konduktor ionik padat berupa keramik, sulfida, atau polimer, memungkinkan pemakaian anoda logam litium murni.',
+    },
+    context: {
+      en: 'Pushes gravimetric energy densities beyond 400 Wh/kg while eliminating thermal runaway combustion risks under mechanical puncture or overcharge.',
+      id: 'Mendongkrak densitas energi gravimetrik melampaui 400 Wh/kg sekaligus melenyapkan risiko kebakaran termal saat tertusuk atau mengalami pengisian berlebih.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'critical-current-density',
+    term: {
+      en: 'Critical Current Density (CCD)',
+      id: 'Densitas Arus Kritis (CCD)',
+    },
+    aliases: {
+      en: ['CCD', 'critical current', 'dendrite threshold'],
+      id: ['CCD', 'densitas arus kritis', 'ambang batas dendrit'],
+    },
+    category: 'battery-storage',
+    symbol: 'J_{\\text{CCD}}',
+    pronunciation: '/ˈkrɪt.ɪ.kəl ˈkʌr.ənt ˈdɛn.sɪ.ti/',
+    definition: {
+      en: 'The upper threshold of charging current density in a solid-state cell above which metallic lithium dendrites nucleate along grain boundaries and cause short-circuits.',
+      id: 'Batas atas densitas arus pengisian pada sel solid-state yang jika dilampaui akan memicu pertumbuhan dendrit logam litium di sepanjang batas butir dan menyebabkan korsleting.',
+    },
+    context: {
+      en: 'A vital engineering metric determining how fast solid-state batteries can safely recharge without catastrophic failure.',
+      id: 'Metrik rekayasa vital yang menentukan seberapa cepat baterai solid-state dapat diisi ulang dengan aman tanpa kegagalan katastropik.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'lithium-sulfur',
+    term: {
+      en: 'Lithium-Sulfur Battery (Li-S)',
+      id: 'Baterai Litium-Sulfur (Li-S)',
+    },
+    aliases: {
+      en: ['Li-S', 'lithium sulfur cell', 'Li-S battery'],
+      id: ['Li-S', 'baterai litium sulfur'],
+    },
+    category: 'battery-storage',
+    symbol: 'S_8 + 16\\text{Li}^+ + 16e^- \\rightleftharpoons 8\\text{Li}_2S',
+    pronunciation: '/ˈlɪθ.i.əm ˈsʌl.fər ˈbæt.ər.i/',
+    definition: {
+      en: 'A multielectron conversion electrochemical system featuring an elemental sulfur cathode and lithium metal anode with a theoretical specific energy of 2,600 Wh/kg.',
+      id: 'Sistem elektrokimia konversi multielektron yang mengandalkan katoda sulfur murni dan anoda logam litium dengan energi spesifik teoretis mencapai 2.600 Wh/kg.',
+    },
+    context: {
+      en: 'Targeted for stratospheric pseudo-satellites, electric aviation, and high-altitude aerospace where lightweight mass is paramount.',
+      id: 'Ditargetkan untuk satelit semu stratosfer, penerbangan listrik, dan kedirgantaraan ketinggian tinggi di mana bobot ultra-ringan menjadi prioritas utama.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'polysulfide-shuttle',
+    term: {
+      en: 'Polysulfide Shuttle Effect',
+      id: 'Efek Bolak-Balik Polisulfida',
+    },
+    aliases: {
+      en: ['polysulfide shuttle', 'shuttle mechanism', 'shuttle effect'],
+      id: ['efek bolak-balik polisulfida', 'mekanisme bolak-balik polisulfida'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{Li}_2\\text{S}_x \\xrightarrow{\\text{diffusion}} \\text{Anode}',
+    pronunciation: '/ˌpɒl.iˈsʌl.faɪd ˈʃʌt.əl ɪˈfɛkt/',
+    definition: {
+      en: 'The parasitic dissolution and diffusion of intermediate long-chain lithium polysulfides from cathode to anode, causing severe self-discharge and active sulfur loss.',
+      id: 'Pelarutan dan difusi parasitik molekul perantara polisulfida litium rantai panjang dari katoda menuju anoda, memicu pengosongan mandiri dan hilangnya material sulfur aktif.',
+    },
+    context: {
+      en: 'Mitigated in next-generation cells through solid-state barriers, permselective functional coatings, and localized high-concentration electrolytes.',
+      id: 'Dimitigasi pada sel masa depan melalui pemisah solid-state, pelapis fungsional selektif, dan elektrolit berkonsentrasi tinggi terlokalisasi.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'iron-air-battery',
+    term: {
+      en: 'Iron-Air Battery (Fe-Air)',
+      id: 'Baterai Besi-Udara (Fe-Air)',
+    },
+    aliases: {
+      en: ['Fe-Air', 'iron air cell', 'reversible rust battery'],
+      id: ['Fe-Air', 'baterai besi udara', 'baterai karat bolak-balik'],
+    },
+    category: 'battery-storage',
+    symbol: '2\\text{Fe} + \\text{O}_2 + 2\\text{H}_2\\text{O} \\rightleftharpoons 2\\text{Fe(OH)}_2',
+    pronunciation: '/ˈaɪ.ən eər ˈbæt.ər.i/',
+    definition: {
+      en: 'A multi-day energy storage technology utilizing the reversible electrochemical oxidation and reduction of metallic iron in an alkaline electrolyte breathing ambient air.',
+      id: 'Teknologi penyimpanan energi multi-hari yang memanfaatkan oksidasi dan reduksi elektrokimia bolak-balik dari logam besi dalam elektrolit alkalin yang menghirup udara luar.',
+    },
+    context: {
+      en: 'Enables 100-hour continuous discharge for multi-day weather events (Dunkelflaute) at a capital cost below $25/kWh.',
+      id: 'Memungkinkan pengosongan kontinu selama 100 jam untuk mengatasi cuaca ekstrem multi-hari (Dunkelflaute) dengan biaya modal di bawah $25/kWh.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'ldes',
+    term: {
+      en: 'Long-Duration Energy Storage (LDES)',
+      id: 'Penyimpanan Energi Berdurasi Panjang (LDES)',
+    },
+    aliases: {
+      en: ['LDES', 'long duration storage', 'multi-day storage'],
+      id: ['LDES', 'penyimpanan durasi panjang', 'penyimpanan multi-hari'],
+    },
+    category: 'battery-storage',
+    symbol: '\\text{LDES} \\ (t_{\\text{discharge}} \\ge 8\\text{h})',
+    pronunciation: '/lɒŋ djʊˈreɪ.ʃən ˈɛn.ə.dʒi ˈstɔː.rɪdʒ/',
+    definition: {
+      en: 'Energy storage systems designed to deliver rated power continuously for 8 hours to multiple days, addressing multi-day renewable droughts and seasonal supply shifts.',
+      id: 'Sistem penyimpanan energi yang dirancang untuk menyalurkan daya secara kontinu selama 8 jam hingga berhari-hari, mengatasi ketiadaan angin-surya multi-hari dan pergeseran pasokan musiman.',
+    },
+    context: {
+      en: 'Encompasses flow batteries, iron-air systems, compressed air, and pumped hydro as grids transition toward 100% renewable generation.',
+      id: 'Mencakup baterai alir, sistem besi-udara, udara terkompresi, dan pompa air hidro seiring transisi jaringan menuju 100% energi terbarukan.',
+    },
+    relatedTopicId: 'battery-storage',
+  },
+  {
+    id: 'rte',
+    term: {
+      en: 'Round-Trip Efficiency (RTE)',
+      id: 'Efisiensi Bolak-Balik (RTE)',
+    },
+    aliases: {
+      en: ['RTE', 'AC-to-AC efficiency', 'cycle efficiency'],
+      id: ['RTE', 'efisiensi AC-ke-AC', 'efisiensi siklus'],
+    },
+    category: 'battery-storage',
+    symbol: '\\eta_{\\text{RTE}} = \\frac{E_{\\text{discharge}}}{E_{\\text{charge}}}',
+    pronunciation: '/raʊnd trɪp ɪˈfɪʃ.ən.si/',
+    definition: {
+      en: 'The ratio of net usable electrical energy recovered during discharge to the total electrical energy supplied during charging, accounting for all electrochemical, inverter, and thermal cooling losses.',
+      id: 'Rasio energi listrik netto yang berhasil disalurkan kembali saat pengosongan terhadap total energi listrik yang dimasukkan saat pengisian, mencakup semua rugi elektrokimia, inverter, dan pendingin termal.',
+    },
+    context: {
+      en: 'Ranges from 88%–93% for lithium-ion, 68%–76% for flow batteries, and 45%–52% for iron-air systems.',
+      id: 'Berkisar antara 88%–93% pada litium-ion, 68%–76% pada baterai alir, dan 45%–52% pada sistem besi-udara.',
+    },
+    relatedTopicId: 'battery-storage',
   },
 ];
 

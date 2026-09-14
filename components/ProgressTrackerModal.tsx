@@ -24,6 +24,7 @@ import {
   Gauge,
   Globe,
   Car,
+  BatteryCharging,
 } from 'lucide-react';
 
 export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
@@ -208,6 +209,7 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                             {topic.id === 'hypertension' && <Gauge className="w-4 h-4 text-amber-500" />}
                             {topic.id === 'biomes-ecology' && <Globe className="w-4 h-4 text-emerald-500" />}
                             {topic.id === 'hybrid-vehicles' && <Car className="w-4 h-4 text-orange-500" />}
+                            {topic.id === 'battery-storage' && <BatteryCharging className="w-4 h-4 text-teal-500" />}
                           </div>
                           <div>
                             <div className="text-xs font-bold text-slate-900 dark:text-white">

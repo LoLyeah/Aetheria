@@ -110,6 +110,12 @@ const FORMULA_SNIPPETS: FormulaSnippet[] = [
   { label: 'ECMS Hamiltonian', latex: 'H = \\dot{m}_{\\text{fuel}} + s(t) \\cdot \\frac{P_{\\text{batt}}}{\\text{LHV}}', display: 'H_{ECMS}', discipline: 'hybrid' },
   { label: 'P2 Torque Sum', latex: 'T_{\\text{wheel}} = i_{\\text{gear}} [T_{\\text{EM}} + u_{\\text{K0}} T_{\\text{ICE}}]', display: 'T_{\\Sigma}', discipline: 'hybrid' },
   { label: 'BSFC Formula', latex: '\\text{BSFC} = \\frac{\\dot{m}_{\\text{fuel}}}{P_{\\text{mech}}}', display: 'BSFC', discipline: 'hybrid' },
+  // Battery Storage & Next-Gen Chemistries
+  { label: 'Levelized Cost of Storage', latex: '\\text{LCOS} = \\frac{\\text{CAPEX}_0 + \\sum \\frac{\\text{OPEX}_t + C_{\\text{chg},t}}{(1+r)^t}}{\\sum \\frac{E_{\\text{dis},t}}{(1+r)^t}}', display: 'LCOS', discipline: 'battery-storage' },
+  { label: 'VRFB Nernst Potential', latex: 'E_{\\text{cell}} = E^0 - \\frac{RT}{F} \\ln\\left(\\frac{[V^{3+}][VO^{2+}][H^+]^2}{[V^{2+}][VO_2^+]}\\right)', display: 'E_{VRFB}', discipline: 'battery-storage' },
+  { label: 'Hard Carbon Na+ Capacity', latex: 'q_{\\text{total}} = q_{\\text{slope}} + q_{\\text{plateau}}', display: 'q_{Na}', discipline: 'battery-storage' },
+  { label: 'Critical Current Density', latex: 'J_{\\text{CCD}} = \\frac{2FD_{\\text{Li}}C_{\\text{Li}}}{\\delta} \\cdot \\frac{\\sigma_{\\text{solid}}\\Omega_{\\text{Li}}}{R_{\\text{crack}}(1-\\nu^2)}', display: 'J_{CCD}', discipline: 'battery-storage' },
+  { label: 'Reversible Rusting', latex: '2\\text{Fe} + \\text{O}_2 + 2\\text{H}_2\\text{O} \\rightleftharpoons 2\\text{Fe(OH)}_2', display: 'Fe\\text{-Air}', discipline: 'battery-storage' },
 ];
 
 /**
@@ -641,6 +647,8 @@ export const StudyNotesWorkspace: React.FC<StudyNotesWorkspaceProps> = ({
     const defaultTopicFormula =
       topic.id === 'ev-battery'
         ? 'E = E^0 - \\frac{RT}{zF} \\ln Q'
+        : topic.id === 'battery-storage'
+        ? '\\text{LCOS} = \\frac{\\text{CAPEX}_0 + \\sum \\frac{\\text{OPEX}_t + C_{\\text{chg},t}}{(1+r)^t}}{\\sum \\frac{E_{\\text{dis},t}}{(1+r)^t}}'
         : topic.id === 'hybrid-vehicles'
         ? '\\omega_c(1 + \\rho) = \\omega_s + \\rho \\omega_r'
         : topic.id === 'biomes-ecology'
@@ -738,6 +746,7 @@ $$
   // Filter formula snippets by active module topic
   const relevantFormulaSnippets = useMemo(() => {
     const isBattery = topic.id === 'ev-battery';
+    const isBatteryStorage = topic.id === 'battery-storage';
     const isHybrid = topic.id === 'hybrid-vehicles';
     const isEcology = topic.id === 'biomes-ecology';
     const isBio =
@@ -749,10 +758,11 @@ $$
     return FORMULA_SNIPPETS.filter((snippet) => {
       if (snippet.discipline === 'math') return true;
       if (isBattery && snippet.discipline === 'battery') return true;
+      if (isBatteryStorage && snippet.discipline === 'battery-storage') return true;
       if (isHybrid && snippet.discipline === 'hybrid') return true;
       if (isEcology && snippet.discipline === 'ecology') return true;
       if (isBio && snippet.discipline === 'bio') return true;
-      if (!isBattery && !isHybrid && !isBio && !isEcology && snippet.discipline === 'qm') return true;
+      if (!isBattery && !isBatteryStorage && !isHybrid && !isBio && !isEcology && snippet.discipline === 'qm') return true;
       return false;
     });
   }, [topic.id]);

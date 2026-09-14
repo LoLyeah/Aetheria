@@ -9,7 +9,8 @@ export type TopicId =
   | 'cardiac-arrest'
   | 'hypertension'
   | 'biomes-ecology'
-  | 'hybrid-vehicles';
+  | 'hybrid-vehicles'
+  | 'battery-storage';
 
 export interface QuizQuestion {
   id: string;
@@ -121,7 +122,8 @@ export type InteractiveLabType =
   | 'cardiac-hemodynamics'
   | 'vascular-hemodynamics'
   | 'biome-globe'
-  | 'hybrid-powertrain';
+  | 'hybrid-powertrain'
+  | 'battery-storage-lab';
 
 export interface LearningModule {
   id: string;

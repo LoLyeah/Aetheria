@@ -20,6 +20,7 @@ import {
   ExternalLink,
   Globe,
   Car,
+  BatteryCharging,
 } from 'lucide-react';
 
 interface GlossaryTermProps {
@@ -97,6 +98,12 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       label: { en: 'Biomes & Ecology', id: 'Bioma & Ekologi' },
       badgeBg: 'bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
       icon: Globe,
+      accentBorder: 'border-teal-500/30',
+    },
+    'battery-storage': {
+      label: { en: 'Battery Storage & Next-Gen', id: 'Penyimpanan Baterai & Masa Depan' },
+      badgeBg: 'bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
+      icon: BatteryCharging,
       accentBorder: 'border-teal-500/30',
     },
     general: {

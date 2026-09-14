@@ -27,6 +27,7 @@ import {
   Share2,
   Check,
   Car,
+  BatteryCharging,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -39,6 +40,7 @@ const topicIcons: Record<TopicId, React.ReactNode> = {
   'hypertension': <Gauge className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
   'biomes-ecology': <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
   'hybrid-vehicles': <Car className="w-5 h-5 text-orange-600 dark:text-orange-400" />,
+  'battery-storage': <BatteryCharging className="w-5 h-5 text-teal-600 dark:text-teal-400" />,
 };
 
 interface LearningDashboardProps {
@@ -56,6 +58,7 @@ export const LearningDashboard: React.FC<LearningDashboardProps> = ({
     navigateTo,
     userProgress,
     totalCompletionPercentage,
+    totalModulesCount,
   } = useLearning();
 
   const effectiveTopicId = propTopicId !== undefined ? propTopicId : contextTopicId;
@@ -146,7 +149,7 @@ export const LearningDashboard: React.FC<LearningDashboardProps> = ({
                 {language === 'en' ? 'Curriculum Progress' : 'Progres Kurikulum'}
               </div>
               <div className="text-sm font-bold font-mono text-slate-900 dark:text-white">
-                {userProgress.completedModules.length} / 12 {language === 'en' ? 'Modules' : 'Modul'} ({totalCompletionPercentage}%)
+                {userProgress.completedModules.length} / {totalModulesCount} {language === 'en' ? 'Modules' : 'Modul'} ({totalCompletionPercentage}%)
               </div>
             </div>
             <button

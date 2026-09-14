@@ -43,6 +43,7 @@ interface LearningContextType {
   isWebGPUSupported: boolean;
   gpuRendererInfo: string;
   totalCompletionPercentage: number;
+  totalModulesCount: number;
 }
 
 const STORAGE_KEY_PROGRESS = 'aetheria_user_progress_v1';
@@ -586,11 +587,14 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
     }
   };
 
+  const totalModulesCount = useMemo(() => {
+    return allTopics.reduce((acc, t) => acc + t.modules.length, 0);
+  }, []);
+
   const totalCompletionPercentage = useMemo(() => {
-    const totalCount = allTopics.reduce((acc, t) => acc + t.modules.length, 0);
-    if (totalCount === 0) return 0;
-    return Math.round((userProgress.completedModules.length / totalCount) * 100);
-  }, [userProgress.completedModules]);
+    if (totalModulesCount === 0) return 0;
+    return Math.round((userProgress.completedModules.length / totalModulesCount) * 100);
+  }, [userProgress.completedModules, totalModulesCount]);
 
   return (
     <LearningContext.Provider
@@ -624,6 +628,7 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
         isWebGPUSupported,
         gpuRendererInfo,
         totalCompletionPercentage,
+        totalModulesCount,
       }}
     >
       {children}

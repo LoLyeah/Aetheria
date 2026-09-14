@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useLearning } from '@/context/LearningContext';
 import { translations } from '@/lib/translations';
@@ -16,6 +16,7 @@ import {
   Award,
   Globe2,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   Sparkles,
   Layers,
@@ -24,6 +25,7 @@ import {
   Gauge,
   Globe,
   Car,
+  BatteryCharging,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -51,6 +53,29 @@ export const LandingPage: React.FC = () => {
   const { language, navigateTo, userProgress } = useLearning();
   const t = translations[language];
   const [hoveredTopic, setHoveredTopic] = useState<TopicId>('quantum-mechanics');
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = () => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+  };
+
+  useEffect(() => {
+    updateScrollState();
+    window.addEventListener('resize', updateScrollState);
+    return () => window.removeEventListener('resize', updateScrollState);
+  }, []);
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (!carouselRef.current) return;
+    const cardWidth = 380;
+    const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
+    carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  };
 
   const topicIcons: Record<TopicId, React.ReactNode> = {
     'quantum-mechanics': <Atom className="w-5 h-5 text-sky-600 dark:text-sky-400" />,
@@ -61,6 +86,7 @@ export const LandingPage: React.FC = () => {
     'hypertension': <Gauge className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
     'biomes-ecology': <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
     'hybrid-vehicles': <Car className="w-5 h-5 text-orange-600 dark:text-orange-400" />,
+    'battery-storage': <BatteryCharging className="w-5 h-5 text-teal-600 dark:text-teal-400" />,
   };
 
   return (
@@ -160,25 +186,66 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. THREE MAJOR TOPICS SHOWCASE */}
+      {/* 2. CORE DISCIPLINES SHOWCASE (Horizontal One-Row Carousel) */}
       <section id="curriculum-topics" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <motion.div variants={itemVariants} className="max-w-2xl mb-10">
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-1">
-            <Layers className="w-3.5 h-3.5" />
-            <span>{language === 'en' ? 'CORE DISCIPLINES' : 'DISIPLIN UTAMA'}</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {language === 'en' ? 'Select a Subject Area' : 'Pilih Disiplin Sains'}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
-            {language === 'en'
-              ? 'Every discipline contains progressive structured parts, interactive 3D laboratory apparatus, rigorous theory, and assessment checkpoints.'
-              : 'Setiap disiplin dilengkapi bagian pembelajaran bertahap, aparatus laboratorium 3D, teori mendalam, dan kuis evaluasi.'}
-          </p>
-        </motion.div>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <motion.div variants={itemVariants} className="max-w-2xl">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-1">
+              <Layers className="w-3.5 h-3.5" />
+              <span>{language === 'en' ? 'CORE DISCIPLINES' : 'DISIPLIN UTAMA'}</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              {language === 'en' ? 'Select a Subject Area' : 'Pilih Disiplin Sains'}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+              {language === 'en'
+                ? 'Every discipline contains progressive structured parts, interactive 3D laboratory apparatus, rigorous theory, and assessment checkpoints.'
+                : 'Setiap disiplin dilengkapi bagian pembelajaran bertahap, aparatus laboratorium 3D, teori mendalam, dan kuis evaluasi.'}
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allTopics.map((topic, idx) => {
+          {/* Action Buttons: Show All & Carousel Nav */}
+          <div className="flex items-center gap-2.5 flex-shrink-0 self-start sm:self-auto">
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigateTo('learn')}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+            >
+              <span>{language === 'en' ? 'Show All Topics' : 'Lihat Semua Topik'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </motion.button>
+
+            <div className="hidden sm:flex items-center gap-1.5 ml-1">
+              <button
+                type="button"
+                onClick={() => scrollCarousel('left')}
+                disabled={!canScrollLeft}
+                aria-label={language === 'en' ? 'Scroll left' : 'Gulir ke kiri'}
+                className="w-9 h-9 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollCarousel('right')}
+                disabled={!canScrollRight}
+                aria-label={language === 'en' ? 'Scroll right' : 'Gulir ke kanan'}
+                className="w-9 h-9 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Single Row Horizontal Scroll Container */}
+        <div
+          ref={carouselRef}
+          onScroll={updateScrollState}
+          className="flex gap-6 overflow-x-auto pb-6 pt-2 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 snap-x snap-mandatory scroll-smooth"
+        >
+          {allTopics.map((topic) => {
             const completedCount = topic.modules.filter((m) => userProgress.completedModules.includes(m.id)).length;
             const progressPct = Math.round((completedCount / topic.modules.length) * 100);
 
@@ -190,7 +257,7 @@ export const LandingPage: React.FC = () => {
                 transition={{ duration: 0.2 }}
                 onMouseEnter={() => setHoveredTopic(topic.id)}
                 onClick={() => navigateTo('learn', topic.id)}
-                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-2xs hover:border-slate-400 dark:hover:border-slate-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                className="w-[320px] sm:w-[360px] md:w-[380px] flex-shrink-0 snap-start group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-2xs hover:border-slate-400 dark:hover:border-slate-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   {/* Top Bar: Icon & Discipline Tag */}
@@ -204,7 +271,7 @@ export const LandingPage: React.FC = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 min-h-[3.5rem]">
                     {topic.title[language]}
                   </h3>
 
@@ -257,6 +324,34 @@ export const LandingPage: React.FC = () => {
               </motion.div>
             );
           })}
+
+          {/* End-of-row Card: Explore All Topics */}
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => navigateTo('learn')}
+            className="w-[280px] sm:w-[300px] flex-shrink-0 snap-start bg-slate-100/70 dark:bg-slate-900/50 border border-dashed border-slate-300 dark:border-slate-700 hover:border-sky-500 dark:hover:border-sky-500 rounded-2xl p-6 shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group"
+          >
+            <div>
+              <div className="w-11 h-11 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 flex items-center justify-center mb-4 text-sky-600 dark:text-sky-400 group-hover:scale-105 transition-transform">
+                <Layers className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+                {language === 'en' ? 'Full Science Curriculum' : 'Kurikulum Sains Lengkap'}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                {language === 'en'
+                  ? `Browse the complete directory of all ${allTopics.length} disciplines, structured modules, and interactive labs.`
+                  : `Jelajahi direktori lengkap seluruh ${allTopics.length} disiplin ilmu, modul berurutan, dan lab interaktif.`}
+              </p>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-600 dark:text-sky-400">
+              <span>{language === 'en' ? 'View All in Topics' : 'Lihat Semua di Topik'}</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </motion.div>
         </div>
       </section>
 
