@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Aetheria - Interactive 3D Science Platform',
     short_name: 'Aetheria',
-    description: 'An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Cardiovascular Electrophysiology, and Pulmonary Mechanics.',
+    description: 'An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Grid Energy Storage (BESS) & Upcoming Chemistries, Cardiovascular Electrophysiology, and Earth Biomes.',
     start_url: '/',
     id: '/?source=pwa',
     scope: '/',
@@ -72,8 +72,15 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [{ src: '/icon-192.png', sizes: '192x192' }],
       },
       {
+        name: 'Battery Storage & BESS',
+        short_name: 'Storage',
+        description: 'Containerized BESS, redox flow & upcoming battery chemistries',
+        url: '/learn/battery-storage',
+        icons: [{ src: '/icon-192.png', sizes: '192x192' }],
+      },
+      {
         name: 'EV Battery Physics',
-        short_name: 'Battery',
+        short_name: 'EV Battery',
         description: '4680 jellyroll, regenerative braking & powertrain',
         url: '/learn/ev-battery',
         icons: [{ src: '/icon-192.png', sizes: '192x192' }],

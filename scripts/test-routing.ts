@@ -323,5 +323,36 @@ for (const term of GLOSSARY_TERMS) {
   }
 }
 
+// Check glossary term search lookup for all battery-storage terms
+import { findGlossaryTerm } from '../lib/glossaryData';
+const expectedBatteryStorageTermIds = [
+  'bess',
+  'lcos',
+  'vrfb',
+  'sodium-ion',
+  'solid-state-battery',
+  'critical-current-density',
+  'lithium-sulfur',
+  'polysulfide-shuttle',
+  'iron-air-battery',
+  'ldes',
+  'rte',
+];
+
+for (const termId of expectedBatteryStorageTermIds) {
+  const found = findGlossaryTerm(termId);
+  assert.ok(found, `findGlossaryTerm should successfully resolve ${termId}`);
+  assert.equal(found.category, 'battery-storage', `${termId} must belong to battery-storage category`);
+  assert.equal(found.relatedTopicId, 'battery-storage', `${termId} must relate to battery-storage topic`);
+}
+
+// Verify all 5 battery-storage modules specify 'battery-storage-lab'
+const bessModules = allMods.filter((m) => m.topic.id === 'battery-storage');
+assert.equal(bessModules.length, 5, 'Must have exactly 5 battery-storage modules');
+bessModules.forEach(({ module: mod }, idx) => {
+  assert.equal(mod.order, idx + 1, `Module ${mod.id} must have order ${idx + 1}`);
+  assert.equal(mod.interactiveType, 'battery-storage-lab', `Module ${mod.id} interactiveType must be battery-storage-lab`);
+});
+
 console.log(`✅ Successfully validated ${testedFormulasCount} KaTeX mathematical formulas & variables without error!`);
-console.log('✅ ALL PRODUCTION ROUTING & DEEP-LINK TESTS PASSED (41 modules, 9 topics, edge cases)!');
+console.log('✅ ALL PRODUCTION ROUTING, DEEP-LINK & GLOSSARY TESTS PASSED (41 modules, 9 topics, edge cases)!');

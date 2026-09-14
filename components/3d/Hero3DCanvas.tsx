@@ -386,6 +386,13 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       cancelAnimationFrame(animId);
       detachControls();
       ro.disconnect();
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Points || obj instanceof THREE.LineSegments) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) obj.material.forEach((m) => m.dispose());
+          else obj.material?.dispose();
+        }
+      });
       renderer.dispose();
     };
   }, []);
@@ -398,15 +405,17 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     // Reset animation list
     animatedObjectsRef.current = { rotators: [], pulsers: [], explodedMeshes: [], customAnimators: [] };
 
-    // Clean previous children
+    // Clean previous children and recursively dispose all sub-meshes/points/materials
     while (group.children.length > 0) {
       const child = group.children[0];
       group.remove(child);
-      if (child instanceof THREE.Mesh || child instanceof THREE.Points || child instanceof THREE.LineSegments) {
-        child.geometry.dispose();
-        if (Array.isArray(child.material)) child.material.forEach((m) => m.dispose());
-        else child.material.dispose();
-      }
+      child.traverse((obj) => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Points || obj instanceof THREE.LineSegments) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) obj.material.forEach((m) => m.dispose());
+          else obj.material?.dispose();
+        }
+      });
     }
 
     const isWire = renderStyle === 'holographic';

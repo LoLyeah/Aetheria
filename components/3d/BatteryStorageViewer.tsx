@@ -67,12 +67,17 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
   const [powerRatingMw, setPowerRatingMw] = useState<number>(2.5); // 0.5 to 5.0 MW
   const [stateOfCharge, setStateOfCharge] = useState<number>(72); // 10% to 95%
   const [showThermalOverlay, setShowThermalOverlay] = useState<boolean>(false);
-  const [isRotating, setIsRotating] = useState<boolean>(true);
+  const [isRotating, setIsRotating] = useState<boolean>(settings.autoRotate3D ?? true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [showMetricsDrawer, setShowMetricsDrawer] = useState<boolean>(true);
 
   // Performance telemetry
   const [fps, setFps] = useState<number>(60);
+
+  // Dynamic material references for fast visual updates without scene rebuilding
+  const cellModuleMatRef = useRef<THREE.MeshStandardMaterial | null>(null);
+  const ledMatsRef = useRef<THREE.MeshBasicMaterial[]>([]);
+  const powerFlowMatRef = useRef<THREE.PointsMaterial | null>(null);
 
   // Refs for render animation loop
   const modeRef = useRef(viewMode);
@@ -92,6 +97,22 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
     thermalRef.current = showThermalOverlay;
     rotatingRef.current = isRotating;
   }, [viewMode, chemistry, isCharging, powerRatingMw, stateOfCharge, showThermalOverlay, isRotating]);
+
+  // Reactive color updates for thermal overlay and charging state without tearing down WebGL
+  useEffect(() => {
+    if (cellModuleMatRef.current) {
+      cellModuleMatRef.current.color.setHex(showThermalOverlay ? 0xf59e0b : 0x0d9488);
+    }
+  }, [showThermalOverlay]);
+
+  useEffect(() => {
+    ledMatsRef.current.forEach((mat) => {
+      mat.color.setHex(isCharging ? 0x22c55e : 0x06b6d4);
+    });
+    if (powerFlowMatRef.current) {
+      powerFlowMatRef.current.color.setHex(isCharging ? 0x14b8a6 : 0x38bdf8);
+    }
+  }, [isCharging]);
 
   // Three.js Scene References
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -191,7 +212,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
       points: THREE.Points;
       basePositions: Float32Array;
       speedMult: number;
-      direction: number;
+      baseDirection: number;
     }[] = [];
 
     let flowLiquids: { neg: THREE.Mesh; pos: THREE.Mesh } | null = null;
@@ -232,10 +253,12 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
       // 6 BESS Racks with Battery Cell Modules & Cooling Cold Plates
       const rackMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.4 });
       const cellModuleMat = new THREE.MeshStandardMaterial({
-        color: showThermalOverlay ? 0xf59e0b : 0x0d9488,
+        color: thermalRef.current ? 0xf59e0b : 0x0d9488,
         metalness: 0.6,
         roughness: 0.2,
       });
+      cellModuleMatRef.current = cellModuleMat;
+      ledMatsRef.current = [];
       const coldPlateMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.9, roughness: 0.1 });
 
       for (let r = 0; r < 5; r++) {
@@ -257,7 +280,8 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           modelGroup.add(coldPlate);
 
           // Status LED
-          const ledMat = new THREE.MeshBasicMaterial({ color: isCharging ? 0x22c55e : 0x06b6d4 });
+          const ledMat = new THREE.MeshBasicMaterial({ color: chargingRef.current ? 0x22c55e : 0x06b6d4 });
+          ledMatsRef.current.push(ledMat);
           const led = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8), ledMat);
           led.position.set(xPos + 0.56, yPos, -0.25);
           modelGroup.add(led);
@@ -287,19 +311,20 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
       }
       pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
       const pMat = new THREE.PointsMaterial({
-        color: isCharging ? 0x14b8a6 : 0x38bdf8,
+        color: chargingRef.current ? 0x14b8a6 : 0x38bdf8,
         size: 0.07,
         transparent: true,
         opacity: 0.8,
         blending: THREE.AdditiveBlending,
       });
+      powerFlowMatRef.current = pMat;
       const points = new THREE.Points(pGeo, pMat);
       modelGroup.add(points);
       animatedParticles.push({
         points,
         basePositions: pPos.slice(),
         speedMult: 0.04,
-        direction: isCharging ? 1 : -1,
+        baseDirection: 1,
       });
     } else if (viewMode === 'redox-flow') {
       // 2. VANADIUM REDOX FLOW BATTERY (VRFB) SYSTEM
@@ -406,7 +431,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
         points: flowPoints,
         basePositions: fPos.slice(),
         speedMult: 0.03,
-        direction: isCharging ? 1 : -1,
+        baseDirection: 1,
       });
     } else {
       // 3. UPCOMING CHEMISTRIES ATOMIC / LAYER MICROSTRUCTURE VIEW
@@ -477,7 +502,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           points: naPoints,
           basePositions: naPos.slice(),
           speedMult: 0.05,
-          direction: isCharging ? -1 : 1,
+          baseDirection: -1,
         });
       } else if (chemistry === 'solid-state') {
         // All-Solid-State: Metallic Li anode + dense ceramic/sulfide LLZO electrolyte + composite cathode + spring compression fixture
@@ -613,7 +638,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           points: o2Points,
           basePositions: o2Pos.slice(),
           speedMult: 0.04,
-          direction: isCharging ? 1 : -1, // Oxygen evolution on charge, intake on discharge
+          baseDirection: 1, // Oxygen evolution on charge, intake on discharge
         });
       }
     }
@@ -631,6 +656,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
         cameraAnglesRef.current.theta = 0.65;
         cameraAnglesRef.current.phi = 0.85;
         cameraAnglesRef.current.distance = 14;
+        cameraAnglesRef.current.target.set(0, 0, 0);
       },
     });
 
@@ -666,11 +692,12 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
       camera.position.z = target.z + distance * Math.sin(phi) * Math.cos(theta);
       camera.lookAt(target);
 
-      // Animate Active Particles
+      // Animate Active Particles with dynamic charging direction without scene re-initialization
+      const chargeDir = chargingRef.current ? 1 : -1;
       animatedParticles.forEach((sys) => {
         const positions = sys.points.geometry.attributes.position.array as Float32Array;
         const count = positions.length / 3;
-        const dir = sys.direction;
+        const dir = sys.baseDirection * chargeDir;
         const spd = sys.speedMult * (powerRef.current / 2.5);
 
         for (let i = 0; i < count; i++) {
@@ -696,7 +723,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
 
     animationFrameId = requestAnimationFrame(animate);
 
-    // Responsive Resize Handler
+    // Responsive Resize Handler with ResizeObserver
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const w = container.clientWidth || 800;
@@ -706,22 +733,54 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
       renderer.setSize(w, h);
     };
 
-    window.addEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+    resizeObserver.observe(container);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      resizeObserver.disconnect();
       detachControls();
-      window.removeEventListener('resize', handleResize);
+
+      // Cleanly dispose all Three.js geometries and materials (prevent WebGL memory leaks)
+      const disposedGeometries = new Set<THREE.BufferGeometry>();
+      const disposedMaterials = new Set<THREE.Material>();
+
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Points || obj instanceof THREE.LineSegments) {
+          if (obj.geometry && !disposedGeometries.has(obj.geometry)) {
+            obj.geometry.dispose();
+            disposedGeometries.add(obj.geometry);
+          }
+          if (obj.material) {
+            const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+            materials.forEach((mat) => {
+              if (mat && !disposedMaterials.has(mat)) {
+                mat.dispose();
+                disposedMaterials.add(mat);
+              }
+            });
+          }
+        }
+      });
+
       renderer.dispose();
       scene.clear();
     };
-  }, [viewMode, chemistry, isCharging, showThermalOverlay, settings.graphicsQuality]);
+  }, [viewMode, chemistry, settings.graphicsQuality]);
 
-  // Derived Physical Telemetry Metrics
+  // Derived Physical Telemetry Metrics with physically accurate SoC scaling
   const calculatedDurationHours = useMemo(() => {
-    if (viewMode === 'redox-flow') return (12.0 * (100 / stateOfCharge)).toFixed(1);
-    if (viewMode === 'upcoming-chemistries' && chemistry === 'iron-air') return '100.0';
-    return (4.0).toFixed(1);
+    const socFraction = stateOfCharge / 100;
+    if (viewMode === 'redox-flow') return (12.0 * socFraction).toFixed(1);
+    if (viewMode === 'upcoming-chemistries') {
+      if (chemistry === 'iron-air') return (100.0 * socFraction).toFixed(1);
+      if (chemistry === 'solid-state') return (6.0 * socFraction).toFixed(1);
+      if (chemistry === 'na-ion') return (4.0 * socFraction).toFixed(1);
+      if (chemistry === 'li-sulfur') return (8.0 * socFraction).toFixed(1);
+    }
+    return (4.0 * socFraction).toFixed(1); // Default container BESS (4-hour duration)
   }, [viewMode, chemistry, stateOfCharge]);
 
   const calculatedRtePercent = useMemo(() => {
@@ -736,10 +795,19 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
   }, [viewMode, chemistry]);
 
   const estimatedCellTemp = useMemo(() => {
-    const baseTemp = 24.5;
-    const thermalRise = (powerRatingMw / 5.0) * 12.0;
-    return (baseTemp + (showThermalOverlay ? thermalRise : thermalRise * 0.4)).toFixed(1);
-  }, [powerRatingMw, showThermalOverlay]);
+    const ambientTemp = 24.0;
+    const loadFactor = powerRatingMw / 5.0; // 0.1 to 1.0
+    // Heat dissipation characteristics per architecture
+    let thermalCoeff = 9.5;
+    if (viewMode === 'redox-flow') thermalCoeff = 3.2; // Massive external electrolyte volume moderates stack heat
+    else if (viewMode === 'upcoming-chemistries') {
+      if (chemistry === 'iron-air') thermalCoeff = 4.0; // Aqueous KOH thermal mass
+      else if (chemistry === 'solid-state') thermalCoeff = 14.0; // Ceramic interfacial resistance
+      else if (chemistry === 'na-ion') thermalCoeff = 8.0;
+    }
+    const internalTemp = ambientTemp + loadFactor * thermalCoeff;
+    return internalTemp.toFixed(1);
+  }, [viewMode, chemistry, powerRatingMw]);
 
   return (
     <div
@@ -757,7 +825,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
         <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 pointer-events-auto shadow-md">
           <button
             onClick={() => setViewMode('container-bess')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${
               viewMode === 'container-bess'
                 ? 'bg-teal-500 text-slate-950 font-bold'
                 : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -768,7 +836,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           </button>
           <button
             onClick={() => setViewMode('redox-flow')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${
               viewMode === 'redox-flow'
                 ? 'bg-teal-500 text-slate-950 font-bold'
                 : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -779,7 +847,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           </button>
           <button
             onClick={() => setViewMode('upcoming-chemistries')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${
               viewMode === 'upcoming-chemistries'
                 ? 'bg-teal-500 text-slate-950 font-bold'
                 : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -793,16 +861,28 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
         {/* Viewport Control Buttons */}
         <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 pointer-events-auto">
           <button
+            onClick={() => {
+              cameraAnglesRef.current.theta = 0.65;
+              cameraAnglesRef.current.phi = 0.85;
+              cameraAnglesRef.current.distance = 14;
+              cameraAnglesRef.current.target.set(0, 0, 0);
+            }}
+            title={language === 'en' ? 'Reset Camera View' : 'Atur Ulang Kamera'}
+            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+          <button
             onClick={() => setIsRotating(!isRotating)}
             title={language === 'en' ? 'Toggle Auto-Rotation' : 'Putar Otomatis'}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
           >
             {isRotating ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
           </button>
           <button
             onClick={() => setShowThermalOverlay(!showThermalOverlay)}
             title={language === 'en' ? 'Thermal & Cooling Gradient' : 'Gradien Termal & Pendingin'}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               showThermalOverlay ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-slate-300 hover:bg-slate-800/60'
             }`}
           >
@@ -811,7 +891,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           <button
             onClick={toggleFullscreen}
             title={language === 'en' ? 'Toggle Fullscreen' : 'Layar Penuh'}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
           >
             {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
           </button>
@@ -824,7 +904,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
           <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/70 shadow-lg text-[11px]">
             <button
               onClick={() => setChemistry('na-ion')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
                 chemistry === 'na-ion' ? 'bg-amber-400 text-slate-950 font-bold' : 'text-slate-300 hover:bg-slate-800'
               }`}
             >
@@ -832,7 +912,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
             </button>
             <button
               onClick={() => setChemistry('solid-state')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
                 chemistry === 'solid-state' ? 'bg-teal-400 text-slate-950 font-bold' : 'text-slate-300 hover:bg-slate-800'
               }`}
             >
@@ -840,7 +920,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
             </button>
             <button
               onClick={() => setChemistry('li-sulfur')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
                 chemistry === 'li-sulfur' ? 'bg-purple-400 text-slate-950 font-bold' : 'text-slate-300 hover:bg-slate-800'
               }`}
             >
@@ -848,7 +928,7 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
             </button>
             <button
               onClick={() => setChemistry('iron-air')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${
+              className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
                 chemistry === 'iron-air' ? 'bg-sky-400 text-slate-950 font-bold' : 'text-slate-300 hover:bg-slate-800'
               }`}
             >

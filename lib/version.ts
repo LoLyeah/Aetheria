@@ -22,14 +22,39 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.4.0',
+  version: '1.4.1',
   major: 1,
   minor: 4,
-  patch: 0,
+  patch: 1,
   releaseDate: '2026-09-14',
-  buildNumber: 'build.20260914.00',
+  buildNumber: 'build.20260914.01',
   environment: 'production',
   changelog: [
+    {
+      version: '1.4.1',
+      date: '2026-09-14',
+      type: 'patch',
+      title: {
+        en: 'Battery Storage 3D WebGL Leak Prevention, Reactive Controls & Duration Telemetry Fix',
+        id: 'Pencegahan Kebocoran WebGL BESS 3D, Kontrol Reaktif & Perbaikan Telemetri Durasi',
+      },
+      highlights: {
+        en: [
+          'Implemented leak-free recursive Three.js geometry and material disposal on scene rebuilds and component unmounts.',
+          'Decoupled charge/discharge toggles and thermal overlay from scene re-initialization, delivering zero-flicker 60 FPS updates via direct material refs and particle animation vectors.',
+          'Integrated container ResizeObserver for seamless responsive viewport adaptation across fullscreen and layout shifts.',
+          'Fixed inverted State of Charge (SoC) remaining duration calculation across VRFB, Iron-Air, and containerized BESS modes.',
+          'Added Camera Reset viewport button and updated verifiable completion certificate citation with Grid Battery Storage.',
+        ],
+        id: [
+          'Menerapkan pembersihan rekursif geometri dan material Three.js bebas kebocoran memori saat pergantian mode dan unmount komponen.',
+          'Memisahkan tombol pengisian/pengosongan dan gradien termal dari re-inisialisasi scene, menghasilkan pembaruan 60 FPS tanpa kedipan kanvas WebGL.',
+          'Mengintegrasikan ResizeObserver kontainer untuk adaptasi viewport responsif yang mulus di layar penuh dan perubahan tata letak.',
+          'Memperbaiki formula durasi pengosongan tersisa (SoC) yang terbalik pada mode VRFB, Besi-Udara, dan BESS kontainer.',
+          'Menambahkan tombol Atur Ulang Kamera pada kontrol 3D dan memperbarui teks sertifikat akreditasi dengan disiplin Penyimpanan Baterai.',
+        ],
+      },
+    },
     {
       version: '1.4.0',
       date: '2026-09-14',

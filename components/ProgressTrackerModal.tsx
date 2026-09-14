@@ -393,12 +393,12 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                     {language === 'en' ? (
                       <>
                         For mastering the core theoretical foundations and interactive hardware-accelerated 3D simulations across{' '}
-                        <strong>Quantum Mechanics</strong>, <strong>Embryonic Biology</strong>, <strong>EV & Hybrid Powertrains</strong>, and foundational STEM disciplines.
+                        <strong>Quantum Mechanics</strong>, <strong>Embryonic Biology</strong>, <strong>EV Powertrains & Grid Battery Storage</strong>, and foundational STEM disciplines.
                       </>
                     ) : (
                       <>
                         Atas penguasaan fondasi teoretis mendalam dan simulasi 3D real-time terakselerasi perangkat keras pada{' '}
-                        <strong>Mekanika Kuantum</strong>, <strong>Biologi Embrio</strong>, <strong>Powertrain EV & Hibrida</strong>, serta disiplin ilmu STEM dasar.
+                        <strong>Mekanika Kuantum</strong>, <strong>Biologi Embrio</strong>, <strong>Powertrain EV & Penyimpanan Baterai Jaringan</strong>, serta disiplin ilmu STEM dasar.
                       </>
                     )}
                   </p>
