@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { attachCanvasControls } from '@/lib/canvasControls';
+import { TelemetryHUD } from './TelemetryHUD';
 import {
   RotateCcw,
   Play,
@@ -74,6 +75,7 @@ export const HybridPowertrainViewer: React.FC<HybridPowertrainViewerProps> = ({ 
   const speedRef = useRef(speedKmh);
   const throttleRef = useRef(throttlePercent);
   const isRotatingRef = useRef(isRotating);
+  const settingsRef = useRef(settings);
 
   useEffect(() => {
     archRef.current = architecture;
@@ -81,7 +83,8 @@ export const HybridPowertrainViewer: React.FC<HybridPowertrainViewerProps> = ({ 
     speedRef.current = speedKmh;
     throttleRef.current = throttlePercent;
     isRotatingRef.current = isRotating;
-  }, [architecture, drivingState, speedKmh, throttlePercent, isRotating]);
+    settingsRef.current = settings;
+  }, [architecture, drivingState, speedKmh, throttlePercent, isRotating, settings]);
 
   // Three.js Scene References
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -640,8 +643,10 @@ export const HybridPowertrainViewer: React.FC<HybridPowertrainViewerProps> = ({ 
     const render = () => {
       animId = requestAnimationFrame(render);
       const now = performance.now();
-      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      const rawDt = Math.min(0.05, (now - lastTime) / 1000);
       lastTime = now;
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+      const dt = rawDt * physicsMultiplier;
 
       frameCount++;
       if (now - fpsTimer >= 1000) {
@@ -651,7 +656,8 @@ export const HybridPowertrainViewer: React.FC<HybridPowertrainViewerProps> = ({ 
       }
 
       // Auto-Rotation
-      if (isRotatingRef.current) {
+      const shouldRotate = isRotatingRef.current && (settingsRef.current.autoRotate3D !== false);
+      if (shouldRotate) {
         cameraAnglesRef.current.theta += 0.25 * dt;
       }
 
@@ -899,6 +905,9 @@ export const HybridPowertrainViewer: React.FC<HybridPowertrainViewerProps> = ({ 
 
       {/* 2. THREE.JS 3D CANVAS VIEWPORT */}
       <div ref={mountRef} className="relative flex-1 w-full h-full cursor-grab active:cursor-grabbing overflow-hidden" />
+
+      {/* Telemetry HUD */}
+      <TelemetryHUD fps={fps} />
 
       {/* 3. FLOATING HUD OVERLAYS */}
       {/* Top-Left Architecture Card */}

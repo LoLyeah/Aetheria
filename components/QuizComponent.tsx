@@ -82,11 +82,49 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
     return () => clearInterval(interval);
   }, [isTimerRunning, isSubmitted]);
 
+  const playAudioCue = (type: 'select' | 'complete') => {
+    if (settings?.soundEffects === false) return;
+    if (typeof window === 'undefined') return;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      if (type === 'select') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(660, now + 0.06);
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.06);
+        osc.start(now);
+        osc.stop(now + 0.06);
+      } else {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.18);
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+    } catch {}
+  };
+
   const handleSelectOption = (qId: string, optIdx: number) => {
     if (isSubmitted) return;
+    playAudioCue('select');
     setSelectedAnswers((prev) => ({ ...prev, [qId]: optIdx }));
     if (unansweredWarning !== null) {
       setUnansweredWarning(null);
+    }
+    if (settings?.autoAdvanceQuiz && currentQuestionIdx < questions.length - 1) {
+      setTimeout(() => {
+        setCurrentQuestionIdx((prev) => Math.min(prev + 1, questions.length - 1));
+      }, 450);
     }
   };
 
@@ -116,6 +154,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
     setQuizScore(percentage);
     setIsSubmitted(true);
     setViewMode('review');
+    playAudioCue('complete');
 
     const previousBadges = [...userProgress.badges];
     saveQuizScore(module.id, percentage);

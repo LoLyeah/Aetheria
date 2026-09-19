@@ -173,10 +173,17 @@ export const BiomesGlobeViewer: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Camera tracking & rotation
-  const isAutoRotateRef = useRef<boolean>(true);
-  const [autoRotate, setAutoRotate] = useState<boolean>(true);
+  const isAutoRotateRef = useRef<boolean>(settings.autoRotate3D ?? true);
+  const [autoRotate, setAutoRotate] = useState<boolean>(settings.autoRotate3D ?? true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+    if (settings.autoRotate3D !== undefined) {
+      setAutoRotate(settings.autoRotate3D);
+    }
+  }, [settings]);
 
   // Synchronize autoRotate ref
   useEffect(() => {
@@ -605,16 +612,18 @@ export const BiomesGlobeViewer: React.FC = () => {
       }
 
       // Auto-rotation when idle
-      if (isAutoRotateRef.current) {
+      if (isAutoRotateRef.current && settingsRef.current.autoRotate3D !== false) {
+        const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
         if (viewScaleRef.current === 'globe' && globeGroupRef.current) {
-          globeGroupRef.current.rotation.y += 0.0035;
+          globeGroupRef.current.rotation.y += 0.0035 * physicsMultiplier;
         } else if (viewScaleRef.current === 'biotope' && biotopeGroupRef.current) {
-          biotopeGroupRef.current.rotation.y += 0.0025;
+          biotopeGroupRef.current.rotation.y += 0.0025 * physicsMultiplier;
         }
       }
 
       // Execute registered dynamic biotope updates (particles, fish, waves)
-      animatedObjectsRef.current.forEach((obj) => obj.update(delta, elapsed));
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+      animatedObjectsRef.current.forEach((obj) => obj.update(delta * physicsMultiplier, elapsed));
 
       renderer.render(scene, camera);
     };

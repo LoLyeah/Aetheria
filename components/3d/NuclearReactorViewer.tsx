@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { attachCanvasControls } from '@/lib/canvasControls';
+import { TelemetryHUD } from './TelemetryHUD';
 import {
   RotateCcw,
   Play,
@@ -70,6 +71,14 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
 
   // Performance telemetry
   const [fps, setFps] = useState<number>(60);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+    if (settings.autoRotate3D !== undefined) {
+      setIsRotating(settings.autoRotate3D);
+    }
+  }, [settings]);
 
   // Derived Physical Metrics
   const coreMetrics = useMemo(() => {
@@ -191,9 +200,15 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
     };
     updateCameraPos();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+    const isPerf = settings.graphicsQuality === 'performance';
+    const isBalanced = settings.graphicsQuality === 'balanced';
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isPerf,
+      alpha: false,
+      powerPreference: 'high-performance',
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isPerf ? 1.0 : isBalanced ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -330,7 +345,8 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
       }
 
       // 4. Cherenkov Radiation Particle Cloud (Brilliant Electric Blue Glow)
-      const pCount = 1200;
+      const densityScale = (settings.particleDensity || 100) / 100;
+      const pCount = Math.round(1200 * densityScale);
       const cherenkovGeo = new THREE.BufferGeometry();
       const posArray = new Float32Array(pCount * 3);
       for (let i = 0; i < pCount; i++) {
@@ -354,7 +370,7 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
       rpvGroup.add(cherenkovParticles);
 
       // 5. Upward Coolant Flow Stream Particles
-      const cCount = 500;
+      const cCount = Math.round(500 * densityScale);
       const coolantGeo = new THREE.BufferGeometry();
       const cPos = new Float32Array(cCount * 3);
       for (let i = 0; i < cCount; i++) {
@@ -652,8 +668,9 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
       }
 
       // Auto-rotation
-      if (rotatingRef.current) {
-        cameraAnglesRef.theta += 0.2 * dt;
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+      if (rotatingRef.current && settingsRef.current.autoRotate3D !== false) {
+        cameraAnglesRef.theta += 0.2 * dt * physicsMultiplier;
       }
       updateCameraPos();
 
@@ -667,13 +684,13 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
       if (controlRodSpiderGroup) {
         // Rod position: 0% -> y = 2.4 (high), 100% -> y = 0.0 (fully inserted)
         const targetY = 2.4 - (insertion / 100) * 2.4;
-        controlRodSpiderGroup.position.y += (targetY - controlRodSpiderGroup.position.y) * 0.12;
+        controlRodSpiderGroup.position.y += (targetY - controlRodSpiderGroup.position.y) * 0.12 * Math.min(physicsMultiplier, 2.0);
       }
 
       if (cherenkovParticles && cherenkovMaterial) {
         cherenkovParticles.visible = cherenkovRef.current;
         if (cherenkovRef.current) {
-          cherenkovParticles.rotation.y += 0.012;
+          cherenkovParticles.rotation.y += 0.012 * physicsMultiplier;
           const glowFactor = isScram ? 0.25 : Math.max(0.2, curPower / 3400);
           cherenkovMaterial.opacity = (0.5 + Math.sin(currentTime * 0.004) * 0.15) * glowFactor;
           blueGlowLight.intensity = glowFactor * 3.0;
@@ -683,8 +700,8 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
       }
 
       if (coolantParticles) {
-        coolantParticles.rotation.y += 0.005;
-        const flowSpeed = isSBO ? 0.25 : 1.8; // Natural circulation vs pumped flow
+        coolantParticles.rotation.y += 0.005 * physicsMultiplier;
+        const flowSpeed = (isSBO ? 0.25 : 1.8) * physicsMultiplier; // Natural circulation vs pumped flow
         const cPositions = coolantParticles.geometry.attributes.position.array as Float32Array;
         for (let i = 1; i < cPositions.length; i += 3) {
           cPositions[i] += flowSpeed * dt;
@@ -695,7 +712,7 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
 
       // Mode 2: Turbine rotation
       if (turbineRotorGroup) {
-        const spinSpeed = isSBO ? 0 : (curPower / 3400) * 8.0;
+        const spinSpeed = (isSBO ? 0 : (curPower / 3400) * 8.0) * physicsMultiplier;
         turbineRotorGroup.rotation.x += spinSpeed * dt;
       }
 
@@ -706,7 +723,7 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
         if (pccsActive) {
           const sprayPositions = pccsSprayParticles.geometry.attributes.position.array as Float32Array;
           for (let i = 1; i < sprayPositions.length; i += 3) {
-            sprayPositions[i] -= 2.2 * dt;
+            sprayPositions[i] -= 2.2 * dt * physicsMultiplier;
             if (sprayPositions[i] < -1.8) sprayPositions[i] = 2.5;
           }
           pccsSprayParticles.geometry.attributes.position.needsUpdate = true;
@@ -772,7 +789,7 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
       renderer.dispose();
       scene.clear();
     };
-  }, [viewMode, settings.graphicsQuality]);
+  }, [viewMode, settings.graphicsQuality, settings.particleDensity]);
 
   return (
     <div
@@ -883,6 +900,9 @@ export const NuclearReactorViewer: React.FC<NuclearReactorViewerProps> = ({ modu
 
       {/* 2. THREE.JS 3D CANVAS MOUNT */}
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+
+      {/* Real-time Telemetry HUD */}
+      <TelemetryHUD fps={fps} />
 
       {/* 3. INTERACTIVE CONTROL DRAWER (BOTTOM OVERLAY) */}
       {showMetricsDrawer && (

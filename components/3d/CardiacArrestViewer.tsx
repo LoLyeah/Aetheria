@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
+import { TelemetryHUD } from './TelemetryHUD';
 import {
   Activity,
   RotateCcw,
@@ -209,7 +210,7 @@ const CARDIAC_CATEGORIES: {
 ];
 
 export const CardiacArrestViewer: React.FC = () => {
-  const { language } = useLearning();
+  const { language, settings } = useLearning();
 
   // State
   const [condition, setCondition] = useState<CardiacCondition>('stemi');
@@ -220,6 +221,12 @@ export const CardiacArrestViewer: React.FC = () => {
   const [showVessels, setShowVessels] = useState<boolean>(true);
   const [showIschemiaZone, setShowIschemiaZone] = useState<boolean>(true);
   const [troponinLevel, setTroponinLevel] = useState<number>(1850); // ng/L
+  const [fps, setFps] = useState<number>(60);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
 
   // Refs
   const mountRef = useRef<HTMLDivElement>(null);
@@ -304,9 +311,11 @@ export const CardiacArrestViewer: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 1.2, 5.2);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const isPerf = settings.graphicsQuality === 'performance';
+    const isBalanced = settings.graphicsQuality === 'balanced';
+    const renderer = new THREE.WebGLRenderer({ antialias: !isPerf, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isPerf ? 1.0 : isBalanced ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
     rendererRef.current = renderer;
@@ -533,15 +542,28 @@ export const CardiacArrestViewer: React.FC = () => {
 
     // --- ANIMATION LOOP ---
     let clock = new THREE.Clock();
+    let frameCount = 0;
+    let fpsTimer = performance.now();
 
     const animate = () => {
       animFrameIdRef.current = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+
+      // FPS calculation
+      frameCount++;
+      const now = performance.now();
+      if (now - fpsTimer >= 1000) {
+        setFps(frameCount);
+        frameCount = 0;
+        fpsTimer = now;
+      }
+
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+      const elapsed = clock.getElapsedTime() * physicsMultiplier;
 
       // Shock animation decay
       if (shockAnimRef.current > 0) {
         flashMat.opacity = shockAnimRef.current * 0.6;
-        shockAnimRef.current -= 0.04;
+        shockAnimRef.current -= 0.04 * physicsMultiplier;
         if (shockAnimRef.current < 0) shockAnimRef.current = 0;
       } else {
         flashMat.opacity = 0;
@@ -550,7 +572,9 @@ export const CardiacArrestViewer: React.FC = () => {
       // Heartbeat dynamics based on condition and CPR
       if (heartGroupRef.current) {
         // Slow natural rotation
-        heartGroupRef.current.rotation.y += 0.003;
+        if (settingsRef.current.autoRotate3D !== false) {
+          heartGroupRef.current.rotation.y += 0.003 * physicsMultiplier;
+        }
 
         let scaleOsc = 1.0;
         const currentCond = conditionRef.current;
@@ -637,7 +661,7 @@ export const CardiacArrestViewer: React.FC = () => {
         rendererRef.current.dispose();
       }
     };
-  }, []);
+  }, [settings.graphicsQuality]);
 
   // Update Dynamic Meshes on State Change
   useEffect(() => {
@@ -921,6 +945,9 @@ export const CardiacArrestViewer: React.FC = () => {
         {/* 3D Heart Canvas Container */}
         <div className="relative w-full h-[380px] sm:h-[450px] rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden shadow-xl">
           <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+
+          {/* Real-time Telemetry HUD */}
+          <TelemetryHUD fps={fps} />
 
           {/* Defibrillation Shock Visual Flash Overlay */}
           {shockFlash && (

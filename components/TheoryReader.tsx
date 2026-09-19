@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { LearningModule, Topic, Language } from '@/types/learning';
 import { MathFormula } from './ui/MathFormula';
@@ -41,9 +41,20 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
   onNavigateTo3D,
   onOpenGlossary,
 }) => {
-  const { settings } = useLearning();
+  const { settings, updateSettings } = useLearning();
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg'>(settings?.readerFontSize || 'base');
   const [activeSectionId, setActiveSectionId] = useState<string>(module.sections[0]?.id || '');
+
+  useEffect(() => {
+    if (settings?.readerFontSize && settings.readerFontSize !== fontSize) {
+      setFontSize(settings.readerFontSize);
+    }
+  }, [settings?.readerFontSize]);
+
+  const handleSetFontSize = (newSize: 'sm' | 'base' | 'lg') => {
+    setFontSize(newSize);
+    updateSettings({ readerFontSize: newSize });
+  };
 
   const fontSizeClasses = {
     sm: 'text-xs sm:text-sm leading-relaxed',
@@ -93,21 +104,21 @@ export const TheoryReader: React.FC<TheoryReaderProps> = ({
             <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-mono">
               <Type className="w-3.5 h-3.5 text-slate-400 ml-1.5" />
               <button
-                onClick={() => setFontSize('sm')}
+                onClick={() => handleSetFontSize('sm')}
                 className={`px-2 py-0.5 rounded cursor-pointer ${fontSize === 'sm' ? 'bg-white dark:bg-slate-700 font-bold shadow-xs text-slate-900 dark:text-white' : 'text-slate-500'}`}
                 title="Small text"
               >
                 A-
               </button>
               <button
-                onClick={() => setFontSize('base')}
+                onClick={() => handleSetFontSize('base')}
                 className={`px-2 py-0.5 rounded cursor-pointer ${fontSize === 'base' ? 'bg-white dark:bg-slate-700 font-bold shadow-xs text-slate-900 dark:text-white' : 'text-slate-500'}`}
                 title="Standard text"
               >
                 A
               </button>
               <button
-                onClick={() => setFontSize('lg')}
+                onClick={() => handleSetFontSize('lg')}
                 className={`px-2 py-0.5 rounded cursor-pointer ${fontSize === 'lg' ? 'bg-white dark:bg-slate-700 font-bold shadow-xs text-slate-900 dark:text-white' : 'text-slate-500'}`}
                 title="Large text"
               >

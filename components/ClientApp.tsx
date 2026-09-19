@@ -14,7 +14,7 @@ import { VersionModal } from '@/components/VersionModal';
 import { Footer } from '@/components/Footer';
 
 export const AppContent: React.FC = () => {
-  const { view, language, navigateTo, returnFromSettings, selectedModuleId, selectedTopicId, activeTab } = useLearning();
+  const { view, effectiveView, language, navigateTo, returnFromSettings, selectedModuleId, selectedTopicId, activeTab } = useLearning();
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
   const [isVersionModalOpen, setIsVersionModalOpen] = useState(false);
   const [isGlossaryModalOpen, setIsGlossaryModalOpen] = useState(false);
@@ -37,7 +37,7 @@ export const AppContent: React.FC = () => {
             }
           }}
         >
-          {view === 'landing' && (
+          {effectiveView === 'landing' && (
             <motion.div
               key="landing"
               initial={{ opacity: 0, y: 12 }}
@@ -50,7 +50,7 @@ export const AppContent: React.FC = () => {
             </motion.div>
           )}
 
-          {(view === 'learn' || view === 'settings') && (
+          {effectiveView === 'learn' && (
             <motion.div
               key={`learn-${selectedTopicId || 'root'}`}
               initial={{ opacity: 0, y: 12 }}
@@ -66,7 +66,7 @@ export const AppContent: React.FC = () => {
             </motion.div>
           )}
 
-          {view === 'module' && (
+          {effectiveView === 'module' && (
             <motion.div
               key={`module-${selectedModuleId || 'default'}`}
               initial={{ opacity: 0, y: 12 }}

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
+import { TelemetryHUD } from './TelemetryHUD';
 import {
   Activity,
   RotateCcw,
@@ -224,7 +225,7 @@ const ALVEOLAR_HOTSPOTS: HotspotInfo[] = [
 ];
 
 export const PulmonaryAlveoliViewer: React.FC = () => {
-  const { language } = useLearning();
+  const { language, settings } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
 
   // State
@@ -233,10 +234,19 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
   const [exudateLevel, setExudateLevel] = useState<number>(0);
   const [ventilationRate, setVentilationRate] = useState<number>(4.2); // L/min
   const [perfusionRate, setPerfusionRate] = useState<number>(5.0); // L/min
-  const [isAutoRotating, setIsAutoRotating] = useState<boolean>(true);
+  const [isAutoRotating, setIsAutoRotating] = useState<boolean>(settings.autoRotate3D ?? true);
   const [activeHotspot, setActiveHotspot] = useState<HotspotInfo | null>(null);
   const [showHelperGrid, setShowHelperGrid] = useState<boolean>(true);
   const [showClinicalDock, setShowClinicalDock] = useState<boolean>(false);
+  const [fps, setFps] = useState<number>(60);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+    if (settings.autoRotate3D !== undefined) {
+      setIsAutoRotating(settings.autoRotate3D);
+    }
+  }, [settings]);
 
   // CURB-65 Interactive Checklist State
   const [curbC, setCurbC] = useState<boolean>(false);
@@ -320,10 +330,16 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
     camera.position.set(0, 0, 7.5);
     cameraRef.current = camera;
 
-    // 2. WebGL Renderer with High Precision
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+    // 2. WebGL Renderer with Adaptive Quality
+    const isLowQuality = settings.graphicsQuality === 'performance';
+    const isHighQuality = settings.graphicsQuality === 'high';
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isLowQuality,
+      alpha: false,
+      powerPreference: isLowQuality ? 'low-power' : 'high-performance',
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isLowQuality ? 1 : Math.min(window.devicePixelRatio, isHighQuality ? 2 : 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
     rendererRef.current = renderer;
@@ -338,62 +354,56 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
     scene.add(ambientLight);
 
     const mainKeyLight = new THREE.DirectionalLight(0xffffff, 1.4);
-    mainKeyLight.position.set(5, 8, 7);
+    mainKeyLight.position.set(5, 8, 6);
     scene.add(mainKeyLight);
 
-    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.7);
-    fillLight.position.set(-6, -3, -5);
-    scene.add(fillLight);
-
-    const rimLight = new THREE.PointLight(0xff4444, 0.8, 15);
-    rimLight.position.set(0, -4, 4);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.8);
+    rimLight.position.set(-6, -4, -4);
     scene.add(rimLight);
 
-    // 4. Master Rotational Group
+    // 4. Create Master Anatomical Pivot Group
     const masterGroup = new THREE.Group();
     scene.add(masterGroup);
     masterGroupRef.current = masterGroup;
 
-    // 5. Build 3D Helper Grid & Coordinate Axes
+    // 5. 3D Helper Grid & Medical Calibration Reference Axes
     const helperGroup = new THREE.Group();
     helperGroupRef.current = helperGroup;
     scene.add(helperGroup);
 
-    const gridHelper = new THREE.GridHelper(8, 16, 0x38bdf8, 0x1e293b);
-    gridHelper.position.y = -2.2;
-    (gridHelper.material as THREE.Material).transparent = true;
-    (gridHelper.material as THREE.Material).opacity = 0.35;
-    helperGroup.add(gridHelper);
+    const grid = new THREE.GridHelper(8, 16, 0x0ea5e9, 0x1e293b);
+    grid.position.y = -2.2;
+    helperGroup.add(grid);
 
-    // Coordinate Axes (Red: +X Lateral, Green: +Y Cranial, Blue: +Z Anterior)
-    const axesHelper = new THREE.AxesHelper(2.5);
-    axesHelper.position.set(-3.2, -2.0, -1.5);
+    const axesHelper = new THREE.AxesHelper(1.8);
+    axesHelper.position.set(-2.5, -2.1, -2.5);
     helperGroup.add(axesHelper);
 
-    // 6. Interaction Event Listeners (Orbit & Pinch)
+    helperGroup.visible = showHelperGrid;
+
+    // 6. Interactive Mouse & Touch Arcball Controls
     let isDragging = false;
-    let prevMouseX = 0;
-    let prevMouseY = 0;
+    let prevMousePos = { x: 0, y: 0 };
     let targetRotX = 0.15;
-    let targetRotY = -0.3;
+    let targetRotY = -0.35;
     let targetZoom = 7.5;
+    let touchStartDist = 0;
 
     const onMouseDown = (e: MouseEvent) => {
       isDragging = true;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
+      prevMousePos = { x: e.clientX, y: e.clientY };
     };
 
     const onMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
-      const deltaX = e.clientX - prevMouseX;
-      const deltaY = e.clientY - prevMouseY;
-      prevMouseX = e.clientX;
-      prevMouseY = e.clientY;
+      const deltaX = e.clientX - prevMousePos.x;
+      const deltaY = e.clientY - prevMousePos.y;
 
       targetRotY += deltaX * 0.008;
       targetRotX += deltaY * 0.008;
-      targetRotX = Math.max(-1.3, Math.min(1.3, targetRotX));
+      targetRotX = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, targetRotX));
+
+      prevMousePos = { x: e.clientX, y: e.clientY };
     };
 
     const onMouseUp = () => {
@@ -411,13 +421,11 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
     window.addEventListener('mouseup', onMouseUp);
     container.addEventListener('wheel', onWheel, { passive: false });
 
-    // Touch Support
-    let touchStartDist = 0;
+    // Mobile Pinch-to-Zoom & Drag
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
         isDragging = true;
-        prevMouseX = e.touches[0].clientX;
-        prevMouseY = e.touches[0].clientY;
+        prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       } else if (e.touches.length === 2) {
         isDragging = false;
         const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -428,12 +436,12 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
 
     const onTouchMove = (e: TouchEvent) => {
       if (e.touches.length === 1 && isDragging) {
-        const deltaX = e.touches[0].clientX - prevMouseX;
-        const deltaY = e.touches[0].clientY - prevMouseY;
-        prevMouseX = e.touches[0].clientX;
-        prevMouseY = e.touches[0].clientY;
+        const deltaX = e.touches[0].clientX - prevMousePos.x;
+        const deltaY = e.touches[0].clientY - prevMousePos.y;
         targetRotY += deltaX * 0.008;
         targetRotX += deltaY * 0.008;
+        targetRotX = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, targetRotX));
+        prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       } else if (e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
@@ -456,19 +464,34 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
     // 7. Animation Loop
     let animId: number;
     let clock = new THREE.Clock();
+    let lastFpsTime = performance.now();
+    let frameCount = 0;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
-      const time = clock.getElapsedTime();
+
+      // Telemetry FPS Calculation
+      frameCount++;
+      const now = performance.now();
+      if (now - lastFpsTime >= 500) {
+        setFps(Math.round((frameCount * 1000) / (now - lastFpsTime)));
+        frameCount = 0;
+        lastFpsTime = now;
+      }
+
+      const rawDelta = clock.getDelta();
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+      const delta = rawDelta * physicsMultiplier;
+      const time = clock.getElapsedTime() * physicsMultiplier;
 
       // Smooth camera interpolation
       camera.position.z += (targetZoom - camera.position.z) * 0.08;
       camera.lookAt(0, 0, 0);
 
       // Smooth rotation
-      if (autoRotateRef.current && !isDragging) {
-        targetRotY += 0.004;
+      const shouldRotate = autoRotateRef.current && (settingsRef.current.autoRotate3D !== false);
+      if (shouldRotate && !isDragging) {
+        targetRotY += 0.004 * physicsMultiplier;
       }
       masterGroup.rotation.y += (targetRotY - masterGroup.rotation.y) * 0.08;
       masterGroup.rotation.x += (targetRotX - masterGroup.rotation.x) * 0.08;
@@ -527,7 +550,7 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
       }
       renderer.dispose();
     };
-  }, []);
+  }, [settings.graphicsQuality]);
 
   // Update Helper Grid Visibility
   useEffect(() => {
@@ -717,7 +740,9 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
     }
 
     // F. Gas Diffusion Particles (O2 Cyan & CO2 Amber)
-    const pCount = selectedCondition === 'normal' ? 650 : Math.max(120, Math.round(650 * (1 - exudateLevel / 100)));
+    const densityMult = (settings.particleDensity || 100) / 100;
+    const basePCount = selectedCondition === 'normal' ? 650 : Math.max(120, Math.round(650 * (1 - exudateLevel / 100)));
+    const pCount = Math.max(30, Math.round(basePCount * densityMult));
     const pGeo = new THREE.BufferAttribute(new Float32Array(pCount * 3), 3);
     const pArr = pGeo.array as Float32Array;
 
@@ -760,7 +785,7 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
         group.add(gc);
       }
     }
-  }, [selectedCondition, isCutaway, exudateLevel]);
+  }, [selectedCondition, isCutaway, exudateLevel, settings.particleDensity]);
 
   return (
     <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col text-slate-100 select-none">
@@ -814,6 +839,9 @@ export const PulmonaryAlveoliViewer: React.FC = () => {
           ref={mountRef}
           className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
         />
+
+        {/* Telemetry HUD */}
+        <TelemetryHUD fps={fps} />
 
         {/* Top-Left: Physiological Status & Alveolar Gas Telemetry */}
         <div className="absolute top-4 left-4 z-20 max-w-[260px] p-3 rounded-2xl bg-slate-950/90 backdrop-blur-md border border-slate-800 text-[11px] font-mono space-y-1.5 shadow-xl">

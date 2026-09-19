@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
 import { attachCanvasControls } from '@/lib/canvasControls';
+import { TelemetryHUD } from './TelemetryHUD';
 import {
   RotateCcw,
   Play,
@@ -87,6 +88,14 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
   const socRef = useRef(stateOfCharge);
   const thermalRef = useRef(showThermalOverlay);
   const rotatingRef = useRef(isRotating);
+  const settingsRef = useRef(settings);
+
+  useEffect(() => {
+    settingsRef.current = settings;
+    if (settings.autoRotate3D !== undefined) {
+      setIsRotating(settings.autoRotate3D);
+    }
+  }, [settings]);
 
   useEffect(() => {
     modeRef.current = viewMode;
@@ -681,8 +690,9 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
       lastTime = currentTime;
 
       // Auto-rotation handling
-      if (rotatingRef.current) {
-        cameraAnglesRef.current.theta += 0.25 * dt;
+      if (rotatingRef.current && settingsRef.current.autoRotate3D !== false) {
+        const speedMultiplier = settingsRef.current.physicsSpeed || 1.0;
+        cameraAnglesRef.current.theta += 0.25 * dt * speedMultiplier;
       }
 
       // Update Spherical Camera Position
@@ -694,11 +704,12 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
 
       // Animate Active Particles with dynamic charging direction without scene re-initialization
       const chargeDir = chargingRef.current ? 1 : -1;
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
       animatedParticles.forEach((sys) => {
         const positions = sys.points.geometry.attributes.position.array as Float32Array;
         const count = positions.length / 3;
         const dir = sys.baseDirection * chargeDir;
-        const spd = sys.speedMult * (powerRef.current / 2.5);
+        const spd = sys.speedMult * (powerRef.current / 2.5) * physicsMultiplier;
 
         for (let i = 0; i < count; i++) {
           positions[i * 3] += spd * dir;
@@ -818,6 +829,9 @@ export const BatteryStorageViewer: React.FC<BatteryStorageViewerProps> = ({ modu
     >
       {/* 3D WebGL Canvas Viewport */}
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+
+      {/* Real-time Telemetry HUD */}
+      <TelemetryHUD fps={fps} />
 
       {/* TOP BAR: View Mode Switcher & Visual Controls */}
       <div className="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 z-20 pointer-events-none">

@@ -31,6 +31,8 @@ import {
   Zap,
   Activity,
   Atom,
+  Calculator,
+  HelpCircle,
 } from 'lucide-react';
 import { APP_VERSION_DATA } from '@/lib/version';
 import { usePWA } from '@/hooks/usePWA';
@@ -66,12 +68,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const [activeTab, setActiveTab] = useState<'appearance' | 'glossary' | 'simulation' | 'data'>('appearance');
   const [nameInput, setNameInput] = useState(userProgress.userName);
+  const [nameSaved, setNameSaved] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showSettingsResetConfirm, setShowSettingsResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [pwaMessage, setPwaMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setNameInput(userProgress.userName);
+  }, [userProgress.userName]);
 
   const { isInstalled, installApp } = usePWA();
 
@@ -255,7 +262,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Body Content with Smooth Tab Cross-Fade Transition */}
-        <div className="flex-1 overflow-y-auto p-6 text-slate-900 dark:text-slate-100 relative">
+        <div className="flex-1 overflow-y-auto p-6 pb-8 text-slate-900 dark:text-slate-100 relative scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
           <AnimatePresence mode="wait">
             {/* 1. APPEARANCE & DISPLAY TAB */}
             {activeTab === 'appearance' && (
@@ -384,6 +391,89 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       );
                     })}
                   </div>
+                </div>
+
+                {/* Mathematical Formula Display Mode */}
+                <div className="space-y-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <Calculator className="w-4 h-4 text-emerald-500" />
+                    <span>{language === 'en' ? 'Mathematical Formula Display Mode' : 'Mode Tampilan Rumus Matematika'}</span>
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => updateSettings({ mathDisplayFormat: 'standard' })}
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        (settings?.mathDisplayFormat || 'standard') === 'standard'
+                          ? 'border-sky-500 bg-sky-50/50 dark:bg-sky-950/40 font-bold text-sky-900 dark:text-sky-200'
+                          : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
+                      <div className="text-xs font-bold">
+                        {language === 'en' ? 'Standard KaTeX' : 'Standar KaTeX'}
+                      </div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        {language === 'en' ? 'Classic academic scientific notation' : 'Format notasi ilmiah akademik klasik'}
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => updateSettings({ mathDisplayFormat: 'high-contrast' })}
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        settings?.mathDisplayFormat === 'high-contrast'
+                          ? 'border-sky-500 bg-sky-50/50 dark:bg-sky-950/40 font-bold text-sky-900 dark:text-sky-200'
+                          : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
+                      <div className="text-xs font-bold">
+                        {language === 'en' ? 'High-Contrast Laboratory' : 'Laboratorium Kontras Tinggi'}
+                      </div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        {language === 'en' ? 'Accent borders & elevated readability' : 'Garis batas aksen & tingkat keterbacaan tinggi'}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Laboratory Audio & Sound Effects */}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <Volume2 className="w-4 h-4 text-sky-500" />
+                      <span>{language === 'en' ? 'Laboratory Sound Effects & Doppler' : 'Efek Suara Laboratorium & Doppler'}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {language === 'en'
+                        ? 'Enables interactive acoustic feedback, Doppler ultrasound hemodynamics, and simulation audio.'
+                        : 'Mengaktifkan suara akustik interaktif, hemodinamik USG Doppler, dan audio simulasi.'}
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={settings?.soundEffects !== false}
+                    onChange={(e) => updateSettings({ soundEffects: e.target.checked })}
+                    className="w-5 h-5 rounded accent-sky-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Checkpoint Quiz Progression */}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <HelpCircle className="w-4 h-4 text-amber-500" />
+                      <span>{language === 'en' ? 'Automatic Quiz Progression' : 'Kemajuan Kuis Otomatis'}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {language === 'en'
+                        ? 'Automatically advances to the next question upon selecting an option.'
+                        : 'Otomatis beralih ke soal berikutnya setelah memilih opsi jawaban.'}
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={settings?.autoAdvanceQuiz === true}
+                    onChange={(e) => updateSettings({ autoAdvanceQuiz: e.target.checked })}
+                    className="w-5 h-5 rounded accent-amber-500 cursor-pointer"
+                  />
                 </div>
 
                 {/* 4. Web App & Offline PWA Installation */}
@@ -800,10 +890,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       className="flex-1 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                     />
                     <button
-                      onClick={() => setUserName(nameInput)}
-                      className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
+                      onClick={() => {
+                        setUserName(nameInput);
+                        setNameSaved(true);
+                        setTimeout(() => setNameSaved(false), 2500);
+                      }}
+                      className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
                     >
-                      {language === 'en' ? 'Save' : 'Simpan'}
+                      {nameSaved ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{language === 'en' ? 'Saved!' : 'Tersimpan!'}</span>
+                        </>
+                      ) : (
+                        <span>{language === 'en' ? 'Save' : 'Simpan'}</span>
+                      )}
                     </button>
                   </div>
                 </div>

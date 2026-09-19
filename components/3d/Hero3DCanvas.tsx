@@ -134,7 +134,7 @@ const TOPIC_OPTIONS: TopicOption[] = [
 export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   activeTopicId = 'quantum-mechanics',
 }) => {
-  const { language, navigateTo } = useLearning();
+  const { language, navigateTo, settings } = useLearning();
   const mountRef = useRef<HTMLDivElement>(null);
   const [selectedTopic, setSelectedTopic] = useState<TopicId>(activeTopicId);
   const [prevActiveTopicId, setPrevActiveTopicId] = useState<TopicId>(activeTopicId);
@@ -193,17 +193,17 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
   }>({ rotators: [], pulsers: [], explodedMeshes: [], customAnimators: [] });
 
   // State refs for animation loop
-  const speedRef = useRef(simSpeed);
-  const autoRotateRef = useRef(isAutoRotating);
+  const speedRef = useRef(simSpeed * (settings?.physicsSpeed || 1.0));
+  const autoRotateRef = useRef(isAutoRotating && (settings?.autoRotate3D !== false));
   const explodedRef = useRef(isExploded);
 
   useEffect(() => {
-    speedRef.current = simSpeed;
-  }, [simSpeed]);
+    speedRef.current = simSpeed * (settings?.physicsSpeed || 1.0);
+  }, [simSpeed, settings?.physicsSpeed]);
 
   useEffect(() => {
-    autoRotateRef.current = isAutoRotating;
-  }, [isAutoRotating]);
+    autoRotateRef.current = isAutoRotating && (settings?.autoRotate3D !== false);
+  }, [isAutoRotating, settings?.autoRotate3D]);
 
   useEffect(() => {
     explodedRef.current = isExploded;
@@ -221,13 +221,19 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 9.0);
+    camera.position.set(0, 0, 5.8);
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
     let renderer: THREE.WebGLRenderer;
+    const isLowQuality = settings?.graphicsQuality === 'performance';
+    const isHighQuality = settings?.graphicsQuality === 'high';
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({
+        antialias: !isLowQuality,
+        alpha: true,
+        powerPreference: isLowQuality ? 'low-power' : 'high-performance',
+      });
     } catch (err) {
       console.warn('WebGL context creation failed:', err);
       queueMicrotask(() => {
@@ -236,7 +242,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       return;
     }
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isLowQuality ? 1 : Math.min(window.devicePixelRatio, isHighQuality ? 2 : 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
     rendererRef.current = renderer;
@@ -404,7 +410,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       });
       renderer.dispose();
     };
-  }, []);
+  }, [settings?.graphicsQuality]);
 
   // Rebuild 3D Scientific Geometry on Topic, Render Style, or Particle Density Change
   useEffect(() => {
@@ -1549,9 +1555,9 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         {/* Right Action: Telemetry toggle & direct topic link */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button
-            onClick={() => setShowTelemetry(!showTelemetry)}
+            onClick={() => setShowTelemetry((prev) => !prev)}
             className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all cursor-pointer ${
-              showTelemetry
+              showTelemetry || settings?.showFpsOverlay
                 ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-400/60 ring-1 ring-cyan-400/30'
                 : 'bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-slate-300'
             }`}
@@ -1572,7 +1578,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       </div>
 
       {/* 2. REAL-TIME TELEMETRY HUD (COMPACT OVERLAY WITH CLOSE BUTTON) */}
-      {showTelemetry && (
+      {(showTelemetry || settings?.showFpsOverlay) && (
         <div className="absolute top-16 right-4 sm:right-5 z-25 max-w-[270px] p-3 rounded-2xl bg-slate-950/90 backdrop-blur-md border border-cyan-500/40 text-[11px] font-mono text-slate-300 space-y-1.5 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-800 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
             <span className="flex items-center gap-1.5">

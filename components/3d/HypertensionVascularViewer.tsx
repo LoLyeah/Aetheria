@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { useLearning } from '@/context/LearningContext';
+import { TelemetryHUD } from './TelemetryHUD';
 import {
   Activity,
   Gauge,
@@ -198,7 +199,7 @@ export const HTN_CONDITIONS: Record<HypertensionType, HypertensionDetails> = {
 };
 
 export const HypertensionVascularViewer: React.FC = () => {
-  const { language } = useLearning();
+  const { language, settings } = useLearning();
 
   // Selected Condition & Interactive Overrides
   const [condition, setCondition] = useState<HypertensionType>('stage2');
@@ -207,6 +208,12 @@ export const HypertensionVascularViewer: React.FC = () => {
   const [isDrugActive, setIsDrugActive] = useState<boolean>(false);
   const [showLayers, setShowLayers] = useState<boolean>(true);
   const [showRbcFlow, setShowRbcFlow] = useState<boolean>(true);
+  const [fps, setFps] = useState<number>(60);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
 
   // Canvas Refs
   const mountRef = useRef<HTMLDivElement>(null);
@@ -264,9 +271,11 @@ export const HypertensionVascularViewer: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 1.6, 5.0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const isPerf = settings.graphicsQuality === 'performance';
+    const isBalanced = settings.graphicsQuality === 'balanced';
+    const renderer = new THREE.WebGLRenderer({ antialias: !isPerf, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isPerf ? 1.0 : isBalanced ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     rendererRef.current = renderer;
@@ -344,7 +353,7 @@ export const HypertensionVascularViewer: React.FC = () => {
     }
 
     // --- BLOOD FLOW PARTICLES (ERYTHROCYTE STREAM) ---
-    const particleCount = 450;
+    const particleCount = Math.round(450 * ((settings.particleDensity || 100) / 100));
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount);
@@ -433,11 +442,29 @@ export const HypertensionVascularViewer: React.FC = () => {
 
     // --- ANIMATION LOOP ---
     const clock = new THREE.Clock();
+    let frameCount = 0;
+    let fpsTimer = performance.now();
 
     const animate = () => {
       animFrameIdRef.current = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
-      const elapsed = clock.getElapsedTime();
+
+      // FPS tracking
+      frameCount++;
+      const now = performance.now();
+      if (now - fpsTimer >= 1000) {
+        setFps(frameCount);
+        frameCount = 0;
+        fpsTimer = now;
+      }
+
+      const physicsMultiplier = settingsRef.current.physicsSpeed || 1.0;
+      const delta = clock.getDelta() * physicsMultiplier;
+      const elapsed = clock.getElapsedTime() * physicsMultiplier;
+
+      // Slow rotation if enabled
+      if (settingsRef.current.autoRotate3D !== false && vesselGroupRef.current) {
+        vesselGroupRef.current.rotation.y += 0.003 * physicsMultiplier;
+      }
 
       // Pulsatile Vessel Wall Movement (systolic distension)
       if (vesselGroupRef.current) {
@@ -506,7 +533,7 @@ export const HypertensionVascularViewer: React.FC = () => {
         rendererRef.current.dispose();
       }
     };
-  }, []);
+  }, [settings.graphicsQuality, settings.particleDensity]);
 
   // Adjust Visual Wall Thickness Based on Remodeling / Drug
   useEffect(() => {
@@ -599,6 +626,9 @@ export const HypertensionVascularViewer: React.FC = () => {
         {/* 3D Arterial Canvas */}
         <div className="relative w-full h-[400px] sm:h-[460px] rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden shadow-xl">
           <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+
+          {/* Real-time Telemetry HUD */}
+          <TelemetryHUD fps={fps} />
 
           {/* Telemetry HUD */}
           <div className="absolute top-4 left-4 p-3.5 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 text-xs font-mono space-y-1.5 text-slate-300 pointer-events-none select-none">

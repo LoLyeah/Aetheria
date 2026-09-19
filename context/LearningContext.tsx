@@ -42,6 +42,7 @@ interface LearningContextType {
   resetProgress: () => void;
   isWebGPUSupported: boolean;
   gpuRendererInfo: string;
+  effectiveView: AppView;
   totalCompletionPercentage: number;
   totalModulesCount: number;
 }
@@ -503,8 +504,8 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
         }
       }
     } else if (newView === 'settings') {
-      nextTopicId = null;
-      nextModuleId = null;
+      nextTopicId = selectedTopicId;
+      nextModuleId = selectedModuleId;
     } else if (newView === 'landing') {
       nextTopicId = null;
       nextModuleId = null;
@@ -596,6 +597,13 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
     return Math.round((userProgress.completedModules.length / totalModulesCount) * 100);
   }, [userProgress.completedModules, totalModulesCount]);
 
+  const effectiveView: AppView = useMemo(() => {
+    if (view !== 'settings') return view;
+    if (selectedModuleId) return 'module';
+    if (selectedTopicId) return 'learn';
+    return lastContentRouteRef.current.view !== 'settings' ? lastContentRouteRef.current.view : 'learn';
+  }, [view, selectedModuleId, selectedTopicId]);
+
   return (
     <LearningContext.Provider
       value={{
@@ -606,6 +614,7 @@ export const LearningProvider: React.FC<{ children: ReactNode; initialSlug?: str
         setTheme,
         toggleTheme,
         view,
+        effectiveView,
         selectedTopicId,
         selectedModuleId,
         activeTab,
