@@ -27,6 +27,7 @@ import {
   Globe,
   Car,
   BatteryCharging,
+  ShieldAlert,
   X,
   Info,
 } from 'lucide-react';
@@ -119,6 +120,14 @@ const TOPIC_OPTIONS: TopicOption[] = [
     icon: BatteryCharging,
     accentColor: 'text-teal-400',
     badgeBg: 'bg-teal-500/20',
+  },
+  {
+    id: 'nuclear-reactor',
+    label: { en: 'Nuclear Reactor Physics', id: 'Fisika Reaktor Nuklir' },
+    category: { en: 'Fission, Gen-IV & Safety', id: 'Fisi, Gen-IV & Keselamatan' },
+    icon: ShieldAlert,
+    accentColor: 'text-amber-400',
+    badgeBg: 'bg-amber-500/20',
   },
 ];
 
@@ -1223,6 +1232,154 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         },
       ];
     }
+
+    // -------------------------------------------------------------
+    // TOPIC 10: NUCLEAR REACTOR PHYSICS & SAFETY ARCHITECTURE
+    // -------------------------------------------------------------
+    else if (selectedTopic === 'nuclear-reactor') {
+      const pCount = particleDensity === 'ultra' ? 1400 : 700;
+
+      // 1. Reactor Pressure Vessel (RPV)
+      const rpvGroup = new THREE.Group();
+      group.add(rpvGroup);
+
+      const vesselMat = new THREE.MeshPhysicalMaterial({
+        color: 0x334155,
+        metalness: 0.85,
+        roughness: 0.25,
+        transparent: true,
+        opacity: renderStyle === 'holographic' ? 0.35 : 0.65,
+        wireframe: isWire,
+      });
+
+      // Vessel main cylinder
+      const vesselGeo = new THREE.CylinderGeometry(1.6, 1.6, 4.2, 32, 1, true);
+      const vesselMesh = new THREE.Mesh(vesselGeo, vesselMat);
+      rpvGroup.add(vesselMesh);
+
+      // Bottom and Top Hemispherical Heads
+      const bottomHeadGeo = new THREE.SphereGeometry(1.6, 32, 16, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2);
+      const bottomHead = new THREE.Mesh(bottomHeadGeo, vesselMat);
+      bottomHead.position.y = -2.1;
+      rpvGroup.add(bottomHead);
+
+      const topHeadGeo = new THREE.SphereGeometry(1.6, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+      const topHead = new THREE.Mesh(topHeadGeo, vesselMat);
+      topHead.position.y = 2.1;
+      rpvGroup.add(topHead);
+
+      // 2. Core Fuel Rod Assembly Lattice
+      const coreGroup = new THREE.Group();
+      rpvGroup.add(coreGroup);
+
+      const fuelCladMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b, // Amber glowing fuel
+        emissive: 0xd97706,
+        emissiveIntensity: renderStyle === 'holographic' ? 0.8 : 0.4,
+        metalness: 0.7,
+        roughness: 0.3,
+        wireframe: isWire,
+      });
+
+      const fuelRodGeo = new THREE.CylinderGeometry(0.06, 0.06, 2.6, 12);
+      const rodGridRadius = 1.0;
+      const rodSpacings = [-0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9];
+      for (const rx of rodSpacings) {
+        for (const rz of rodSpacings) {
+          if (rx * rx + rz * rz <= rodGridRadius * rodGridRadius) {
+            const rod = new THREE.Mesh(fuelRodGeo, fuelCladMat);
+            rod.position.set(rx, 0, rz);
+            coreGroup.add(rod);
+          }
+        }
+      }
+
+      // 3. Movable Control Rod Spider Cluster
+      const controlRodGroup = new THREE.Group();
+      rpvGroup.add(controlRodGroup);
+
+      const controlMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        metalness: 0.9,
+        roughness: 0.2,
+        wireframe: isWire,
+      });
+
+      const spiderPlate = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 0.1, 24), controlMat);
+      spiderPlate.position.y = 1.5;
+      controlRodGroup.add(spiderPlate);
+
+      const absorberGeo = new THREE.CylinderGeometry(0.05, 0.05, 2.4, 12);
+      const absorberMat = new THREE.MeshStandardMaterial({
+        color: 0x475569,
+        metalness: 0.8,
+        roughness: 0.4,
+      });
+
+      for (const cx of [-0.6, 0, 0.6]) {
+        for (const cz of [-0.6, 0, 0.6]) {
+          if (cx * cx + cz * cz <= 0.7) {
+            const absorberRod = new THREE.Mesh(absorberGeo, absorberMat);
+            absorberRod.position.set(cx, 0.3, cz);
+            controlRodGroup.add(absorberRod);
+          }
+        }
+      }
+
+      // 4. Cherenkov Radiation Particle Cloud (Brilliant Electric Blue Glow)
+      const cherenkovGeo = new THREE.BufferGeometry();
+      const cherenkovPos = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const rad = 0.2 + Math.random() * 1.3;
+        const y = (Math.random() - 0.5) * 2.8;
+        cherenkovPos[i * 3] = Math.cos(theta) * rad;
+        cherenkovPos[i * 3 + 1] = y;
+        cherenkovPos[i * 3 + 2] = Math.sin(theta) * rad;
+      }
+      cherenkovGeo.setAttribute('position', new THREE.BufferAttribute(cherenkovPos, 3));
+
+      const cherenkovMat = new THREE.PointsMaterial({
+        color: 0x38bdf8, // Electric Cherenkov Blue
+        size: renderStyle === 'holographic' ? 0.05 : 0.035,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      });
+      const cherenkovParticles = new THREE.Points(cherenkovGeo, cherenkovMat);
+      rpvGroup.add(cherenkovParticles);
+
+      // 5. Primary Coolant Nozzles (Hot Leg / Cold Leg)
+      const pipeMatHot = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.6, roughness: 0.4 });
+      const pipeMatCold = new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.6, roughness: 0.4 });
+      const pipeGeo = new THREE.CylinderGeometry(0.32, 0.32, 1.2, 16);
+
+      const hotNozzle = new THREE.Mesh(pipeGeo, pipeMatHot);
+      hotNozzle.rotation.z = Math.PI / 2;
+      hotNozzle.position.set(1.9, 0.8, 0);
+      rpvGroup.add(hotNozzle);
+
+      const coldNozzle = new THREE.Mesh(pipeGeo, pipeMatCold);
+      coldNozzle.rotation.z = Math.PI / 2;
+      coldNozzle.position.set(-1.9, -0.8, 0);
+      rpvGroup.add(coldNozzle);
+
+      // 6. Dynamic Animation Loop
+      let timeAccumulator = 0;
+      animatedObjectsRef.current.customAnimators = [
+        (dt: number) => {
+          const speed = speedRef.current;
+          timeAccumulator += dt * speed;
+          // Cherenkov swirl & flux pulse
+          cherenkovParticles.rotation.y += 0.018 * speed;
+          cherenkovMat.opacity = 0.75 + Math.sin(timeAccumulator * 3.5) * 0.2;
+          // Subtle control rod oscillation
+          controlRodGroup.position.y = Math.sin(timeAccumulator * 1.5) * 0.15;
+          // Core gentle rotation
+          rpvGroup.rotation.y += 0.005 * speed;
+        },
+      ];
+    }
   }, [selectedTopic, renderStyle, particleDensity]);
 
   // Telemetry details based on selected topic
@@ -1290,6 +1447,13 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           { label: 'Round-Trip Eff.', val: 'RTE = 89.2% (AC-to-AC LFP)' },
           { label: 'Levelized Cost', val: 'LCOS = $118 / MWh (15-yr life)' },
           { label: 'Degradation Rate', val: 'ΔSoH = -1.6% / yr (Liquid Cooled)' },
+        ];
+      case 'nuclear-reactor':
+        return [
+          { label: 'Multiplication Factor', val: 'k_eff = 1.00000 (Critical)' },
+          { label: 'Delayed Fraction', val: 'β = 0.0065 (Delayed Controlled)' },
+          { label: 'Thermal Power', val: '3,400 MWth / 1,150 MWe (33.8% η)' },
+          { label: 'Passive Safety', val: 'PCCS 72h Autonomous Walk-Away' },
         ];
       default:
         return [];

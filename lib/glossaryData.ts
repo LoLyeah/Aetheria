@@ -8,6 +8,7 @@ export type GlossaryCategory =
   | 'ecology'
   | 'hybrid'
   | 'battery-storage'
+  | 'nuclear'
   | 'general';
 
 export interface GlossaryTermData {
@@ -40,7 +41,8 @@ export interface GlossaryTermData {
     | 'hypertension'
     | 'biomes-ecology'
     | 'hybrid-vehicles'
-    | 'battery-storage';
+    | 'battery-storage'
+    | 'nuclear-reactor';
 }
 
 export const GLOSSARY_TERMS: GlossaryTermData[] = [
@@ -2200,6 +2202,375 @@ export const GLOSSARY_TERMS: GlossaryTermData[] = [
       id: 'Berkisar antara 88%–93% pada litium-ion, 68%–76% pada baterai alir, dan 45%–52% pada sistem besi-udara.',
     },
     relatedTopicId: 'battery-storage',
+  },
+  // ================= NUCLEAR REACTOR PHYSICS & SAFETY =================
+  {
+    id: 'nuclear-fission',
+    term: {
+      en: 'Nuclear Fission',
+      id: 'Pembelahan Fisi Nuklir',
+    },
+    aliases: {
+      en: ['fission', 'induced fission', 'nuclear splitting'],
+      id: ['fisi nuklir', 'pembelahan inti', 'reaksi fisi'],
+    },
+    category: 'nuclear',
+    symbol: 'Q = \\Delta m \\cdot c^2 \\approx 200\\text{ MeV}',
+    pronunciation: '/ˈnuː.kli.ɚ ˈfɪʃ.ən/',
+    definition: {
+      en: 'The nuclear reaction in which a heavy nucleus (such as Uranium-235 or Plutonium-239) absorbs a neutron and splits into two lighter daughter nuclei, emitting 2 to 3 prompt neutrons and approximately 200 MeV of kinetic and radiative energy.',
+      id: 'Reaksi nuklir di mana inti berat (seperti Uranium-235 atau Plutonium-239) menyerap neutron dan terbelah menjadi dua inti anak yang lebih ringan, memancarkan 2 hingga 3 neutron serentak dan energi kinetik serta radiasi sekitar 200 MeV.',
+    },
+    context: {
+      en: 'Forms the foundational physical power-generation mechanism across all commercial civilian nuclear power plants.',
+      id: 'Merupakan mekanisme fisis dasar pembangkitan daya pada seluruh pembangkit listrik tenaga nuklir komersial.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'criticality',
+    term: {
+      en: 'Criticality',
+      id: 'Kekritisan Reaktor',
+    },
+    aliases: {
+      en: ['critical state', 'chain reaction equilibrium'],
+      id: ['kondisi kritis', 'kesetimbangan reaksi berantai'],
+    },
+    category: 'nuclear',
+    symbol: 'k_{\\text{eff}} = 1.0',
+    pronunciation: '/ˌkrɪt.ɪˈkæl.ə.ti/',
+    definition: {
+      en: 'The self-sustaining operational equilibrium state of a nuclear reactor core where the rate of neutron production exactly equals the rate of neutron loss (absorption plus leakage), resulting in a constant, stable fission power output.',
+      id: 'Kondisi kesetimbangan operasional mandiri dari teras reaktor nuklir di mana laju produksi neutron tepat sama dengan laju kehilangan neutron (serapan ditambah kebocoran), menghasilkan daya fisi yang stabil dan konstan.',
+    },
+    context: {
+      en: 'Subcritical (k < 1) cores shut down; supercritical (k > 1) cores increase power; prompt critical (k >= 1 + β) produces violent runaway.',
+      id: 'Teras subkritis (k < 1) memadamkan daya; superkritis (k > 1) menaikkan daya; kritis serentak (k >= 1 + β) memicu lonjakan tak terkendali.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'keff',
+    term: {
+      en: 'Effective Multiplication Factor (k_eff)',
+      id: 'Faktor Multiplikasi Efektif (k_eff)',
+    },
+    aliases: {
+      en: ['k-effective', 'neutron multiplication', 'keff'],
+      id: ['k-efektif', 'multiplikasi neutron', 'keff'],
+    },
+    category: 'nuclear',
+    symbol: 'k_{\\text{eff}} = \\eta \\cdot f \\cdot p \\cdot \\epsilon \\cdot P_{\\text{FNL}} \\cdot P_{\\text{TNL}}',
+    pronunciation: '/keɪ ɪˈfɛk.tɪv/',
+    definition: {
+      en: 'The ratio of the number of neutrons produced by fission in one generation to the total number of neutrons lost by absorption and leakage in the preceding generation.',
+      id: 'Rasio jumlah neutron yang diproduksi oleh fisi pada satu generasi terhadap total jumlah neutron yang hilang akibat serapan dan kebocoran pada generasi sebelumnya.',
+    },
+    context: {
+      en: 'Governed by the Six-Factor Formula in finite cores and adjusted in real-time via control rods and soluble chemical shim.',
+      id: 'Ditentukan oleh Formula Enam-Faktor pada teras berdimensi terhingga dan diatur secara real-time melalui batang kendali dan chemical shim.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'control-rod',
+    term: {
+      en: 'Control Rod',
+      id: 'Batang Kendali Reaktor',
+    },
+    aliases: {
+      en: ['absorber rod', 'regulating rod', 'safety rod'],
+      id: ['batang penyerap', 'batang pengatur', 'batang pengaman'],
+    },
+    category: 'nuclear',
+    symbol: '\\sigma_a(^{10}\\text{B}) = 3840\\text{ b}',
+    pronunciation: '/kənˈtroʊl rɑːd/',
+    definition: {
+      en: 'Movable mechanical rods containing strong neutron-absorbing materials (boron carbide, cadmium, silver-indium, or hafnium) inserted into fuel assemblies to manage reactivity, shape neutron flux, or rapidly terminate the chain reaction during SCRAM.',
+      id: 'Batang mekanis bergerak yang mengandung material penyerap neutron kuat (boron karbida, kadmium, perak-indium, atau hafnium) yang dimasukkan ke bundel bahan bakar untuk mengendalikan reaktivitas, meratakan fluks neutron, atau menghentikan reaksi saat SCRAM.',
+    },
+    context: {
+      en: 'Gravity-driven electromagnetic release mechanisms ensure fail-safe insertion in under 2 seconds during emergency trips.',
+      id: 'Mekanisme pelepasan elektromagnetik berbasis gravitasi memastikan penancapan darurat fail-safe dalam waktu kurang dari 2 detik.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'neutron-moderator',
+    term: {
+      en: 'Neutron Moderator',
+      id: 'Moderator Neutron',
+    },
+    aliases: {
+      en: ['moderator', 'thermalizer'],
+      id: ['moderator', 'penyerap energi kinetik neutron'],
+    },
+    category: 'nuclear',
+    symbol: '\\xi = \\ln(E_1 / E_2)',
+    pronunciation: '/ˈnuː.trɑːn ˈmɑː.də.reɪ.tɚ/',
+    definition: {
+      en: 'A low-atomic-mass material (light water, heavy water, or high-purity graphite) placed within the reactor core to decelerate fast 2-MeV fission neutrons to 0.025-eV thermal speeds via elastic collisions without parasitically capturing them.',
+      id: 'Material bermassa atom rendah (air biasa, air berat, atau grafit berkemurnian tinggi) yang ditempatkan di dalam teras reaktor untuk memperlambat neutron fisi cepat 2 MeV ke kecepatan termal 0,025 eV melalui tumbukan elastis tanpa menyerapnya.',
+    },
+    context: {
+      en: 'Thermalization boosts Uranium-235 fission cross-section by over two orders of magnitude (from ~1.5 barns to 585 barns).',
+      id: 'Termalisasi meningkatkan penampang lintang fisi Uranium-235 lebih dari dua orde magnitudo (dari ~1,5 barn menjadi 585 barn).',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'delayed-neutrons',
+    term: {
+      en: 'Delayed Neutrons',
+      id: 'Neutron Kasip',
+    },
+    aliases: {
+      en: ['delayed neutron fraction', 'precursor neutrons', 'beta fraction'],
+      id: ['fraksi neutron kasip', 'neutron prekursor'],
+    },
+    category: 'nuclear',
+    symbol: '\\beta = \\frac{\\nu_d}{\\nu} \\approx 0.0065',
+    pronunciation: '/dɪˈleɪd ˈnuː.trɑːnz/',
+    definition: {
+      en: 'The small fraction (~0.65% for U-235) of fission neutrons emitted seconds to minutes after fission by radioactive decay of neutron-rich fission fragments (precursors such as Br-87 and I-137), lengthening the effective reactor response time from milliseconds to tens of seconds.',
+      id: 'Sebagian kecil fraksi (~0,65% pada U-235) neutron fisi yang dipancarkan beberapa detik hingga menit setelah fisi melalui peluruhan radioaktif fragmen fisi (prekursor seperti Br-87 dan I-137), memperpanjang waktu respons reaktor dari milidetik menjadi puluhan detik.',
+    },
+    context: {
+      en: 'The fundamental physical reason commercial nuclear reactors can be safely controlled by mechanical and computer systems without prompt runaway.',
+      id: 'Alasan fisis mendasar mengapa reaktor nuklir komersial dapat dikendalikan secara aman oleh sistem mekanis dan komputer tanpa lonjakan liar seketika.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'scram',
+    term: {
+      en: 'SCRAM (Emergency Reactor Trip)',
+      id: 'Pemadaman Darurat SCRAM',
+    },
+    aliases: {
+      en: ['reactor trip', 'emergency shutdown', 'SCRAM'],
+      id: ['pemadaman darurat', 'reaktor trip', 'SCRAM'],
+    },
+    category: 'nuclear',
+    symbol: 't_{\\text{drop}} < 2.0\\text{ s}',
+    pronunciation: '/skræm/',
+    definition: {
+      en: 'The instantaneous, fail-safe emergency shutdown of a nuclear reactor achieved by rapidly inserting all control rods into the core under gravity and spring assist, inserting massive negative reactivity within seconds.',
+      id: 'Pemadaman darurat reaktor nuklir secara fail-safe dan instan yang dilakukan dengan menjatuhkan seluruh batang kendali ke dalam teras menggunakan gravitasi dan pegas, menginjeksikan reaktivitas negatif masif dalam hitungan detik.',
+    },
+    context: {
+      en: 'Automatically triggered by seismic sensors, high core pressure, loss of coolant flow, or manual operator trip switch.',
+      id: 'Dipicu otomatis oleh sensor seismik gempa, tekanan tinggi teras, hilangnya aliran pendingin, atau sakelar manual operator.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'decay-heat',
+    term: {
+      en: 'Decay Heat',
+      id: 'Panas Peluruhan Radioaktif',
+    },
+    aliases: {
+      en: ['residual heat', 'fission product decay heat'],
+      id: ['panas residual', 'panas peluruhan produk fisi'],
+    },
+    category: 'nuclear',
+    symbol: '\\frac{P_d(t)}{P_0} \\propto t^{-0.2}',
+    pronunciation: '/dɪˈkeɪ hiːt/',
+    definition: {
+      en: 'The heat generated by the radioactive beta-decay and gamma-decay of accumulated fission products after the reactor has been shut down via SCRAM, initially equal to approximately 6.5% to 7% of nominal operating thermal power.',
+      id: 'Panas yang dihasilkan oleh peluruhan radioaktif beta dan gamma dari produk fisi yang terakumulasi setelah reaktor dipadamkan melalui SCRAM, yang awalnya setara dengan sekitar 6,5% hingga 7% dari daya termal nominal operasi.',
+    },
+    context: {
+      en: 'Requires uninterrupted active or passive core cooling for days to weeks following shutdown to prevent fuel uncovery and cladding overheating.',
+      id: 'Memerlukan pendinginan teras aktif atau pasif tanpa henti selama berhari-hari hingga berminggu-minggu setelah pemadaman guna mencegah terbukanya bahan bakar dan panas berlebih.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'pwr',
+    term: {
+      en: 'Pressurized Water Reactor (PWR)',
+      id: 'Reaktor Air Bertekanan (PWR)',
+    },
+    aliases: {
+      en: ['PWR', 'pressurized water nuclear plant'],
+      id: ['PWR', 'reaktor air bertekanan'],
+    },
+    category: 'nuclear',
+    symbol: 'p_{\\text{primary}} \\approx 15.5\\text{ MPa}',
+    pronunciation: '/ˌpiː.dʌb.əl.juːˈɑːr/',
+    definition: {
+      en: 'The world\'s most widely deployed commercial nuclear reactor class, utilizing high-pressure liquid light water (15.5 MPa) to prevent bulk boiling in the primary loop, transferring heat via steam generators to a secondary turbine loop.',
+      id: 'Kelas reaktor nuklir komersial yang paling banyak digunakan di dunia, memanfaatkan air biasa bertekanan tinggi (15,5 MPa) untuk mencegah pendidihan ruah di loop primer, mentransfer panas melalui steam generator ke loop sekunder turbin.',
+    },
+    context: {
+      en: 'Accounts for ~68% of global operating nuclear reactors; keeps radioactive primary coolant strictly isolated inside containment.',
+      id: 'Mencakup ~68% reaktor nuklir yang beroperasi di dunia; menjaga pendingin primer radioaktif terisolasi rapat di dalam kubah penahan.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'bwr',
+    term: {
+      en: 'Boiling Water Reactor (BWR)',
+      id: 'Reaktor Air Mendidih (BWR)',
+    },
+    aliases: {
+      en: ['BWR', 'direct cycle nuclear plant'],
+      id: ['BWR', 'reaktor air mendidih'],
+    },
+    category: 'nuclear',
+    symbol: 'p_{\\text{vessel}} \\approx 7.0\\text{ MPa}',
+    pronunciation: '/ˌbiː.dʌb.əl.juːˈɑːr/',
+    definition: {
+      en: 'A commercial nuclear reactor class where ordinary water boils directly inside the reactor pressure vessel at 7.0 MPa, producing saturated steam that feeds directly to the electrical turbine in a direct single-loop Rankine cycle.',
+      id: 'Kelas reaktor nuklir komersial di mana air biasa mendidih langsung di dalam bejana tekan reaktor pada 7,0 MPa, menghasilkan uap jenuh yang dialirkan langsung menuju turbin listrik dalam siklus Rankine satu loop langsung.',
+    },
+    context: {
+      en: 'Eliminates steam generators and pressurizers, but requires radiation shielding around the turbine building due to short-lived N-16 carryover.',
+      id: 'Meniadakan steam generator dan pressurizer, namun memerlukan perisai radiasi di gedung turbin akibat adanya uap radioaktif N-16 berumur pendek.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'smr',
+    term: {
+      en: 'Small Modular Reactor (SMR)',
+      id: 'Small Modular Reactor (SMR)',
+    },
+    aliases: {
+      en: ['SMR', 'modular reactor', 'integral reactor'],
+      id: ['SMR', 'reaktor modular kecil'],
+    },
+    category: 'nuclear',
+    symbol: 'P_e \\le 300\\text{ MWe}',
+    pronunciation: '/ˌɛs.ɛmˈɑːr/',
+    definition: {
+      en: 'Factory-fabricated, rail-transportable nuclear fission reactors producing ≤ 300 MWe per unit, featuring integral reactor vessels (iPWR), underground containment, and multi-day passive walk-away safety.',
+      id: 'Reaktor fisi nuklir terstandarisasi yang dirakit di pabrik dan dapat diangkut dengan kereta api, memproduksi daya ≤ 300 MWe per unit, memiliki bejana integral (iPWR), penempatan bawah tanah, dan keselamatan pasif mandiri multi-hari.',
+    },
+    context: {
+      en: 'Compresses construction schedules to 2–3 years and drastically shrinks emergency planning zones to plant site boundaries.',
+      id: 'Memangkas durasi konstruksi menjadi 2–3 tahun dan menyusutkan radius zona perencanaan darurat hingga batas tapak pembangkit.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'msr',
+    term: {
+      en: 'Molten Salt Reactor (MSR)',
+      id: 'Reaktor Garam Cair (MSR)',
+    },
+    aliases: {
+      en: ['MSR', 'LFTR', 'liquid fluoride thorium reactor'],
+      id: ['MSR', 'reaktor garam cair', 'LFTR'],
+    },
+    category: 'nuclear',
+    symbol: 'T_{\\text{melt}} < T_{\\text{core}}',
+    pronunciation: '/ˌɛm.ɛsˈɑːr/',
+    definition: {
+      en: 'A Generation IV nuclear reactor architecture where nuclear fuel is dissolved directly into high-temperature molten fluoride or chloride salt (e.g. FLiBe) acting simultaneously as fuel and low-pressure primary coolant.',
+      id: 'Arsitektur reaktor nuklir Generasi IV di mana bahan bakar nuklir dilarutkan langsung ke dalam garam fluorida atau klorida cair bersuhu tinggi (seperti FLiBe) yang bertindak sekaligus sebagai bahan bakar dan pendingin primer bertekanan rendah.',
+    },
+    context: {
+      en: 'Operates at atmospheric pressure and incorporates freeze plugs that passively drain liquid fuel into subcritical cooling tanks if power fails.',
+      id: 'Beroperasi pada tekanan atmosfer dan memiliki freeze plug yang mengalirkan bahan bakar cair secara pasif ke tangki pendingin subkritis jika terjadi kegagalan daya.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'triso',
+    term: {
+      en: 'TRISO Particle Fuel',
+      id: 'Bahan Bakar Partikel TRISO',
+    },
+    aliases: {
+      en: ['TRISO', 'pebble bed fuel', 'tri-isotropic fuel'],
+      id: ['TRISO', 'bahan bakar TRISO', 'pebble fuel'],
+    },
+    category: 'nuclear',
+    symbol: 'T_{\\text{fail}} > 1600^\\circ\\text{C}',
+    pronunciation: '/ˈtraɪ.soʊ/',
+    definition: {
+      en: 'An advanced, meltdown-proof nuclear fuel format consisting of sub-millimeter fissile kernels coated in three isotropic pyrolytic carbon layers and a high-strength silicon carbide (SiC) ceramic shell.',
+      id: 'Format bahan bakar nuklir mutakhir yang kebal terhadap pelelehan teras, terdiri atas kernel fisil sub-milimeter yang dilapisi tiga lapisan karbon pirolitik isotropik dan cangkang keramik silikon karbida (SiC) berkekuatan tinggi.',
+    },
+    context: {
+      en: 'Hermetically contains fission gases up to >1,600°C without melting, utilized in Gen-IV High Temperature Gas-Cooled Reactors (HTGR).',
+      id: 'Menahan gas fisi secara kedap hingga suhu >1.600°C tanpa meleleh, digunakan pada reaktor suhu tinggi berpendingin gas (HTGR) Generasi IV.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'defense-in-depth',
+    term: {
+      en: 'Defense-in-Depth',
+      id: 'Pertahanan Berlapis (Defense-in-Depth)',
+    },
+    aliases: {
+      en: ['multi-barrier defense', 'safety layers'],
+      id: ['pertahanan berlapis', 'lapisan keselamatan'],
+    },
+    category: 'nuclear',
+    symbol: 'L_1 \\to L_5',
+    pronunciation: '/dɪˈfɛns ɪn dɛpθ/',
+    definition: {
+      en: 'The fundamental IAEA nuclear safety doctrine comprising five independent successive physical barriers and procedural levels ensuring that no single equipment failure, human error, or natural disaster can lead to an off-site radioactive release.',
+      id: 'Doktrin keselamatan nuklir fundamental IAEA yang terdiri atas lima lapis penghalang fisik dan prosedural independen berurutan yang memastikan tidak ada satu kegagalan peralatan, kelalaian manusia, atau bencana alam yang dapat memicu pelepasan radioaktif ke luar tapak.',
+    },
+    context: {
+      en: 'Physical barriers include ceramic fuel matrix, zircaloy cladding, reactor pressure vessel, and prestressed concrete containment dome.',
+      id: 'Penghalang fisik meliputi matriks keramik bahan bakar, kelongsong zirkaloy, bejana tekan reaktor, dan kubah penahan beton bertulang.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'core-catcher',
+    term: {
+      en: 'Core Catcher (Corium Retention Crucible)',
+      id: 'Penangkap Inti Leleh (Core Catcher)',
+    },
+    aliases: {
+      en: ['core catcher', 'corium trap', 'sacrificial concrete crucible'],
+      id: ['core catcher', 'penangkap corium', 'wadah beton pengorbanan'],
+    },
+    category: 'nuclear',
+    symbol: 'T_{\\text{melt}} \\approx 2500^\\circ\\text{C}',
+    pronunciation: '/kɔːr ˈkætʃ.ɚ/',
+    definition: {
+      en: 'A massive sacrificial crucible installed beneath the reactor vessel in Gen-III+ and Gen-IV reactors to catch, spread, chemically dilute, and passively water-flood molten corium if the pressure vessel ever breaches, permanently preventing basement burn-through.',
+      id: 'Wadah pengorbanan masif yang dipasang di bawah bejana reaktor Gen-III+ dan Gen-IV untuk menangkap, meratakan, mengencerkan secara kimiawi, dan mendinginkan corium cair jika bejana tekan jebol, secara permanen mencegah penembusan lantai dasar reaktor.',
+    },
+    context: {
+      en: 'Standard on European EPR, Russian VVER-1200, and Chinese Hualong One plants to guarantee severe accident containment.',
+      id: 'Standar wajib pada PLTN EPR Eropa, VVER-1200 Rusia, dan Hualong One Tiongkok untuk menjamin integritas kubah saat kecelakaan terparah.',
+    },
+    relatedTopicId: 'nuclear-reactor',
+  },
+  {
+    id: 'passive-safety',
+    term: {
+      en: 'Passive Safety Systems',
+      id: 'Sistem Keselamatan Pasif',
+    },
+    aliases: {
+      en: ['walk-away safety', 'natural circulation cooling', 'inherent safety'],
+      id: ['keselamatan pasif', 'walk-away safety', 'sirkulasi alami'],
+    },
+    category: 'nuclear',
+    symbol: '\\Delta t \\ge 72\\text{ h}',
+    pronunciation: '/ˈpæs.ɪv ˈseɪf.ti/',
+    definition: {
+      en: 'Engineered reactor safety systems that operate autonomously without alternating current (AC) electrical power, human intervention, or computer signals, relying exclusively on gravity, natural convective circulation, evaporation, and passive catalysis.',
+      id: 'Sistem keselamatan reaktor terkayasa yang beroperasi secara mandiri tanpa pasokan listrik arus bolak-balik (AC), tindakan operator manusia, atau sinyal komputer, bersandar murni pada gravitasi, sirkulasi konveksi alami, penguapan, dan katalisis pasif.',
+    },
+    context: {
+      en: 'Guarantees at least 72 hours of uninterrupted core and containment cooling following a total Station Blackout (SBO).',
+      id: 'Menjamin pendinginan teras dan kubah penahan tanpa henti minimal selama 72 jam saat terjadi Station Blackout (SBO) total.',
+    },
+    relatedTopicId: 'nuclear-reactor',
   },
 ];
 

@@ -116,6 +116,12 @@ const FORMULA_SNIPPETS: FormulaSnippet[] = [
   { label: 'Hard Carbon Na+ Capacity', latex: 'q_{\\text{total}} = q_{\\text{slope}} + q_{\\text{plateau}}', display: 'q_{Na}', discipline: 'battery-storage' },
   { label: 'Critical Current Density', latex: 'J_{\\text{CCD}} = \\frac{2FD_{\\text{Li}}C_{\\text{Li}}}{\\delta} \\cdot \\frac{\\sigma_{\\text{solid}}\\Omega_{\\text{Li}}}{R_{\\text{crack}}(1-\\nu^2)}', display: 'J_{CCD}', discipline: 'battery-storage' },
   { label: 'Reversible Rusting', latex: '2\\text{Fe} + \\text{O}_2 + 2\\text{H}_2\\text{O} \\rightleftharpoons 2\\text{Fe(OH)}_2', display: 'Fe\\text{-Air}', discipline: 'battery-storage' },
+  // Nuclear Reactor Physics & Safety
+  { label: 'Mass-Energy Defect', latex: 'E = \\Delta m \\cdot c^2', display: 'E=\\Delta mc^2', discipline: 'nuclear' },
+  { label: 'Six-Factor Criticality', latex: 'k_{\\text{eff}} = \\eta f p \\epsilon P_{\\text{FNL}} P_{\\text{TNL}}', display: 'k_{\\text{eff}}', discipline: 'nuclear' },
+  { label: 'Inhour Kinetics', latex: '\\rho = \\frac{\\Lambda}{T} + \\sum_{i=1}^6 \\frac{\\beta_i}{1 + \\lambda_i T}', display: '\\rho(T)', discipline: 'nuclear' },
+  { label: 'Wigner-Way Decay Heat', latex: '\\frac{P_d(t)}{P_0} = 0.066 [t^{-0.2} - (t+t_0)^{-0.2}]', display: 'P_{\\text{decay}}', discipline: 'nuclear' },
+  { label: 'Core Heat Extraction', latex: '\\dot{Q}_{\\text{core}} = \\dot{m} c_p (T_{\\text{hot}} - T_{\\text{cold}})', display: '\\dot{Q}_{\\text{core}}', discipline: 'nuclear' },
 ];
 
 /**
@@ -649,6 +655,8 @@ export const StudyNotesWorkspace: React.FC<StudyNotesWorkspaceProps> = ({
         ? 'E = E^0 - \\frac{RT}{zF} \\ln Q'
         : topic.id === 'battery-storage'
         ? '\\text{LCOS} = \\frac{\\text{CAPEX}_0 + \\sum \\frac{\\text{OPEX}_t + C_{\\text{chg},t}}{(1+r)^t}}{\\sum \\frac{E_{\\text{dis},t}}{(1+r)^t}}'
+        : topic.id === 'nuclear-reactor'
+        ? 'k_{\\text{eff}} = \\eta \\cdot f \\cdot p \\cdot \\epsilon \\cdot P_{\\text{FNL}} \\cdot P_{\\text{TNL}}'
         : topic.id === 'hybrid-vehicles'
         ? '\\omega_c(1 + \\rho) = \\omega_s + \\rho \\omega_r'
         : topic.id === 'biomes-ecology'
@@ -749,6 +757,7 @@ $$
     const isBatteryStorage = topic.id === 'battery-storage';
     const isHybrid = topic.id === 'hybrid-vehicles';
     const isEcology = topic.id === 'biomes-ecology';
+    const isNuclear = topic.id === 'nuclear-reactor';
     const isBio =
       topic.id === 'fetus-development' ||
       topic.id === 'cardiac-arrest' ||
@@ -762,7 +771,8 @@ $$
       if (isHybrid && snippet.discipline === 'hybrid') return true;
       if (isEcology && snippet.discipline === 'ecology') return true;
       if (isBio && snippet.discipline === 'bio') return true;
-      if (!isBattery && !isBatteryStorage && !isHybrid && !isBio && !isEcology && snippet.discipline === 'qm') return true;
+      if (isNuclear && snippet.discipline === 'nuclear') return true;
+      if (!isBattery && !isBatteryStorage && !isHybrid && !isBio && !isEcology && !isNuclear && snippet.discipline === 'qm') return true;
       return false;
     });
   }, [topic.id]);

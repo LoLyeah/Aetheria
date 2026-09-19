@@ -22,14 +22,43 @@ export interface VersionInfo {
 }
 
 export const APP_VERSION_DATA: VersionInfo = {
-  version: '1.4.1',
+  version: '1.5.0',
   major: 1,
-  minor: 4,
-  patch: 1,
-  releaseDate: '2026-09-14',
-  buildNumber: 'build.20260914.01',
+  minor: 5,
+  patch: 0,
+  releaseDate: '2026-09-19',
+  buildNumber: 'build.20260919.00',
   environment: 'production',
   changelog: [
+    {
+      version: '1.5.0',
+      date: '2026-09-19',
+      type: 'minor',
+      title: {
+        en: 'Nuclear Reactor Physics, Generations I–IV Architectures & Disaster Mitigation (10th Major Discipline)',
+        id: 'Fisika Reaktor Nuklir, Arsitektur Generasi I–IV & Mitigasi Bencana (Disiplin Utama ke-10)',
+      },
+      highlights: {
+        en: [
+          'Engineered the 10th foundational STEM discipline: Nuclear Reactor Physics, Core Thermodynamics & Disaster Mitigation with 5 comprehensive bilingual modules (expanding curriculum to 46 interactive modules).',
+          'Covered mass defect, Bethe-Weizsäcker liquid drop model, effective neutron multiplication factor (keff), Six-Factor Formula, Inhour equation, delayed neutrons, and control reactivity mechanisms.',
+          'Explored nuclear reactor taxonomy: Gen-I early prototypes, Gen-II/III commercial LWRs (PWR vs BWR), CANDU heavy water, and RBMK positive void coefficient design vulnerabilities.',
+          'Analyzed Gen-IV nuclear systems (VHTR, MSR, SFR, LFR, SCWR), Small Modular Reactors (SMRs), microreactors, TRISO accident-tolerant fuel pebbles, and Thorium breeding cycles.',
+          'Conducted forensic accident post-mortems of Three Mile Island, Chernobyl, and Fukushima Daiichi, detailing multi-layer defense-in-depth, inherent reactivity feedbacks, and passive mitigation systems (PCCS, Core Catcher, PAR).',
+          'Engineered interactive 3D WebGL NuclearReactorViewer with 3 switchable operational modes (RPV core lattice with Cherenkov radiation, primary/secondary steam loop, and containment passive mitigation) with real-time SCRAM trip kinetics and Station Blackout simulation.',
+          'Integrated 16 KaTeX-verified glossary terms, 5 nuclear LaTeX note shortcuts, and the Nuclear Reactor Safety Specialist accreditation badge.',
+        ],
+        id: [
+          'Mengembangkan disiplin STEM inti ke-10: Fisika Reaktor Nuklir, Termodinamika Teras & Mitigasi Bencana dengan 5 modul bilingual mendalam (memperluas kurikulum menjadi 46 modul interaktif).',
+          'Mengupas defek massa, model tetes cairan Bethe-Weizsäcker, faktor multiplikasi neutron efektif (keff), Formula Enam Faktor, persamaan Inhour, neutron kasip, dan mekanisme reaktivitas kontrol.',
+          'Mengeksplorasi taksonomi reaktor: prototipe awal Gen-I, LWR komersial Gen-II/III (PWR vs BWR), CANDU air berat, serta kerentanan koefisien void positif pada RBMK.',
+          'Menganalisis sistem reaktor Gen-IV (VHTR, MSR, SFR, LFR, SCWR), Reaktor Modular Kecil (SMR), mikroreaktor, bahan bakar tahan kecelakaan TRISO, dan siklus pembiakan Torium.',
+          'Melakukan analisis forensik bencana Three Mile Island, Chernobyl, dan Fukushima Daiichi, merinci pertahanan berlapis (defense-in-depth), umpan balik inheren, dan sistem keselamatan pasif (PCCS, Core Catcher, PAR).',
+          'Merancang laboratorium 3D WebGL NuclearReactorViewer dengan 3 mode operasional (teras RPV dengan radiasi Cherenkov, sirkulasi uap primer/sekunder, dan mitigasi pasif kubah penahan) lengkap dengan kinetika trip SCRAM dan simulasi Station Blackout.',
+          'Mengintegrasikan 16 istilah glosarium berverifikasi KaTeX, 5 pintasan rumus LaTeX pada ruang catatan, dan lencana akreditasi master Spesialis Keselamatan Reaktor Nuklir.',
+        ],
+      },
+    },
     {
       version: '1.4.1',
       date: '2026-09-14',

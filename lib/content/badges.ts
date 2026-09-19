@@ -139,6 +139,19 @@ export const allBadges: Badge[] = [
     requiredModuleIds: ['bess-mod-1', 'bess-mod-2', 'bess-mod-3', 'bess-mod-4', 'bess-mod-5'],
   },
   {
+    id: 'nuclear-master',
+    title: {
+      en: 'Nuclear Reactor Physicist',
+      id: 'Fisikawan Reaktor Nuklir',
+    },
+    description: {
+      en: 'Completed all 5 modules in Nuclear Reactor Physics, Advanced Architectures & Disaster Mitigation.',
+      id: 'Menyelesaikan seluruh 5 modul dalam Fisika Reaktor Nuklir, Arsitektur Mutakhir & Mitigasi Bencana.',
+    },
+    icon: 'ShieldAlert',
+    requiredModuleIds: ['nuc-mod-1', 'nuc-mod-2', 'nuc-mod-3', 'nuc-mod-4', 'nuc-mod-5'],
+  },
+  {
     id: 'quiz-ace',
     title: {
       en: 'Academic Excellence',
@@ -158,8 +171,8 @@ export const allBadges: Badge[] = [
       id: 'Polimat Agung Aetheria',
     },
     description: {
-      en: 'Completed all 41 modules across all 9 foundational scientific disciplines.',
-      id: 'Menyelesaikan seluruh 41 modul di kesembilan disiplin ilmu sains dasar.',
+      en: 'Completed all 46 modules across all 10 foundational scientific disciplines.',
+      id: 'Menyelesaikan seluruh 46 modul di kesepuluh disiplin ilmu sains dasar.',
     },
     icon: 'GraduationCap',
   },

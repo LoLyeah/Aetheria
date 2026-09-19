@@ -26,6 +26,7 @@ import {
   Globe,
   Car,
   BatteryCharging,
+  ShieldAlert,
 } from 'lucide-react';
 import { TopicId } from '@/types/learning';
 
@@ -87,6 +88,7 @@ export const LandingPage: React.FC = () => {
     'biomes-ecology': <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
     'hybrid-vehicles': <Car className="w-5 h-5 text-orange-600 dark:text-orange-400" />,
     'battery-storage': <BatteryCharging className="w-5 h-5 text-teal-600 dark:text-teal-400" />,
+    'nuclear-reactor': <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
   };
 
   return (

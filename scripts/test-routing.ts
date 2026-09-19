@@ -66,9 +66,9 @@ for (const topic of allTopics) {
   assert.equal(getUrlForState('learn', topic.id), `/learn/${topic.id}`);
 }
 
-// 5. Specific Modules (test ALL 41 modules across all 9 disciplines)
+// 5. Specific Modules (test ALL 46 modules across all 10 disciplines)
 const allMods = getAllModules();
-assert.equal(allMods.length, 41, 'Expected 41 total modules across disciplines');
+assert.equal(allMods.length, 46, 'Expected 46 total modules across disciplines');
 
 for (const { topic, module: mod } of allMods) {
   // Test canonical path: /learn/:topicId/:moduleId
@@ -114,6 +114,8 @@ assert.equal(getUrlForState('module', null, 'hyb-mod-2', 'interactive'), '/learn
 assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'hyb-mod-2', 'interactive'), '/learn/hybrid-vehicles/hyb-mod-2?tab=interactive');
 assert.equal(getUrlForState('module', null, 'bess-mod-2', 'interactive'), '/learn/battery-storage/bess-mod-2?tab=interactive');
 assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'bess-mod-2', 'interactive'), '/learn/battery-storage/bess-mod-2?tab=interactive');
+assert.equal(getUrlForState('module', null, 'nuc-mod-2', 'interactive'), '/learn/nuclear-reactor/nuc-mod-2?tab=interactive');
+assert.equal(getUrlForState('module', 'quantum-mechanics' as any, 'nuc-mod-2', 'interactive'), '/learn/nuclear-reactor/nuc-mod-2?tab=interactive');
 
 // 8. Settings Route
 assert.deepEqual(parseUrlToState('/settings', ''), {
@@ -187,12 +189,12 @@ assert.deepEqual(parseUrlToState('/learn/alien-science-discipline', ''), {
 // Clipboard utility export sanity
 assert.equal(typeof copyTextToClipboard, 'function');
 
-// 11. Deep Curriculum & KaTeX Formula Integrity Verification across all 36 modules
+// 11. Deep Curriculum & KaTeX Formula Integrity Verification across all 46 modules
 import katex from 'katex';
 import { allBadges } from '../lib/content/badges';
 import { GLOSSARY_TERMS } from '../lib/glossaryData';
 
-console.log('📐 Verifying KaTeX formulas, bilingual content, and badge integrity across all 41 modules...');
+console.log('📐 Verifying KaTeX formulas, bilingual content, and badge integrity across all 46 modules...');
 
 // Check badge configurations
 const hybridBadge = allBadges.find((b) => b.id === 'hybrid-master');
@@ -211,10 +213,18 @@ assert.deepEqual(
   'bess-master badge must require all 5 battery storage modules'
 );
 
+const nucBadge = allBadges.find((b) => b.id === 'nuclear-master');
+assert.ok(nucBadge, 'nuclear-master badge must exist');
+assert.deepEqual(
+  nucBadge.requiredModuleIds,
+  ['nuc-mod-1', 'nuc-mod-2', 'nuc-mod-3', 'nuc-mod-4', 'nuc-mod-5'],
+  'nuclear-master badge must require all 5 nuclear modules'
+);
+
 const grandPolymath = allBadges.find((b) => b.id === 'polymath');
 assert.ok(grandPolymath, 'polymath badge must exist');
-assert.match(grandPolymath.description.en, /41 modules/, 'grand-polymath must mention 41 modules in English');
-assert.match(grandPolymath.description.id, /41 modul/, 'grand-polymath must mention 41 modul in Indonesian');
+assert.match(grandPolymath.description.en, /46 modules/, 'grand-polymath must mention 46 modules in English');
+assert.match(grandPolymath.description.id, /46 modul/, 'grand-polymath must mention 46 modul in Indonesian');
 
 // Verify every module's bilingual integrity, order, quizzes, and KaTeX formulas
 let testedFormulasCount = 0;
@@ -226,7 +236,7 @@ for (const { topic, module: mod } of allMods) {
   assert.ok(mod.shortDescription.id && mod.shortDescription.id.trim().length > 0, `Module ${mod.id} missing id description`);
   assert.ok(mod.sections.length > 0, `Module ${mod.id} must have at least one section`);
   assert.ok(mod.quiz.length >= 1, `Module ${mod.id} must have at least 1 quiz question`);
-  if (mod.topicId === 'hybrid-vehicles' || mod.topicId === 'battery-storage') {
+  if (mod.topicId === 'hybrid-vehicles' || mod.topicId === 'battery-storage' || mod.topicId === 'nuclear-reactor') {
     assert.ok(mod.quiz.length >= 2, `${mod.topicId} module ${mod.id} must have at least 2 quiz questions`);
   }
 
@@ -354,5 +364,40 @@ bessModules.forEach(({ module: mod }, idx) => {
   assert.equal(mod.interactiveType, 'battery-storage-lab', `Module ${mod.id} interactiveType must be battery-storage-lab`);
 });
 
+// Check glossary term search lookup for all nuclear-reactor terms
+const expectedNuclearTermIds = [
+  'nuclear-fission',
+  'criticality',
+  'keff',
+  'control-rod',
+  'neutron-moderator',
+  'delayed-neutrons',
+  'scram',
+  'decay-heat',
+  'pwr',
+  'bwr',
+  'smr',
+  'msr',
+  'triso',
+  'defense-in-depth',
+  'core-catcher',
+  'passive-safety',
+];
+
+for (const termId of expectedNuclearTermIds) {
+  const found = findGlossaryTerm(termId);
+  assert.ok(found, `findGlossaryTerm should successfully resolve ${termId}`);
+  assert.equal(found.category, 'nuclear', `${termId} must belong to nuclear category`);
+  assert.equal(found.relatedTopicId, 'nuclear-reactor', `${termId} must relate to nuclear-reactor topic`);
+}
+
+// Verify all 5 nuclear-reactor modules specify 'nuclear-reactor-lab'
+const nucModules = allMods.filter((m) => m.topic.id === 'nuclear-reactor');
+assert.equal(nucModules.length, 5, 'Must have exactly 5 nuclear-reactor modules');
+nucModules.forEach(({ module: mod }, idx) => {
+  assert.equal(mod.order, idx + 1, `Module ${mod.id} must have order ${idx + 1}`);
+  assert.equal(mod.interactiveType, 'nuclear-reactor-lab', `Module ${mod.id} interactiveType must be nuclear-reactor-lab`);
+});
+
 console.log(`✅ Successfully validated ${testedFormulasCount} KaTeX mathematical formulas & variables without error!`);
-console.log('✅ ALL PRODUCTION ROUTING, DEEP-LINK & GLOSSARY TESTS PASSED (41 modules, 9 topics, edge cases)!');
+console.log('✅ ALL PRODUCTION ROUTING, DEEP-LINK & GLOSSARY TESTS PASSED (46 modules, 10 topics, edge cases)!');

@@ -23,6 +23,7 @@ import {
   Globe,
   Car,
   BatteryCharging,
+  ShieldAlert,
 } from 'lucide-react';
 
 interface GlossaryModalProps {
@@ -56,6 +57,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
     { id: 'hypertension', label: { en: 'Hypertension', id: 'Hipertensi' }, icon: Gauge },
     { id: 'ecology', label: { en: 'Biomes & Ecology', id: 'Bioma & Ekologi' }, icon: Globe },
     { id: 'battery-storage', label: { en: 'Battery Storage', id: 'Penyimpanan Baterai' }, icon: BatteryCharging },
+    { id: 'nuclear', label: { en: 'Nuclear Reactor', id: 'Reaktor Nuklir' }, icon: ShieldAlert },
   ];
 
   const filteredTerms = GLOSSARY_TERMS.filter((term) => {

@@ -8,6 +8,7 @@ import { hypertensionTopic } from './hypertension';
 import { biomesEcologyTopic } from './biomes';
 import { hybridVehiclesTopic } from './hybrid';
 import { batteryStorageTopic } from './batteryStorage';
+import { nuclearReactorTopic } from './nuclear';
 import { allBadges } from './badges';
 
 export const allTopics: Topic[] = [
@@ -20,6 +21,7 @@ export const allTopics: Topic[] = [
   biomesEcologyTopic,
   hybridVehiclesTopic,
   batteryStorageTopic,
+  nuclearReactorTopic,
 ];
 
 export {
@@ -32,6 +34,7 @@ export {
   biomesEcologyTopic,
   hybridVehiclesTopic,
   batteryStorageTopic,
+  nuclearReactorTopic,
   allBadges,
 };
 

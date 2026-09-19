@@ -25,6 +25,7 @@ import {
   Globe,
   Car,
   BatteryCharging,
+  ShieldAlert,
 } from 'lucide-react';
 
 export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
@@ -210,6 +211,7 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                             {topic.id === 'biomes-ecology' && <Globe className="w-4 h-4 text-emerald-500" />}
                             {topic.id === 'hybrid-vehicles' && <Car className="w-4 h-4 text-orange-500" />}
                             {topic.id === 'battery-storage' && <BatteryCharging className="w-4 h-4 text-teal-500" />}
+                            {topic.id === 'nuclear-reactor' && <ShieldAlert className="w-4 h-4 text-amber-500" />}
                           </div>
                           <div>
                             <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -393,12 +395,12 @@ export const ProgressTrackerModal: React.FC<{ isOpen: boolean; onClose: () => vo
                     {language === 'en' ? (
                       <>
                         For mastering the core theoretical foundations and interactive hardware-accelerated 3D simulations across{' '}
-                        <strong>Quantum Mechanics</strong>, <strong>Embryonic Biology</strong>, <strong>EV Powertrains & Grid Battery Storage</strong>, and foundational STEM disciplines.
+                        <strong>Quantum Mechanics</strong>, <strong>Embryonic Biology</strong>, <strong>EV Powertrains & Grid Battery Storage</strong>, <strong>Nuclear Reactor Physics & Safety</strong>, and foundational STEM disciplines.
                       </>
                     ) : (
                       <>
                         Atas penguasaan fondasi teoretis mendalam dan simulasi 3D real-time terakselerasi perangkat keras pada{' '}
-                        <strong>Mekanika Kuantum</strong>, <strong>Biologi Embrio</strong>, <strong>Powertrain EV & Penyimpanan Baterai Jaringan</strong>, serta disiplin ilmu STEM dasar.
+                        <strong>Mekanika Kuantum</strong>, <strong>Biologi Embrio</strong>, <strong>Powertrain EV & Penyimpanan Baterai Jaringan</strong>, <strong>Fisika Reaktor Nuklir & Keselamatan</strong>, serta disiplin ilmu STEM dasar.
                       </>
                     )}
                   </p>

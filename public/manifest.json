@@ -1,7 +1,7 @@
 {
   "name": "Aetheria - Interactive 3D Science Platform",
   "short_name": "Aetheria",
-  "description": "An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Cardiovascular Electrophysiology, and Pulmonary Mechanics.",
+  "description": "An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Nuclear Reactor Physics & Safety, Grid Storage, and Cardiovascular Electrophysiology.",
   "start_url": "/",
   "id": "/?source=pwa",
   "scope": "/",

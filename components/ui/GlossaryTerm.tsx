@@ -21,6 +21,7 @@ import {
   Globe,
   Car,
   BatteryCharging,
+  ShieldAlert,
 } from 'lucide-react';
 
 interface GlossaryTermProps {
@@ -105,6 +106,12 @@ export const GlossaryTerm: React.FC<GlossaryTermProps> = ({
       badgeBg: 'bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
       icon: BatteryCharging,
       accentBorder: 'border-teal-500/30',
+    },
+    nuclear: {
+      label: { en: 'Nuclear Engineering & Safety', id: 'Rekayasa Nuklir & Keselamatan' },
+      badgeBg: 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+      icon: ShieldAlert,
+      accentBorder: 'border-amber-500/30',
     },
     general: {
       label: { en: 'Scientific Principle', id: 'Prinsip Ilmiah' },

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Aetheria - Interactive 3D Science Platform',
     short_name: 'Aetheria',
-    description: 'An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Grid Energy Storage (BESS) & Upcoming Chemistries, Cardiovascular Electrophysiology, and Earth Biomes.',
+    description: 'An interactive WebGPU and 3D science laboratory featuring Quantum Mechanics, Embryonic Morphogenesis, EV Battery Dynamics, Grid Energy Storage (BESS), Nuclear Reactor Physics & Safety, Cardiovascular Electrophysiology, and Earth Biomes.',
     start_url: '/',
     id: '/?source=pwa',
     scope: '/',

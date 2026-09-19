@@ -16,6 +16,7 @@ export const VALID_TOPIC_IDS: readonly TopicId[] = [
   'biomes-ecology',
   'hybrid-vehicles',
   'battery-storage',
+  'nuclear-reactor',
 ] as const;
 
 export interface RouteState {

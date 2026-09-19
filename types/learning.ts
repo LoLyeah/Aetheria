@@ -10,7 +10,8 @@ export type TopicId =
   | 'hypertension'
   | 'biomes-ecology'
   | 'hybrid-vehicles'
-  | 'battery-storage';
+  | 'battery-storage'
+  | 'nuclear-reactor';
 
 export interface QuizQuestion {
   id: string;
@@ -123,7 +124,8 @@ export type InteractiveLabType =
   | 'vascular-hemodynamics'
   | 'biome-globe'
   | 'hybrid-powertrain'
-  | 'battery-storage-lab';
+  | 'battery-storage-lab'
+  | 'nuclear-reactor-lab';
 
 export interface LearningModule {
   id: string;
